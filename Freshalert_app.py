@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, date
 
-st.set_page_config(page_title="FreshAlert", page_icon="🎂", layout="wide")
+st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
 
 def init_dataframe():
     """Initialize or load the dataframe."""
