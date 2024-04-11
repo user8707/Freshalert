@@ -29,7 +29,7 @@ def display_dataframe():
         st.write("No data to display.")
 
 def main():
-    st.title("FreshAltert")
+    st.title("FreshAlert")
 
     init_dataframe()
 
