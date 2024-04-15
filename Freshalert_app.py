@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from github_contents import GithubContents
 
 def main():
     st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
