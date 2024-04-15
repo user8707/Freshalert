@@ -4,21 +4,11 @@ from github_contents import GithubContents
 
 st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
 
-def init_github():
-    """Initialize the GithubContents object."""
-    if 'github' not in st.session_state:
-        st.session_state.github = GithubContents(
-            st.secrets["github"]["owner"],
-            st.secrets["github"]["repo"],
-            st.secrets["github"]["token"])
-
-
 def main():
     if not is_user_logged_in():
         show_login_page()
     else:
         show_fresh_alert_page()
-    init_github()
 def is_user_logged_in():
     return True  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
    
