@@ -2,15 +2,6 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 
-def main():
-    st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
-    if not is_user_logged_in():
-        show_login_page()
-    else:
-        show_fresh_alert_page()
-def is_user_logged_in():
-    return False  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
-
 def init_github():
     """Initialize the GithubContents object."""
     if 'github' not in st.session_state:
@@ -18,6 +9,19 @@ def init_github():
             st.secrets["github"]["owner"],
             st.secrets["github"]["repo"],
             st.secrets["github"]["token"])
+
+def main():
+    st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
+     init_github()
+    if not is_user_logged_in():
+        show_login_page()
+    else:
+        show_fresh_alert_page()
+def is_user_logged_in():
+    return False  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
+   
+
+
 def show_login_page():
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
