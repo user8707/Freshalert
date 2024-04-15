@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 
+st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
+
 def init_github():
     """Initialize the GithubContents object."""
     if 'github' not in st.session_state:
@@ -10,8 +12,8 @@ def init_github():
             st.secrets["github"]["repo"],
             st.secrets["github"]["token"])
 
+
 def main():
-    st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
      init_github()
     if not is_user_logged_in():
         show_login_page()
