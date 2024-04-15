@@ -18,6 +18,7 @@ def main():
         show_login_page()
     else:
         show_fresh_alert_page()
+    init_github()
 def is_user_logged_in():
     return True  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
    
