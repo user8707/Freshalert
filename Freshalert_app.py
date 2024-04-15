@@ -14,7 +14,6 @@ def init_github():
 
 
 def main():
-     init_github()
     if not is_user_logged_in():
         show_login_page()
     else:
