@@ -1,49 +1,86 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, date
-
-st.set_page_config(page_title="Fresh----Alert", page_icon="🗄️", layout="wide")
-
-def init_dataframe():
-    """Initialize or load the dataframe."""
-    if 'df' not in st.session_state:
-        st.session_state.df = pd.DataFrame(columns=['Name', 'Birth Date', 'Age'])
-def calculate_ablauf(ablauf_date):
-    """Calculate Ablaufdatum given the Ablauf date."""
-    today = date.today()
-    ablauf = today.year - ablauf_date.year - ((today.month, today.day) < (ablauf_date.month, ablauf_date.day))
-    return ablauf
-
-
-def add_entry(lebensmittel, ablauf_date):
-    """Add a new entry to the DataFrame using pd.concat and calculate age."""
-    age = calculate_ablauf(ablauf_date)
-    new_entry = pd.DataFrame([{'lebensmittel': name, 'Ablaufdatum': ablauf_date, 'Ablauf': ablauf}])
-    st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
-
-def display_dataframe():
-    """Display the DataFrame in the app."""
-    if not st.session_state.df.empty:
-        st.dataframe(st.session_state.df)
-    else:
-        st.write("No data to display.")
 
 def main():
+    st.set_page_config(page_title="FreshAlert", page_icon="🗄️", layout="wide")
+    if not is_user_logged_in():
+        show_login_page()
+    else:
+        show_fresh_alert_page()
+def is_user_logged_in():
+    return True  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
+def show_login_page():
+    st.title("Login")
+    email = st.text_input("E-Mail", key="login_email")
+    password = st.text_input("Passwort", type="password", key="login_password")
+    if st.button("Login"):
+        if email == "example@example.com" and password == "password":
+            st.success("Erfolgreich eingeloggt!")
+            show_fresh_alert_page()
+        else:
+            st.error("Ungültige E-Mail oder Passwort.")
+    if st.button("Registrieren", key="registration_button"):
+        st.session_state.show_registration = True
+    if st.session_state.get("show_registration", False):
+        with st.sidebar:
+            show_registration_page()
+def show_fresh_alert_page():
     st.title("FreshAlert")
-
-    init_dataframe()
-
-    with st.sidebar:
-        st.header("Add New Entry")
-        name = st.text_input("Lebensmittel")
-        ablauf_date = st.date_input("Ablaufdatum",min_value=date(1950, 1, 1),format="DD.MM.YYYY")
-        add_button = st.button("Add")
-
-    if add_button and name:  # Check if name is not empty
-        add_entry(lebensmittel, ablauf_date)
-
-    display_dataframe()
-    plot_data()
+    st.sidebar.title("")
+    if st.sidebar.button("Mein Kühlschrank"):
+        show_my_fridge()
+    if st.sidebar.button("Neues Lebensmittel hinzufügen"):
+        add_new_food()
+    st.sidebar.markdown("---")  # Trennlinie
+    if st.sidebar.button("Freunde einladen"):
+        show_my_friends()
+    if st.sidebar.button("Einstellungen"):
+        show_settings()
+def show_my_fridge():
+    st.title("Mein Kühlschrank")
+    if "my_fridge" not in st.session_state:
+        st.session_state.my_fridge = pd.DataFrame(columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"])
+    st.write(st.session_state.my_fridge)
+def add_new_food():
+    st.title("Neues Lebensmittel hinzufügen")
+    with st.form("new_food_form"):
+        st.write("Füllen Sie die folgenden Felder aus:")
+        food_name = st.text_input("Lebensmittel", key="food_name")
+        category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"], key="food_category")
+        location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"], key="food_location")
+        expiry_date = st.date_input("Ablaufdatum", key="food_expiry_date")
+        submitted = st.form_submit_button("Hinzufügen")
+        if submitted:
+            if "my_fridge" not in st.session_state:
+                st.session_state.my_fridge = []
+            st.session_state.my_fridge.append(
+                (food_name, category, location, expiry_date)
+            )
+            st.session_state.my_fridge = pd.DataFrame(
+                st.session_state.my_fridge,
+                columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"],
+            )
+            # Zeige die Tabelle mit den Lebensmitteln an
+            st.write(st.session_state.my_fridge)
+def show_my_friends():
+    st.write("Meine Freunde")
+def show_settings():
+    st.write("Einstellungen")
+def show_registration_page():
+    st.title("Registrieren")
+    first_name = st.text_input("Vorname", key="register_first_name")
+    last_name = st.text_input("Nachname", key="register_last_name")
+    email = st.text_input("E-Mail", key="register_email")
+    password = st.text_input("Passwort", type="password", key="register_password")
+    confirm_password = st.text_input("Passwort wiederholen", type="password", key="confirm_register_password")
+   # Registrierungs-Button
+    if st.button("Registrieren"):
+        if password == confirm_password:
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_registration = False  # Setze den Status zurück
+        else:
+            st.error("Die Passwörter stimmen nicht überein.")
 
 if __name__ == "__main__":
+
     main()
