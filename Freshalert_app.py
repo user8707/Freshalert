@@ -9,6 +9,14 @@ def main():
         show_fresh_alert_page()
 def is_user_logged_in():
     return False  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
+
+def init_github():
+    """Initialize the GithubContents object."""
+    if 'github' not in st.session_state:
+        st.session_state.github = GithubContents(
+            st.secrets["github"]["owner"],
+            st.secrets["github"]["repo"],
+            st.secrets["github"]["token"])
 def show_login_page():
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
