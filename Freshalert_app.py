@@ -89,3 +89,4 @@ def show_registration_page():
 if __name__ == "__main__":
 
     main()
+st.text('Gib links dein Name und dein Geburtsdatum ein und wir berechen wie alt du bist.')
