@@ -17,7 +17,20 @@ Wir schauen was wir designtechnisch anpassen müssen und wie wir die Userexperie
 Ablauf:  Die Person erhält den Prototypen auf Papier, wie in dem Video, und muss durch die App navigieren. Dann bitten wir sie zu beschreiben,was sie denken was die App kann und wie und warum man sie benutzen kann/soll und sie anschliessend zu benutzen (ohne Anleitung)
 
 Bewertung: 
-- Was war gut?
-- Was war schlecht?
-- Neue Ideen?
-- Neue Probleme?
+Was war gut?
+- Intuitiv zurecht gekommen
+- Gleich gewusst wo was is
+- Idee ist gut und sinnvoll
+- Das sharen ist praktisch
+
+Was war schlecht?
+- Login ging zuerst nicht
+- Design nicht so ansprechend
+  
+Neue Ideen?
+- Farbiger gestalten
+  
+Neue Probleme?
+- Es ist mühsam alles immer einzeln einzugeben
+- Login muss angepasst werden
+- Das Rauswerfen (also wenn ich es gegessen/verbraucht habe) muss einfacher gehen
