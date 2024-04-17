@@ -90,6 +90,6 @@ if __name__ == "__main__":
     main()
     
 st.text('Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!')
-st.text("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu.)
+st.text('Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu.')
 st.text('Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden.')
 st.text('#StopFoodwaste')
