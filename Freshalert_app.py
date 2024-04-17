@@ -10,7 +10,7 @@ def main():
     else:
         show_fresh_alert_page()
 def is_user_logged_in():
-    return True  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
+    return False  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
    
 
 
@@ -58,8 +58,7 @@ def add_new_food():
         if submitted:
             if "my_fridge" not in st.session_state:
                 st.session_state.my_fridge = []
-            else:
-                st.session_state.my_fridge.append(
+            st.session_state.my_fridge.append(
                 (food_name, category, location, expiry_date)
             )
             st.session_state.my_fridge = pd.DataFrame(
