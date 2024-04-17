@@ -54,28 +54,28 @@ def init_dataframe():
 def add_entry_in_sidebar():
     """Add a new entry to the DataFrame using pd.concat and calculate age."""
     new_entry = {
-        DATA_COLUMNS[0]:  st.sidebar.text_input(DATA_COLUMNS[0]),  # LM
-        DATA_COLUMNS[1]:  st.sidebar.text_input(DATA_COLUMNS[1]),  # Kategorie
-        DATA_COLUMNS[2]:  st.sidebar.text_input(DATA_COLUMNS[2]),  # Lagerort
-        DATA_COLUMNS[4]:  st.sidebar.date_input(DATA_COLUMNS[4],
-                                                min_value=date(2024, 1, 1),
-                                                format="DD.MM.YYYY"),  # MHD
+        DATA_COLUMNS[0]:  st.sidebar.text_input(DATA_COLUMNS[0], key="food_name"),  # LM
+        DATA_COLUMNS[1]:  st.sidebar.text_input(DATA_COLUMNS[1], key="food_category"),  # Kategorie
+        DATA_COLUMNS[2]:  st.sidebar.text_input(DATA_COLUMNS[2], key="food_location"),  # Lagerort
+        DATA_COLUMNS[4]:  st.sidebar.date_input(DATA_COLUMNS[4], min_value=date.today(), key="food_expiry_date"),  # MHD
     } 
-
     # check wether all data is defined, otherwise show an error message
     for key, value in new_entry.items():
         if value == "":
             st.sidebar.error(f"Bitte ergänze das Feld '{key}'")
             return
-
     if st.sidebar.button("Add"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
-
         # Save the updated DataFrame to GitHub
         name = new_entry[DATA_COLUMNS[0]]
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
         st.session_state.github.write_df(DATA_FILE, st.session_state.df, msg)
+        # Clear the input fields
+        for key in new_entry.keys():
+            st.sidebar[key].value = ""
+        # Display a success message
+        st.sidebar.success("Lebensmittel erfolgreich hinzugefügt!")
         
 def show_fresh_alert_page():
     st.title("FreshAlert")
