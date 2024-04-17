@@ -15,7 +15,7 @@ def main():
     else:
         show_fresh_alert_page()
 def is_user_logged_in():
-    return True  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
+    return False  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
    
 
 def show_login_page():
