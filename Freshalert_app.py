@@ -12,7 +12,8 @@ def main():
 def is_user_logged_in():
     return True  # Für dieses Beispiel gehe ich davon aus, dass der Benutzer nicht eingeloggt ist
    
-
+st.text('Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!')
+st.text('Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden. #StopFoodwaste')
 
 def show_login_page():
     st.title("Login")
