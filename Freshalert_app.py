@@ -138,9 +138,9 @@ if __name__ == "__main__":
 
     main()
     
-st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!                                                 "
+st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "
              
-"Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu.                               "
-"Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden.                          "
+"Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+"Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden. "
 "#StopFoodwaste ")
 
