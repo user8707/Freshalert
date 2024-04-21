@@ -30,8 +30,8 @@ def show_login_page():
             show_registration_page()
 def show_fresh_alert_page():
     st.title("FreshAlert")
-    st.sidebar.title("")
     st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
+    st.sidebar.title("")
     if st.sidebar.button("Mein Kühlschrank"):
         show_my_fridge()
     if st.sidebar.button("Neues Lebensmittel hinzufügen"):
