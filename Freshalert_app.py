@@ -91,6 +91,10 @@ def show_registration_page():
 
 def show_fresh_alert_page():
     st.title("FreshAlert")
+    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
+"Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+"Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden. "
+"#StopFoodwaste ")
     st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
     st.sidebar.title("")
     if st.sidebar.button("Mein Kühlschrank"):
