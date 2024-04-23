@@ -132,6 +132,7 @@ def add_food_to_fridge():
             st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
             st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
+            show_my_fridge()
 
 
 def show_my_friends():
