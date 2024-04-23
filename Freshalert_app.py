@@ -112,7 +112,7 @@ def show_my_fridge():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     if not st.session_state.df.empty:
-        st.dataframe(st.session_state.df)
+        st.dataframe(st.session_state.df_food)
     else:
         st.write("Der Kühlschrank ist leer.")
 
