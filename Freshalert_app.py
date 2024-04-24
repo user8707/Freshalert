@@ -18,6 +18,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+add_food_to_fridge(df_food, food_name, category, location, area, expiry_date)
+
 def init_github():
     """Initialize the GithubContents object."""
     if 'github' not in st.session_state:
