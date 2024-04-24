@@ -155,10 +155,10 @@ def show_my_fridge():
     else:
         st.error("Bitte füllen Sie alle Felder aus.")
 
-if not st.session_state.df_food.empty:
-    st.dataframe(st.session_state.df_food)
-else:
-    st.write("Der Kühlschrank ist leer.")
+    if not st.session_state.df_food.empty:
+        st.dataframe(st.session_state.df_food)
+    else:
+        st.write("Der Kühlschrank ist leer.")
 
 
 def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
