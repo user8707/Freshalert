@@ -95,9 +95,9 @@ def show_my_fridge():
     new_entry = {
         DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
         DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Kategorie
-        DATA_COLUMNS_FOOD[2]: st.selectbox(DATA_COLUMNS_FOOD[2], ["Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Lagerort
-        DATA_COLUMNS_FOOD[3]: st.date_input(DATA_COLUMNS_FOOD[3]), #Ablaufdatum
-        DATA_COLUMNS_FOOD[4]: st.selectbox(DATA_COLUMNS_FOOD[4], ["Mein Kühlschrank", "geteilter Kühlschrank"]), #Standort
+        DATA_COLUMNS_FOOD[2]: st.text_input(DATA_COLUMNS_FOOD[2]), # Lagerort
+        DATA_COLUMNS_FOOD[3]: st.text_input(DATA_COLUMNS_FOOD[3], type="date"), #Ablaufdatum
+        DATA_COLUMNS_FOOD[4]: st.text_input(DATA_COLUMNS_FOOD[4],), #Standort
     }
 
     for key, value in new_entry.items():
@@ -105,20 +105,64 @@ def show_my_fridge():
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
-    if st.button("Hinzufügen"):
-        df_food = add_food_to_fridge(st.session_state.df_food, **new_entry)
-        st.session_state.df_food = df_food
-        save_data_to_database_food()
-        st.success("Lebensmittel erfolgreich hinzugefügt!")
+    if st.button("hinzufügen"):
+        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+            new_entry_df = pd.DataFrame([new_entry])
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
+            save_data_to_database_food()
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_my_fridge = False  # Reset status
+        else:
+            st.error("Die Passwörter stimmen nicht überein.")
+
+
+def show_fresh_alert_page():
+    st.title("FreshAlert")
+    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
+"Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+"Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden. "
+"#StopFoodwaste ")
+    st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
+    st.sidebar.title("")
+    if st.sidebar.button("Mein Kühlschrank"):
+        show_my_fridge()
+    if st.sidebar.button("Neues Lebensmittel hinzufügen"):
+        add_food_to_fridge()
+    st.sidebar.markdown("---")  # Separator
+    if st.sidebar.button("Freunde einladen"):
+        show_my_friends()
+    if st.sidebar.button("Einstellungen"):
+        show_settings()
+
+
+def show_my_fridge():
+    """Display the contents of the fridge."""
+    st.title("Mein Kühlschrank")
+    init_dataframe_food()  # Daten laden
+    
+    food_name = st.text_input("Lebensmittel")
+    category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
+    location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
+    area = st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"])
+    expiry_date = st.date_input("Ablaufdatum")
+
+    if st.button("Lebensmittel hinzufügen"):
+        if food_name and category and location and area and expiry_date:
+            df_food = add_food_to_fridge(st.session_state.df_food, food_name, category, location, area, expiry_date)
+            st.session_state.df_food = df_food
+            save_data_to_database_food()
+            st.success("Lebensmittel erfolgreich hinzugefügt!")
+        else:
+            st.error("Bitte füllen Sie alle Felder aus.")
 
     if not st.session_state.df_food.empty:
         st.dataframe(st.session_state.df_food)
     else:
         st.write("Der Kühlschrank ist leer.")
 
-def add_food_to_fridge(df_food, Lebensmittel, Kategorie, Lagerort, Ablaufdatum, Standort):
+def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
     """Add a new food item to the fridge."""
-    new_entry_food = pd.DataFrame([[Lebensmittel, Kategorie, Lagerort, Ablaufdatum, Standort]], columns=DATA_COLUMNS_FOOD)
+    new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
     df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
     return df_food
 
