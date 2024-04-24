@@ -8,7 +8,7 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "FridgeContents.csv"
-DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"]
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
 
 # Set page configuration
 st.set_page_config(
@@ -125,10 +125,11 @@ def add_food_to_fridge():
         food_name = st.text_input("Lebensmittel")
         category = st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
         location = st.selectbox("Lagerort", ["Bitte wählen","Schrank", "Kühlschrank", "Tiefkühler", "offen"])
+        area = st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"] 
         expiry_date = st.date_input("Ablaufdatum")
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
-            new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=DATA_COLUMNS_FOOD)
+            new_entry = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
             st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
             st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
