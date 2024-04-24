@@ -155,6 +155,9 @@ def show_my_fridge():
     else:
         st.error("Bitte füllen Sie alle Felder aus.")
 
+    else:
+        st.error("Bitte füllen Sie alle Felder aus.")
+
     if not st.session_state.df_food.empty:
         st.dataframe(st.session_state.df_food)
     else:
