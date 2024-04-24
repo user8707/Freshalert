@@ -147,7 +147,6 @@ def show_my_fridge():
     expiry_date = st.date_input("Ablaufdatum")
 
     if st.button("Lebensmittel hinzufügen"):
-        
     if food_name and category and location and area and expiry_date:
         df_food = add_food_to_fridge(st.session_state.df_food, food_name, category, location, area, expiry_date)
         st.session_state.df_food = df_food
@@ -156,10 +155,10 @@ def show_my_fridge():
     else:
         st.error("Bitte füllen Sie alle Felder aus.")
 
-    if not st.session_state.df_food.empty:
-        st.dataframe(st.session_state.df_food)
-    else:
-        st.write("Der Kühlschrank ist leer.")
+if not st.session_state.df_food.empty:
+    st.dataframe(st.session_state.df_food)
+else:
+    st.write("Der Kühlschrank ist leer.")
 
 def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
     """Add a new food item to the fridge."""
@@ -177,6 +176,7 @@ def show_my_friends():
 
 def show_settings():
     st.write("Einstellungen")
+
 
 def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
