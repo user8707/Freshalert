@@ -150,7 +150,7 @@ def show_my_fridge():
 
     if st.button("Lebensmittel hinzufügen"):
         if food_name and category and location and area and expiry_date:
-            df_food = add_food_to_fridge(st.session_state.df_food, food_name, category, location, area, expiry_date)
+            df_food = add_food_to_fridge(df_food, food_name, category, location, area, expiry_date)
             st.session_state.df_food = df_food
             save_data_to_database_food()
             st.success("Lebensmittel erfolgreich hinzugefügt!")
