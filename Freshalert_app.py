@@ -108,10 +108,10 @@ def show_my_fridge():
     if st.button("hinzufügen"):
         if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
             new_entry_df = pd.DataFrame([new_entry])
-            st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
-            save_data_to_database_login()
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
+            save_data_to_database_food()
             st.success("Registrierung erfolgreich!")
-            st.session_state.show_registration = False  # Reset status
+            st.session_state.show_my_fridge = False  # Reset status
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
@@ -134,11 +134,6 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
-    """Add a new food item to the fridge."""
-    new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
-    df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
-    return df_food
 
 def show_my_fridge():
     """Display the contents of the fridge."""
@@ -165,7 +160,11 @@ def show_my_fridge():
     else:
         st.write("Der Kühlschrank ist leer.")
 
-
+def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
+    """Add a new food item to the fridge."""
+    new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
+    df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
+    return df_food
 
 
 
