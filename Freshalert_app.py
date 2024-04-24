@@ -31,9 +31,9 @@ def init_dataframe():
     """Initialize or load the dataframe for user registration."""
     if 'df' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE):
-            st.session_state.df = st.session_state.github.read_df(DATA_FILE)
+            st.session_state.df_login = st.session_state.github.read_df(DATA_FILE)
         else:
-            st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS)
+            st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
 
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
@@ -49,7 +49,7 @@ def show_login_page():
     password = st.text_input("Passwort", type="password", key="login_password")
     if st.button("Login"):
         login_successful = False
-        for index, row in st.session_state.df.iterrows():
+        for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
                 break
@@ -82,7 +82,7 @@ def show_registration_page():
     if st.button("Registrieren"):
         if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
             new_entry_df = pd.DataFrame([new_entry])
-            st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
+            st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
             save_data_to_database_login()
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Reset status
@@ -111,8 +111,8 @@ def show_my_fridge():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
-    if not st.session_state.df.empty:
-        st.dataframe(st.session_state.df)
+    if not st.session_state.df_food.empty:
+        st.dataframe(st.session_state.df_food)
     else:
         st.write("Der Kühlschrank ist leer.")
 
@@ -130,8 +130,8 @@ def add_food_to_fridge():
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
             new_entry = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
-            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry], ignore_index=True)
+            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
             show_my_fridge()
 
@@ -143,7 +143,7 @@ def show_settings():
     st.write("Einstellungen")
 
 def save_data_to_database_login():
-    st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated registration data")
+    st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
