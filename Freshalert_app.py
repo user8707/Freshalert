@@ -144,24 +144,11 @@ def show_my_fridge():
         st.write("Der Kühlschrank ist leer.")
 
 
-def add_food_to_fridge():
+def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
     """Add a new food item to the fridge."""
-    st.title("Neues Lebensmittel hinzufügen")
-    with st.form("new_food_form"):
-        st.write("Füllen Sie die folgenden Felder aus:")
-        food_name = st.text_input("Lebensmittel")
-        category = st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
-        location = st.selectbox("Lagerort", ["Bitte wählen","Schrank", "Kühlschrank", "Tiefkühler", "offen"])
-        area = st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"])
-        expiry_date = st.date_input("Ablaufdatum")
-        submitted = st.button("Hinzufügen")
-        if submitted:
-            new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
-            st.dataframe(st.session_state.df_food)
-            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated fridge contents")
-            st.success("Lebensmittel erfolgreich hinzugefügt!")
-            show_my_fridge()
+    new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
+    df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
+    return df_food
 
 
 def show_my_friends():
