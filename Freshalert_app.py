@@ -129,8 +129,8 @@ def add_food_to_fridge():
         expiry_date = st.date_input("Ablaufdatum")
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
-            new_entry = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry], ignore_index=True)
+            new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
             st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
             show_my_fridge()
