@@ -138,6 +138,22 @@ def show_my_fridge():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
+    
+    food_name = st.text_input("Lebensmittel")
+    category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
+    location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
+    area = st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"])
+    expiry_date = st.date_input("Ablaufdatum")
+
+    if st.button("Lebensmittel hinzufügen"):
+        if food_name and category and location and area and expiry_date:
+            df_food = add_food_to_fridge(st.session_state.df_food, food_name, category, location, area, expiry_date)
+            st.session_state.df_food = df_food
+            save_data_to_database_food()
+            st.success("Lebensmittel erfolgreich hinzugefügt!")
+        else:
+            st.error("Bitte füllen Sie alle Felder aus.")
+
     if not st.session_state.df_food.empty:
         st.dataframe(st.session_state.df_food)
     else:
