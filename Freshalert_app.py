@@ -127,7 +127,7 @@ def add_food_to_fridge():
         location = st.selectbox("Lagerort", ["Bitte wählen","Schrank", "Kühlschrank", "Tiefkühler", "offen"])
         area = st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"])
         expiry_date = st.date_input("Ablaufdatum")
-        submitted = st.form_submit_button("Hinzufügen")
+        submitted = st.button("Hinzufügen")
         if submitted:
             new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
             st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
