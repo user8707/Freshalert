@@ -125,7 +125,7 @@ def add_food_to_fridge():
         food_name = st.text_input("Lebensmittel")
         category = st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
         location = st.selectbox("Lagerort", ["Bitte wählen","Schrank", "Kühlschrank", "Tiefkühler", "offen"])
-        area = st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"] 
+        area = st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"])
         expiry_date = st.date_input("Ablaufdatum")
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
