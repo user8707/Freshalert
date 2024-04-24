@@ -164,8 +164,8 @@ def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date
     """Add a new food item to the fridge."""
     new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
     df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
+    save_data_to_database_food()  # Save the updated dataframe to GitHub
     return df_food
-
 
 def show_my_friends():
     st.write("Meine Freunde")
