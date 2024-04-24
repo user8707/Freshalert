@@ -160,7 +160,7 @@ def show_my_fridge():
     else:
         st.write("Der Kühlschrank ist leer.")
 
-def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
+def add_food_to_fridge():
     """Add a new food item to the fridge."""
     new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
     df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
