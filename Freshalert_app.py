@@ -160,6 +160,7 @@ if not st.session_state.df_food.empty:
 else:
     st.write("Der Kühlschrank ist leer.")
 
+
 def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
     """Add a new food item to the fridge."""
     new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
