@@ -89,6 +89,33 @@ def show_registration_page():
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
+def show_my_fridge():
+    st.title("Lebensmittel hinzufügen")
+           
+    new_entry = {
+        DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
+        DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Kategorie
+        DATA_COLUMNS_FOOD[2]: st.text_input(DATA_COLUMNS_FOOD[2]), # Lagerort
+        DATA_COLUMNS_FOOD[3]: st.text_input(DATA_COLUMNS_FOOD[3], type="date"), #Ablaufdatum
+        DATA_COLUMNS_FOOD[4]: st.text_input(DATA_COLUMNS_FOOD[4],), #Standort
+    }
+
+    for key, value in new_entry.items():
+        if value == "":
+            st.error(f"Bitte ergänze das Feld '{key}'")
+            return
+
+    if st.button("hinzufügen"):
+        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+            new_entry_df = pd.DataFrame([new_entry])
+            st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
+            save_data_to_database_login()
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_registration = False  # Reset status
+        else:
+            st.error("Die Passwörter stimmen nicht überein.")
+
+
 def show_fresh_alert_page():
     st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
