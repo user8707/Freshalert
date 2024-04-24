@@ -134,7 +134,6 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-
 def show_my_fridge():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
@@ -148,9 +147,7 @@ def show_my_fridge():
 
 def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
     """Add a new food item to the fridge."""
-    new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
-    df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
-        food_name = st.text_input("Lebensmittel")
+    food_name = st.text_input("Lebensmittel")
     category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
     location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
     area = st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"])
@@ -158,21 +155,22 @@ def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date
 
     if st.button("Lebensmittel hinzufügen"):
         if food_name and category and location and area and expiry_date:
-            df_food = add_food_to_fridge(st.session_state.df_food, food_name, category, location, area, expiry_date)
+            new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
+            df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
             st.session_state.df_food = df_food
             save_data_to_database_food()
             st.success("Lebensmittel erfolgreich hinzugefügt!")
         else:
             st.error("Bitte füllen Sie alle Felder aus.")
-    else:
-        st.error("Bitte füllen Sie alle Felder aus.")
+            return df_food  # Rückgabe des ursprünglichen DataFrames, falls Daten fehlen
+
     save_data_to_database_food()  # Save the updated dataframe to GitHub
-    
     return df_food
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+
 
 def show_my_friends():
     st.write("Meine Freunde")
