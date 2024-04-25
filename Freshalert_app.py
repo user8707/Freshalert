@@ -125,7 +125,7 @@ def show_fresh_alert_page():
     st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
     st.sidebar.title("")
     if st.sidebar.button("Mein Kühlschrank"):
-        show_my_fridge()
+        show_my_fridge_page()
     if st.sidebar.button("Neues Lebensmittel hinzufügen"):
         add_food_to_fridge()
     st.sidebar.markdown("---")  # Separator
@@ -134,7 +134,7 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def show_my_fridge():
+def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
