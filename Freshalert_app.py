@@ -160,9 +160,11 @@ def add_food_to_fridge():
     if st.button("Lebensmittel hinzufügen"):
         if food_name and category and location and area and expiry_date:
             new_entry_food = pd.DataFrame([[food_name, category, location, expiry_date, area]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
+            new_df = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
+            st.session_state.df_food = new_df
             save_data_to_database_food()
             st.success("Lebensmittel erfolgreich hinzugefügt!")
+            st.write(new_df)
         else:
             st.error("Bitte füllen Sie alle Felder aus.")
 
