@@ -170,6 +170,7 @@ def add_food_to_fridge():
     else:
         st.write("Der Kühlschrank ist leer.")
 
+save_data_to_database_food()  # Save the updated dataframe to GitHub
 
 
 def save_data_to_database_food():
