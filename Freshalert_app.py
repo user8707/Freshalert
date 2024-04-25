@@ -145,8 +145,10 @@ def show_my_fridge():
         st.write("Der Kühlschrank ist leer.")
 
 
-def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date):
-    """Add a new food item to the fridge."""
+def add_food_to_fridge():
+    st.title("Neues Lebensmittel hinzufügen")
+    init_dataframe_food()  # Daten laden
+
     food_name = st.text_input("Lebensmittel")
     category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
     location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
@@ -155,14 +157,19 @@ def add_food_to_fridge(df_food, food_name, category, location, area, expiry_date
 
     if st.button("Lebensmittel hinzufügen"):
         if food_name and category and location and area and expiry_date:
-            new_entry_food = pd.DataFrame([[food_name, category, location, area, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            df_food = pd.concat([df_food, new_entry_food], ignore_index=True)
-            st.session_state.df_food = df_food
+            new_entry_food = pd.DataFrame([[food_name, category, location, expiry_date, area]], columns=DATA_COLUMNS_FOOD)
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
             save_data_to_database_food()
             st.success("Lebensmittel erfolgreich hinzugefügt!")
         else:
             st.error("Bitte füllen Sie alle Felder aus.")
-            return df_food  # Rückgabe des ursprünglichen DataFrames, falls Daten fehlen
+
+    if not st.session_state.df_food.empty:
+        st.subheader("Aktuelle Lebensmittel im Kühlschrank")
+        st.dataframe(st.session_state.df_food)
+    else:
+        st.write("Der Kühlschrank ist leer.")
+
 
     save_data_to_database_food()  # Save the updated dataframe to GitHub
     return df_food
