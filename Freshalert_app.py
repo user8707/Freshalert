@@ -89,6 +89,17 @@ def show_registration_page():
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
+def show_my_fridge_page():
+    """Display the contents of the fridge."""
+    st.title("Mein Kühlschrank")
+    init_dataframe_food()  # Daten laden
+    
+    if not st.session_state.df_food.empty:
+        st.dataframe(st.session_state.df_food)
+    else:
+        st.write("Der Kühlschrank ist leer.")
+
+
 def show_my_fridge():
     st.title("Lebensmittel hinzufügen")
            
@@ -111,7 +122,7 @@ def show_my_fridge():
             st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
             save_data_to_database_food()
             st.success("Registrierung erfolgreich!")
-            st.session_state.show_my_fridge = False  # Reset status
+            st.session_state.show_my_fridge_page = False  # Reset status
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
@@ -134,15 +145,6 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def show_my_fridge_page():
-    """Display the contents of the fridge."""
-    st.title("Mein Kühlschrank")
-    init_dataframe_food()  # Daten laden
-    
-    if not st.session_state.df_food.empty:
-        st.dataframe(st.session_state.df_food)
-    else:
-        st.write("Der Kühlschrank ist leer.")
 
 
 def add_food_to_fridge():
