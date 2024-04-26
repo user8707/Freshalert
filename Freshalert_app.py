@@ -35,13 +35,16 @@ def init_dataframe_login():
         else:
             st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
 
+
+
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
-    if 'df_food' not in st.session_state:
+    if 'df_food' not in st.session_state or st.session_state.df_food.empty:
         if st.session_state.github.file_exists(DATA_FILE_FOOD):
             st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+
 
 def show_login_page():
     st.title("Login")
