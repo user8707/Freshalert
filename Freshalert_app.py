@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import streamlit_authenticator as stauth
 from github_contents import GithubContents
 
 # Set constants for user registration
