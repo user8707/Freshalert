@@ -181,7 +181,11 @@ def add_food_to_fridge():
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+        response = st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+        if response:
+            st.success("Daten erfolgreich gespeichert.")
+        else:
+            st.error("Fehler beim Speichern der Daten.")
 
 
 def show_my_friends():
