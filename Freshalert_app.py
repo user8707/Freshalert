@@ -4,7 +4,7 @@ from github_contents import GithubContents
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
-DATA_COLUMNS = ["Vorname", "Nachname", "Benutzername", "Passwort", "Passwort wiederholen"]
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "FridgeContents.csv"
@@ -17,7 +17,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
 
 def init_github():
     """Initialize the GithubContents object."""
@@ -36,32 +35,29 @@ def init_dataframe_login():
         else:
             st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
 
-
-
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
-    if 'df_food' not in st.session_state or st.session_state.df_food.empty:
+    if 'df_food' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE_FOOD):
             st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
-
 def show_login_page():
     st.title("Login")
-    username = st.text_input("Benutzername", key="login_username")
+    email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
-            if row["Benutzername"] == username and row["Passwort"] == password:
+            if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
                 break
         if login_successful:
             st.session_state.user_logged_in = True
             st.success("Erfolgreich eingeloggt!")
         else:
-            st.error("Ungültiger Benutzername oder Passwort.")
+            st.error("Ungültige E-Mail oder Passwort.")
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
@@ -73,7 +69,7 @@ def show_registration_page():
     new_entry = {
         DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]), #Vorname
         DATA_COLUMNS[1]: st.text_input(DATA_COLUMNS[1]), #Nachname
-        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]), # Benutzername
+        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]), # E-Mail
         DATA_COLUMNS[3]: st.text_input(DATA_COLUMNS[3], type="password"), #Passwort
         DATA_COLUMNS[4]: st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
@@ -182,11 +178,7 @@ def add_food_to_fridge():
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
-        response = st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
-        if response:
-            st.success("Daten erfolgreich gespeichert.")
-        else:
-            st.error("Fehler beim Speichern der Daten.")
+        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 
 def show_my_friends():
