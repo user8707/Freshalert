@@ -19,18 +19,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# load list of passwords and logins (login_password_list.csv)
-df = pd.read_csv("login_password_list.csv")
-df.head()
-
-# add column with hashed passwords
-passwords = df['password']
-df['hash'] = stauth.utilities.hasher.Hasher(passwords).generate()
-df.head()
-
-# save logins and hashed passwords to file
-columns = ['username', 'name','hash']
-df[columns].rename(columns={'hash':'password'}).to_csv("login_hashed_password_list.csv", index=False)
 
 def init_github():
     """Initialize the GithubContents object."""
