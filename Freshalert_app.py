@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
+import streamlit_authenticator as stauth
 from github_contents import GithubContents
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
-DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
+DATA_COLUMNS = ["Vorname", "Nachname", "Benutzername", "Passwort", "Passwort wiederholen"]
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "FridgeContents.csv"
@@ -17,6 +18,19 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# load list of passwords and logins (login_password_list.csv)
+df = pd.read_csv("login_password_list.csv")
+df.head()
+
+# add column with hashed passwords
+passwords = df['password']
+df['hash'] = stauth.utilities.hasher.Hasher(passwords).generate()
+df.head()
+
+# save logins and hashed passwords to file
+columns = ['username', 'name','hash']
+df[columns].rename(columns={'hash':'password'}).to_csv("login_hashed_password_list.csv", index=False)
 
 def init_github():
     """Initialize the GithubContents object."""
@@ -48,19 +62,19 @@ def init_dataframe_food():
 
 def show_login_page():
     st.title("Login")
-    email = st.text_input("E-Mail", key="login_email")
+    username = st.text_input("Benutzername", key="login_username")
     password = st.text_input("Passwort", type="password", key="login_password")
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
-            if row["E-Mail"] == email and row["Passwort"] == password:
+            if row["Benutzername"] == username and row["Passwort"] == password:
                 login_successful = True
                 break
         if login_successful:
             st.session_state.user_logged_in = True
             st.success("Erfolgreich eingeloggt!")
         else:
-            st.error("Ungültige E-Mail oder Passwort.")
+            st.error("Ungültiger Benutzername oder Passwort.")
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
@@ -72,7 +86,7 @@ def show_registration_page():
     new_entry = {
         DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]), #Vorname
         DATA_COLUMNS[1]: st.text_input(DATA_COLUMNS[1]), #Nachname
-        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]), # E-Mail
+        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]), # Benutzername
         DATA_COLUMNS[3]: st.text_input(DATA_COLUMNS[3], type="password"), #Passwort
         DATA_COLUMNS[4]: st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
