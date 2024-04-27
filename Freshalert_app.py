@@ -124,9 +124,9 @@ def add_food_to_fridge():
            
     new_entry = {
         DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
-        DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
-        DATA_COLUMNS_FOOD[2]: st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
-        DATA_COLUMNS_FOOD[3]: st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"]), #area
+        DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
+        DATA_COLUMNS_FOOD[2]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
+        DATA_COLUMNS_FOOD[3]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[4]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
 
