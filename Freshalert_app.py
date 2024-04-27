@@ -125,17 +125,5 @@ def save_data_to_database_food():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
-def main():
-    init_github()
-    init_dataframe_login()
-    init_dataframe_food()
-    if 'user_logged_in' not in st.session_state:
-        st.session_state.user_logged_in = False
-
-    if not st.session_state.user_logged_in:
-        show_login_page()
-    else:
-        show_fresh_alert_page()
-
 if __name__ == "__main__":
     main()
