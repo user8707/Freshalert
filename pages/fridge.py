@@ -1,9 +1,7 @@
 # Fridge.py
+
+pip install streamlit
 import streamlit as st
-
-
-
-
 
 def show_fresh_alert_page():
     st.title("FreshAlert")
