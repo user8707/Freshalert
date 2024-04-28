@@ -20,7 +20,7 @@ small_image = image.resize((90, 105))
 # Set page configuration
 st.set_page_config(
     page_title="FreshAlert",
-    page_icon="",
+    page_icon="🗄️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
