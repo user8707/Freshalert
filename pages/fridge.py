@@ -1,6 +1,10 @@
 # Fridge.py
 import streamlit as st
 
+
+
+
+
 def show_fresh_alert_page():
     st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
