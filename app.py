@@ -17,7 +17,7 @@ def main():
     if page == "Startseite":
         show_homepage()
     elif page == "Kühlschrank verwalten":
-        show_fridge_management()
+        show_fresh_alert_page()
     elif page == "Einstellungen":
         show_settings()
 
