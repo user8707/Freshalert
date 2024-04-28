@@ -1,7 +1,7 @@
 # pages/data_management.py
 import pandas as pd
 import streamlit as st
-from config import DATA_FILE, DATA_COLUMNS, DATA_FILE_FOOD, DATA_COLUMNS_FOOD
+from pages.config import DATA_FILE, DATA_COLUMNS, DATA_FILE_FOOD, DATA_COLUMNS_FOOD
 
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
