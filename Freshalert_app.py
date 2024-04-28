@@ -12,7 +12,7 @@ DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
 
 # Lade das Bild
-image = Image.open('Logo_Freshalert.png')
+image = Image.open('Logo_Freshalert-Photoroom.png')
 
 # Verkleinere das Bild
 small_image = image.resize((90, 105))
