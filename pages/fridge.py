@@ -1,5 +1,5 @@
 import streamlit as st
-from pages.data_management import init_dataframe_food, save_data_to_database_food
+from .data_management import init_dataframe_food, save_data_to_database_food
 
 def show_fresh_alert_page():
     st.title("FreshAlert")
