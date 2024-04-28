@@ -15,7 +15,7 @@ DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "St
 image = Image.open('Logo_Freshalert.png')
 
 # Verkleinere das Bild
-small_image = image.resize((45, 50))
+small_image = image.resize((55, 60))
 
 # Set page configuration
 st.set_page_config(
@@ -100,7 +100,7 @@ def show_registration_page():
 
 
 def show_fresh_alert_page():
-    st.image(small_image, caption='Freshalert Logo', use_column_width=False, clamp=True)
+    st.image(small_image, use_column_width=False, clamp=True)
     st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
                  "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
