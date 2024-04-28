@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
+from PIL import Image
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -9,6 +10,12 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 # Set constants for fridge contents
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
+
+# Lade das Bild
+image = Image.open('Logo_Freshalert.png')
+
+# Verkleinere das Bild
+small_image = image.resize((100, 100))
 
 # Set page configuration
 st.set_page_config(
@@ -93,7 +100,7 @@ def show_registration_page():
 
 
 def show_fresh_alert_page():
-    st.image('Logo_Freshalert.png', width=100, caption='Freshalert Logo', use_column_width=False, align='right')
+    st.image(small_image, caption='Freshalert Logo', use_column_width=False, clamp=True)
     st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
                  "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
