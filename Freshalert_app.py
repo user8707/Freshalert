@@ -44,7 +44,8 @@ def init_dataframe_food():
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
 def show_login_page():
-    st.title("Login")
+    st.title("Welcome to FreshAlert ☺️, Let's start together with saving food") 
+    st.subtitle("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
     if st.button("Login"):
