@@ -101,7 +101,7 @@ def show_fresh_alert_page():
     page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
 
     if page == "Startbildschirm":
-        show_mainpaige()
+        show_mainpage()
     elif page == "Mein Kühlschrank":
         show_my_fridge_page()
     elif page == "Neues Lebensmittel hinzufügen":
