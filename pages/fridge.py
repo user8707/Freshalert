@@ -1,6 +1,3 @@
-# Fridge.py
-
-pip install streamlit
 import streamlit as st
 
 def show_fresh_alert_page():
@@ -64,3 +61,4 @@ def show_my_friends():
 
 def show_settings():
     st.write("Einstellungen")
+
