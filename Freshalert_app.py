@@ -13,7 +13,7 @@ DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "St
 # Set page configuration
 st.set_page_config(
     page_title="FreshAlert",
-    page_icon="🗄️",
+    page_icon="st.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)",
     layout="wide",
     initial_sidebar_state="expanded"
 )
