@@ -15,7 +15,7 @@ DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "St
 image = Image.open('Logo_Freshalert.png')
 
 # Verkleinere das Bild
-small_image = image.resize((75, 90))
+small_image = image.resize((90, 105))
 
 # Set page configuration
 st.set_page_config(
