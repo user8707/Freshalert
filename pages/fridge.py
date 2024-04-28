@@ -23,6 +23,7 @@ def show_fresh_alert_page():
 def show_mainpage():
     st.write("HALLO IHR BEIDEN 🙈")
 
+
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
