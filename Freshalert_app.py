@@ -98,7 +98,8 @@ def show_fresh_alert_page():
                  "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
-
+    
+    st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
     page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
 
     if page == "Startbildschirm":
