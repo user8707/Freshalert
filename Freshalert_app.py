@@ -100,7 +100,8 @@ def show_registration_page():
 
 
 def show_fresh_alert_page():
-    st.image(small_image, use_column_width=False, clamp=True)
+    col1, col2 = st.columns([1, 3])
+    col2.image(small_image, use_column_width=False, clamp=True)
     st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
                  "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
