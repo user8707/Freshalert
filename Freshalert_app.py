@@ -108,6 +108,8 @@ def show_fresh_alert_page():
         show_my_fridge_page()
     elif page == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
+
+    st.sidebar.markdown("---")  # Separator
     if st.sidebar.button("Freunde einladen"):
         show_my_friends()
     if st.sidebar.button("Einstellungen"):
