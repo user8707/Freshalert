@@ -100,7 +100,7 @@ def show_fresh_alert_page():
                  "#StopFoodwaste ")
     
     st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
-    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
+    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen"])
 
     if page == "Startbildschirm":
         show_mainpage()
@@ -108,9 +108,9 @@ def show_fresh_alert_page():
         show_my_fridge_page()
     elif page == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
-    elif page == "Freunde einladen":
+    if st.sidebar.button("Freunde einladen"):
         show_my_friends()
-    elif page == "Einstellungen":
+    if st.sidebar.button("Einstellungen"):
         show_settings()
 
 def show_mainpage():
