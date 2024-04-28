@@ -1,5 +1,6 @@
 import streamlit as st
 from pages.data_management import init_dataframe_food, save_data_to_database_food
+from pages.config import DATA_COLUMNS_FOOD, DATA_  # Importiere DATA_COLUMNS_FOOD aus config.py
 
 def show_fresh_alert_page():
     st.title("FreshAlert")
