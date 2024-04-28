@@ -1,9 +1,9 @@
 # app.py
 import streamlit as st
-from page.data_management import init_dataframe_login, init_dataframe_food, save_data_to_database_login, save_data_to_database_food
-from page.github_utils import init_github
-from page.login import show_login_page, show_registration_page
-from page.fridge import show_fresh_alert_page, show_mainpage, show_my_fridge_page, add_food_to_fridge, show_my_friends, show_settings
+from pages.data_management import init_dataframe_login, init_dataframe_food, save_data_to_database_login, save_data_to_database_food
+from pages.github_utils import init_github
+from pages.login import show_login_page, show_registration_page
+from pages.fridge import show_fresh_alert_page, show_mainpage, show_my_fridge_page, add_food_to_fridge, show_my_friends, show_settings
 
 st.set_page_config(
     page_title="FreshAlert",
