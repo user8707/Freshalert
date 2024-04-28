@@ -44,6 +44,7 @@ def init_dataframe_food():
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
 def show_login_page():
+    st.title("Welcome to FreshAlert ☺️, Let's start together with saving food") 
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
@@ -98,9 +99,11 @@ def show_fresh_alert_page():
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
 
-    page = st.sidebar.selectbox("Navigation", ["Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
+    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
 
-    if page == "Mein Kühlschrank":
+    if page == "Startbildschirm":
+        show_mainpage()
+    elif page == "Mein Kühlschrank":
         show_my_fridge_page()
     elif page == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
@@ -109,7 +112,8 @@ def show_fresh_alert_page():
     elif page == "Einstellungen":
         show_settings()
 
-
+def show_mainpage():
+    st.write("HALLO IHR BEIDEN 🙈")
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
