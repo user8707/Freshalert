@@ -1,6 +1,6 @@
 import streamlit as st
 from pages.data_management import init_dataframe_food, save_data_to_database_food
-from pages.config import DATA_COLUMNS_FOOD, DATA_FILE_FOOD   # Importiere DATA_COLUMNS_FOOD aus config.py
+from config import DATA_COLUMNS_FOOD
 
 def show_fresh_alert_page():
     st.title("FreshAlert")
@@ -24,7 +24,6 @@ def show_fresh_alert_page():
 
 def show_mainpage():
     st.write("HALLO IHR BEIDEN 🙈")
-
 
 def show_my_fridge_page():
     """Display the contents of the fridge."""
@@ -63,3 +62,4 @@ def show_my_friends():
 
 def show_settings():
     st.write("Einstellungen")
+
