@@ -98,9 +98,11 @@ def show_fresh_alert_page():
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
 
-    page = st.sidebar.selectbox("Navigation", ["Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
+    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
 
-    if page == "Mein Kühlschrank":
+    if page == "Startbildschirm":
+        show_mainpaige()
+    elif page == "Mein Kühlschrank":
         show_my_fridge_page()
     elif page == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
@@ -109,7 +111,8 @@ def show_fresh_alert_page():
     elif page == "Einstellungen":
         show_settings()
 
-
+def show_mainpage():
+    st.write("HALLO IHR BEIDEN 🙈")
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
