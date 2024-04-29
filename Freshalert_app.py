@@ -54,8 +54,10 @@ def init_dataframe_food():
             st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
-
 def show_login_page():
+    col1, col2 = st.columns([7, 1])
+    col2.image(small_image, use_column_width=False, clamp=True)
+    
     st.title("Welcome to FreshAlert ☺️, Let's start together with saving food") 
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
