@@ -153,7 +153,8 @@ def colorize_expiring_food(df):
     # Einfärbung der Tabellenspalten
     df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf'])
     
-    return df_styled
+    return df_styled.dataframe  # Änderung hier: Rückgabe des DataFrame
+
 
 
 def show_my_fridge_page():
