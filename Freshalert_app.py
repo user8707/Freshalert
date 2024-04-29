@@ -2,16 +2,14 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 from PIL import Image
-import os
 
 # Set constants for user registration
-USER_DATA_FOLDER = "user_data"  # Folder to store user-specific data
-USER_DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
-USER_REGISTRATION_FILE = "registration.csv"  # File to store user registration data
+DATA_FILE = "FreshAlert-Registration.csv"
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
 # Set constants for fridge contents
-USER_DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
-USER_DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
+DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 # Load the image
 image = Image.open('Logo_Freshalert-Photoroom.png')
@@ -40,34 +38,22 @@ def init_github():
     if 'settings_enabled' not in st.session_state:
         st.session_state.settings_enabled = True
 
-def init_user_data():
-    """Initialize or load the dataframe for user's fridge contents."""
-    if 'user_id' not in st.session_state:
-        st.session_state.user_id = get_user_id()  # Get or generate user ID
 
-    user_data_folder = f"{USER_DATA_FOLDER}/{st.session_state.user_id}"
-    if not os.path.exists(user_data_folder):
-        os.makedirs(user_data_folder)
-
-    # Set constants for user-specific fridge contents
-    global USER_DATA_FILE_FOOD
-    USER_DATA_FILE_FOOD = f"{user_data_folder}/{USER_DATA_FILE_FOOD}"
-
-    if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(USER_DATA_FILE_FOOD):
-            st.session_state.df_food = st.session_state.github.read_df(USER_DATA_FILE_FOOD)
-        else:
-            st.session_state.df_food = pd.DataFrame(columns=USER_DATA_COLUMNS_FOOD)
-
-
-def init_user_registration():
+def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
     if 'df_login' not in st.session_state:
-        registration_file = f"{USER_DATA_FOLDER}/{USER_REGISTRATION_FILE}"
-        if st.session_state.github.file_exists(registration_file):
-            st.session_state.df_login = st.session_state.github.read_df(registration_file)
+        if st.session_state.github.file_exists(DATA_FILE):
+            st.session_state.df_login = st.session_state.github.read_df(DATA_FILE)
         else:
-            st.session_state.df_login = pd.DataFrame(columns=USER_DATA_COLUMNS)
+            st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
+
+def init_dataframe_food():
+    """Initialize or load the dataframe for fridge contents."""
+    if 'df_food' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE_FOOD):
+            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
+        else:
+            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
@@ -82,7 +68,6 @@ def show_login_page():
         for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
-                st.session_state.user_id = row["E-Mail"].split('@')[0]  # Set user_id
                 break
         if login_successful:
             st.session_state.user_logged_in = True
@@ -96,13 +81,13 @@ def show_login_page():
 
 def show_registration_page():
     st.title("Registrieren")
-
+           
     new_entry = {
-        USER_DATA_COLUMNS[0]: st.text_input(USER_DATA_COLUMNS[0]),  # Vorname
-        USER_DATA_COLUMNS[1]: st.text_input(USER_DATA_COLUMNS[1]),  # Nachname
-        USER_DATA_COLUMNS[2]: st.text_input(USER_DATA_COLUMNS[2]),  # E-Mail
-        USER_DATA_COLUMNS[3]: st.text_input(USER_DATA_COLUMNS[3], type="password"),  # Passwort
-        USER_DATA_COLUMNS[4]: st.text_input(USER_DATA_COLUMNS[4], type="password"),  # Passwort wiederholen
+        DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]), #Vorname
+        DATA_COLUMNS[1]: st.text_input(DATA_COLUMNS[1]), #Nachname
+        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]), # E-Mail
+        DATA_COLUMNS[3]: st.text_input(DATA_COLUMNS[3], type="password"), #Passwort
+        DATA_COLUMNS[4]: st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
 
     for key, value in new_entry.items():
@@ -111,16 +96,17 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-            new_entry_df = pd.DataFrame([new_entry])
-            # Sicherstellen, dass das Verzeichnis existiert, bevor die Datei gespeichert wird
-            os.makedirs(USER_DATA_FOLDER, exist_ok=True)
-            registration_file = f"{USER_DATA_FOLDER}/{USER_REGISTRATION_FILE}"
-            new_entry_df.to_csv(registration_file, index=False)
-            st.success("Registrierung erfolgreich!")
-            st.session_state.show_registration = False  # Reset status
+        if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
+            st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
-            st.error("Die Passwörter stimmen nicht überein.")
+            if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+                new_entry_df = pd.DataFrame([new_entry])
+                st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
+                save_data_to_database_login()
+                st.success("Registrierung erfolgreich!")
+                st.session_state.show_registration = False  # Reset status
+            else:
+                st.error("Die Passwörter stimmen nicht überein.")
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -148,6 +134,7 @@ def show_fresh_alert_page():
     elif navigation == "Ausloggen":
         logout()
 
+
 def show_expired_food_on_mainpage():
     # Filtern aller Lebensmittel, die rot markiert sind (Ablaufdatum erreicht oder überschritten)
     expired_food = st.session_state.df_food[st.session_state.df_food['Tage_bis_Ablauf'] <= 1]
@@ -157,6 +144,7 @@ def show_expired_food_on_mainpage():
         st.subheader("Deine Lebensmittel, welche bald ablaufen!:")
         for index, row in expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
+
 
 def show_mainpage():
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! ")            
@@ -188,7 +176,7 @@ def colorize_expiring_food(df):
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
-    init_user_data()  # Daten laden
+    init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
         # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
@@ -214,11 +202,11 @@ def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
            
     new_entry = {
-        USER_DATA_COLUMNS_FOOD[0]: st.text_input(USER_DATA_COLUMNS_FOOD[0]), #Lebensmittel
-        USER_DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
-        USER_DATA_COLUMNS_FOOD[2]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
-        USER_DATA_COLUMNS_FOOD[3]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
-        USER_DATA_COLUMNS_FOOD[4]: st.date_input("Ablaufdatum"), #Ablaufdatum
+        DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
+        DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
+        DATA_COLUMNS_FOOD[2]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
+        DATA_COLUMNS_FOOD[3]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
+        DATA_COLUMNS_FOOD[4]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
 
     for key, value in new_entry.items():
@@ -235,7 +223,7 @@ def add_food_to_fridge():
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(USER_DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 
 def show_settings():
@@ -250,7 +238,7 @@ def show_informations():
     
 
 def save_data_to_database_login():
-    st.session_state.github.write_df(USER_REGISTRATION_FILE, st.session_state.df_login, "Updated registration data")
+    st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
 def logout():
     """Logout function to reset user session and redirect to login page."""
@@ -260,16 +248,15 @@ def logout():
 
 def main():
     init_github()
+    init_dataframe_login()
+    init_dataframe_food()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
     if not st.session_state.user_logged_in:
-        init_user_registration()
         show_login_page()
     else:
         show_fresh_alert_page()
 
 if __name__ == "__main__":
     main()
-
-
