@@ -121,8 +121,12 @@ def show_my_friends():
 def show_informations():
     st.title("Was ist Foodwaste?")
     st.image ("Foodwaste1.png")
-
+    
 def logout():
+    """Logout function to reset user session and redirect to login page."""
+    st.session_state.user_logged_in = False
+    st.success("Erfolgreich ausgeloggt!")
     st.experimental_rerun()  # Rerun the app to go back to the login page
+
 
     
