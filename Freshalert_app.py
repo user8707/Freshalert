@@ -154,6 +154,22 @@ def show_my_fridge_page():
     else:
         st.write("Der Kühlschrank ist leer.")
 
+def colorize_expiring_food(df):
+    def colorize(val):
+        if val == 1:
+            return 'color: red'
+        elif val == 3:
+            return 'color: orange'
+        else:
+            return ''
+    
+    # Berechnung der Tage bis zum Ablaufdatum
+    df['Tage_bis_Ablauf'] = (pd.to_datetime(df['Ablaufdatum']) - pd.Timestamp.now()).dt.days
+    
+    # Einfärbung der Tabellenspalten
+    df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf'])
+    
+    return df_styled
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
