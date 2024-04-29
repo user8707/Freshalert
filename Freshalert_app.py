@@ -96,13 +96,13 @@ def show_login_page():
 
 def show_registration_page():
     st.title("Registrieren")
-           
+
     new_entry = {
-        USER_DATA_COLUMNS[0]: st.text_input(USER_DATA_COLUMNS[0]), #Vorname
-        USER_DATA_COLUMNS[1]: st.text_input(USER_DATA_COLUMNS[1]), #Nachname
-        USER_DATA_COLUMNS[2]: st.text_input(USER_DATA_COLUMNS[2]), # E-Mail
-        USER_DATA_COLUMNS[3]: st.text_input(USER_DATA_COLUMNS[3], type="password"), #Passwort
-        USER_DATA_COLUMNS[4]: st.text_input(USER_DATA_COLUMNS[4], type="password"), #Passwort wiederholen
+        DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]),  # Vorname
+        DATA_COLUMNS[1]: st.text_input(DATA_COLUMNS[1]),  # Nachname
+        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]),  # E-Mail
+        DATA_COLUMNS[3]: st.text_input(DATA_COLUMNS[3], type="password"),  # Passwort
+        DATA_COLUMNS[4]: st.text_input(DATA_COLUMNS[4], type="password"),  # Passwort wiederholen
     }
 
     for key, value in new_entry.items():
@@ -112,20 +112,13 @@ def show_registration_page():
 
     if st.button("Registrieren"):
         if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-            registration_file = f"{USER_DATA_FOLDER}/{USER_REGISTRATION_FILE}"
             new_entry_df = pd.DataFrame([new_entry])
-            if not st.session_state.github.file_exists(registration_file):
-                new_entry_df.to_csv(registration_file, index=False)
-            else:
-                existing_emails = st.session_state.df_login["E-Mail"].tolist()
-                if new_entry["E-Mail"] in existing_emails:
-                    st.error("Benutzer schon vorhanden")
-                    return
-                else:
-                    st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
-                    st.session_state.df_login.to_csv(registration_file, index=False)
-                    st.success("Registrierung erfolgreich!")
-                    st.session_state.show_registration = False  # Reset status
+            # Sicherstellen, dass das Verzeichnis existiert, bevor die Datei gespeichert wird
+            os.makedirs(USER_DATA_FOLDER, exist_ok=True)
+            registration_file = f"{USER_DATA_FOLDER}/{DATA_FILE}"
+            new_entry_df.to_csv(registration_file, index=False)
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_registration = False  # Reset status
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
