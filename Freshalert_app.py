@@ -35,7 +35,7 @@ def init_github():
         )
 
      if 'settings_enabled' not in st.session_state:
-        st.session_state.settings_enabled = True
+            st.session_state.settings_enabled = True
 
 def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
