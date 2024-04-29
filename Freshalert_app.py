@@ -189,7 +189,7 @@ def show_settings():
 def show_my_friends():
     st.title("Lade meine Freunde ein")
 
-def show_infromations():
+def show_informations():
     st.title("Was ist Foodwaste?")
     st.image ("Foodwaste1.png")
     
