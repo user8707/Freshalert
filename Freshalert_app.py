@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from seite import login, fresh_alert
-from konstante import constants
+from konstante import constants, github_contents 
 from PIL import Image 
 
 # Set page configuration
