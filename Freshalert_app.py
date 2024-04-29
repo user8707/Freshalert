@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 from PIL import Image
-import time
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -12,10 +11,10 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
-# Lade das Bild
+# Load the image
 image = Image.open('Logo_Freshalert-Photoroom.png')
 
-# Verkleinere das Bild
+# Resize the image
 small_image = image.resize((90, 105))
 
 # Set page configuration
@@ -115,11 +114,17 @@ def show_fresh_alert_page():
 
     st.sidebar.markdown("---")  # Separator
     if st.sidebar.button("Freunde einladen"):
-        show_my_friends()
+        st.session_state.navigation = "Freunde einladen"
     if st.sidebar.button("Einstellungen"):
-        show_settings()
+        st.session_state.navigation = "Einstellungen"
     if st.sidebar.button("Ausloggen"):
         logout()
+
+    # Additional pages
+    if st.session_state.navigation == "Einstellungen":
+        show_settings()
+    elif st.session_state.navigation == "Freunde einladen":
+        show_my_friends()
 
 def show_mainpage():
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
@@ -144,6 +149,7 @@ def show_my_fridge_page():
             st.success("Eintrag erfolgreich gelöscht!")
     else:
         st.write("Der Kühlschrank ist leer.")
+
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
@@ -182,6 +188,10 @@ def show_settings():
     st.title("Einstellungen")
     direct_to_fridge = st.checkbox("Nach Eingabe direkt zum Kühlschrank gehen")
     st.session_state.direct_to_fridge = direct_to_fridge
+    if direct_to_fridge:
+        st.write("Die direkte Weiterleitung zum Kühlschrank nach Eingabe ist aktiviert.")
+    else:
+        st.write("Die direkte Weiterleitung zum Kühlschrank nach Eingabe ist deaktiviert.")
 
 
 def save_data_to_database_login():
