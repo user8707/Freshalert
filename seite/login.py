@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from konstante import constants
 from PIL import Image
-from Seite import Fresh_alert
+from seite import fresh_alert
 
 def init_github():
     """Initialize the GithubContents object and other session state variables."""
