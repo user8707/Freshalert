@@ -41,7 +41,7 @@ def init_github():
 
 def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
-    if 'df' not in st.session_state:
+    if 'df_login' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE):
             st.session_state.df_login = st.session_state.github.read_df(DATA_FILE)
         else:
@@ -96,14 +96,17 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-            new_entry_df = pd.DataFrame([new_entry])
-            st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
-            save_data_to_database_login()
-            st.success("Registrierung erfolgreich!")
-            st.session_state.show_registration = False  # Reset status
+        if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
+            st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
-            st.error("Die Passwörter stimmen nicht überein.")
+            if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+                new_entry_df = pd.DataFrame([new_entry])
+                st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
+                save_data_to_database_login()
+                st.success("Registrierung erfolgreich!")
+                st.session_state.show_registration = False  # Reset status
+            else:
+                st.error("Die Passwörter stimmen nicht überein.")
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -256,4 +259,5 @@ def main():
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main() 
+    main()
+
