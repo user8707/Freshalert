@@ -158,9 +158,11 @@ def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
-        # Colorize the expiring food entries and hide the index
+        # Colorize the expiring food entries
         df_styled = colorize_expiring_food(st.session_state.df_food)
-        df_styled.index = pd.RangeIndex(len(df_styled))  # Hide the index
+        
+        # Hide the index
+        df_styled.reset_index(drop=True, inplace=True)
         
         # Display the styled dataframe
         st.dataframe(df_styled, unsafe_allow_html=True)
@@ -173,6 +175,7 @@ def show_my_fridge_page():
             st.success("Eintrag erfolgreich gelöscht!")
     else:
         st.write("Der Kühlschrank ist leer.")
+
 
 
 def add_food_to_fridge():
