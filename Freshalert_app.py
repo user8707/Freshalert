@@ -174,7 +174,11 @@ def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
+    
     if not st.session_state.df_food.empty:
+        # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
+        st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
+        
         # Colorize the expiring food entries
         df_styled = colorize_expiring_food(st.session_state.df_food)
         
