@@ -123,8 +123,8 @@ def show_fresh_alert_page():
         add_food_to_fridge()
     elif navigation == "Freunde einladen":
         show_my_friends()
-    elif navigation == "Infod":
-        show_infromations()
+    elif navigation == "Information":
+        show_informations()
     elif navigation == "Einstellungen":
         show_settings()
     elif navigation == "Ausloggen":
