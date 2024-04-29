@@ -50,14 +50,14 @@ def init_user_data():
         os.makedirs(user_data_folder)
 
     # Set constants for user-specific fridge contents
-    global DATA_FILE_FOOD_USER
-    DATA_FILE_FOOD_USER = f"{user_data_folder}/Kühlschrankinhalt.csv"
+    global USER_DATA_FILE_FOOD
+    USER_DATA_FILE_FOOD = f"{user_data_folder}/{USER_DATA_FILE_FOOD}"
 
     if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(DATA_FILE_FOOD_USER):
-            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD_USER)
+        if st.session_state.github.file_exists(USER_DATA_FILE_FOOD):
+            st.session_state.df_food = st.session_state.github.read_df(USER_DATA_FILE_FOOD)
         else:
-            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+            st.session_state.df_food = pd.DataFrame(columns=USER_DATA_COLUMNS_FOOD)
 
 
 def init_user_registration():
@@ -98,11 +98,11 @@ def show_registration_page():
     st.title("Registrieren")
 
     new_entry = {
-        DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]),  # Vorname
-        DATA_COLUMNS[1]: st.text_input(DATA_COLUMNS[1]),  # Nachname
-        DATA_COLUMNS[2]: st.text_input(DATA_COLUMNS[2]),  # E-Mail
-        DATA_COLUMNS[3]: st.text_input(DATA_COLUMNS[3], type="password"),  # Passwort
-        DATA_COLUMNS[4]: st.text_input(DATA_COLUMNS[4], type="password"),  # Passwort wiederholen
+        USER_DATA_COLUMNS[0]: st.text_input(USER_DATA_COLUMNS[0]),  # Vorname
+        USER_DATA_COLUMNS[1]: st.text_input(USER_DATA_COLUMNS[1]),  # Nachname
+        USER_DATA_COLUMNS[2]: st.text_input(USER_DATA_COLUMNS[2]),  # E-Mail
+        USER_DATA_COLUMNS[3]: st.text_input(USER_DATA_COLUMNS[3], type="password"),  # Passwort
+        USER_DATA_COLUMNS[4]: st.text_input(USER_DATA_COLUMNS[4], type="password"),  # Passwort wiederholen
     }
 
     for key, value in new_entry.items():
@@ -115,7 +115,7 @@ def show_registration_page():
             new_entry_df = pd.DataFrame([new_entry])
             # Sicherstellen, dass das Verzeichnis existiert, bevor die Datei gespeichert wird
             os.makedirs(USER_DATA_FOLDER, exist_ok=True)
-            registration_file = f"{USER_DATA_FOLDER}/{DATA_FILE}"
+            registration_file = f"{USER_DATA_FOLDER}/{USER_REGISTRATION_FILE}"
             new_entry_df.to_csv(registration_file, index=False)
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Reset status
@@ -235,7 +235,7 @@ def add_food_to_fridge():
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(st.session_state.data_file_food, st.session_state.df_food, "Updated food data")
+        st.session_state.github.write_df(USER_DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 
 def show_settings():
@@ -270,5 +270,6 @@ def main():
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main() 
+    main()
+
 
