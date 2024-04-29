@@ -137,10 +137,20 @@ def show_my_fridge_page():
         st.subheader("Kühlschrankinhalt:")
         for index, row in st.session_state.df_food.iterrows():
             st.write(f"{row['Lebensmittel']} - {row['Kategorie']} - {row['Lagerort']} - {row['Standort']} - {row['Ablaufdatum']}")
-            st.button("🗑️ Löschen")
+            delete_button = st.button(f"Löschen ##{index}", key=f"delete_button_{index}")
+            if delete_button:
+                delete_food_entry(index)
             st.write("---")
     else:
         st.write("Der Kühlschrank ist leer.")
+
+def delete_food_entry(index):
+    """Delete a food entry from the dataframe."""
+    st.session_state.df_food.drop(index, inplace=True)
+    save_data_to_database_food()
+    st.success("Eintrag erfolgreich gelöscht!")
+    st.experimental_rerun()  # Rerun the app to reflect changes
+
         
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
