@@ -218,6 +218,10 @@ def add_food_to_fridge():
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
+        st.button("Zum Kühlschrank", key="fridge_button", on_click=show_my_fridge_page)
+
+
+
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
