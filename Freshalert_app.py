@@ -131,12 +131,24 @@ def show_fresh_alert_page():
     elif navigation == "Ausloggen":
         logout()
 
+
+def show_expired_food_on_mainpage():
+    # Filtern aller Lebensmittel, die rot markiert sind (Ablaufdatum erreicht oder überschritten)
+    expired_food = st.session_state.df_food[st.session_state.df_food['Tage_bis_Ablauf'] <= 0]
+
+    if not expired_food.empty:
+        st.subheader("Abgelaufene Lebensmittel:")
+        for index, row in expired_food.iterrows():
+            st.write(f"- {row['Lebensmittel']} ({row['Ablaufdatum']})")
+
 def show_mainpage():
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
                  "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
     st.write("HALLO IHR BEIDEN 🙈")
+    #Zeigt die bald ablaufenden Lebensmittel an
+    show_expired_food_on_mainpage()
 
 def colorize_expiring_food(df):
     def colorize(val):
