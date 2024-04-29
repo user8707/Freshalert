@@ -143,15 +143,21 @@ def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
-        # Display the dataframe with colored columns
-        st.dataframe(colorize_expiring_food(st.session_state.df_food))
-
+        # Colorize the expiring food entries
+        df_styled = colorize_expiring_food(st.session_state.df_food)
+        
+        # Display the styled dataframe
+        st.dataframe(df_styled)
+        
         # Allow the user to delete a food entry
         index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
         if st.button("Eintrag löschen", key="delete_entry_button"):
             st.session_state.df_food.drop(index=index_to_delete, inplace=True)
             save_data_to_database_food()  # Save the updated dataframe
             st.success("Eintrag erfolgreich gelöscht!")
+    else:
+        st.write("Der Kühlschrank ist leer.")
+
    
 def colorize_expiring_food(df):
     def colorize(val):
