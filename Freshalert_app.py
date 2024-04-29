@@ -146,17 +146,33 @@ def show_my_fridge_page():
         # Colorize the expiring food entries
         df_styled = colorize_expiring_food(st.session_state.df_food)
         
-        # Display the styled dataframe using st.write
-        st.write(df_styled)
+        # Convert styled dataframe to HTML
+        df_html = df_styled.render()
+        
+        # Define custom CSS for coloring
+        custom_css = """
+        <style>
+        .red {color: red;}
+        .orange {color: orange;}
+        </style>
+        """
+        
+        # Add custom CSS to HTML
+        df_html_with_css = custom_css + df_html
+        
+        # Display the HTML using st.markdown
+        st.markdown(df_html_with_css, unsafe_allow_html=True)
         
         # Allow the user to delete a food entry
-        index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
+        index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0,
+        max_value=len(st.session_state.df_food)-1, step=1)
         if st.button("Eintrag löschen", key="delete_entry_button"):
             st.session_state.df_food.drop(index=index_to_delete, inplace=True)
             save_data_to_database_food()  # Save the updated dataframe
             st.success("Eintrag erfolgreich gelöscht!")
     else:
         st.write("Der Kühlschrank ist leer.")
+
 
    
 def colorize_expiring_food(df):
