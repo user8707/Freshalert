@@ -140,7 +140,9 @@ def show_mainpage():
 
 def colorize_expiring_food(df):
     def colorize(val):
-        if val == 1:
+        if val <= 0:
+            return 'color: red'
+        elif val == 1:
             return 'color: red'
         elif val == 3:
             return 'color: orange'
@@ -154,6 +156,7 @@ def colorize_expiring_food(df):
     df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf'])
     
     return df_styled
+
 
 
 def show_my_fridge_page():
