@@ -188,22 +188,9 @@ def save_data_to_database_food():
 
 def show_settings():
     st.title("Einstellungen")
-    if st.session_state.settings_enabled:
-        button_color = "success"
-        button_text = "Aktiviert"
-    else:
-        button_color = "danger"
-        button_text = "Deaktiviert"
-    
-    if st.button(button_text, key="settings_button", color=button_color):
-        st.session_state.settings_enabled = not st.session_state.settings_enabled
 
-    if st.session_state.settings_enabled:
-        st.write("Die Einstellungen sind aktiviert.")
-    else:
-        st.write("Die Einstellungen sind deaktiviert.")
-
-
+def show_my_friends():
+    st.title("Lade meine Freunde ein")
 
 
 def save_data_to_database_login():
