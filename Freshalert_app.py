@@ -164,9 +164,6 @@ def show_my_fridge_page():
         # Colorize the expiring food entries
         df_styled = colorize_expiring_food(st.session_state.df_food)
         
-        # Hide the index
-        df_styled.reset_index(drop=True, inplace=True)
-        
         # Display the styled dataframe
         st.dataframe(df_styled, unsafe_allow_html=True)
         
