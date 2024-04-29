@@ -108,28 +108,23 @@ def show_fresh_alert_page():
     st.title("FreshAlert")
     
     st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
-    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen"])
 
-    if page == "Startbildschirm":
+    # Create buttons for navigation
+    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen", "Ausloggen"])
+
+    # Check which page to display
+    if navigation == "Startbildschirm":
         show_mainpage()
-    elif page == "Mein Kühlschrank":
+    elif navigation == "Mein Kühlschrank":
         show_my_fridge_page()
-    elif page == "Neues Lebensmittel hinzufügen":
+    elif navigation == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
-
-    st.sidebar.markdown("---")  # Separator
-    if st.sidebar.button("Freunde einladen"):
-        st.session_state.navigation = "Freunde einladen"
-    if st.sidebar.button("Einstellungen"):
-        st.session_state.navigation = "Einstellungen"
-    if st.sidebar.button("Ausloggen"):
-        logout()
-
-    # Additional pages
-    if st.session_state.navigation == "Einstellungen":
-        show_settings()
-    elif st.session_state.navigation == "Freunde einladen":
+    elif navigation == "Freunde einladen":
         show_my_friends()
+    elif navigation == "Einstellungen":
+        show_settings()
+    elif navigation == "Ausloggen":
+        logout()
 
 def show_mainpage():
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
