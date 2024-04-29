@@ -137,7 +137,7 @@ def show_my_fridge_page():
         st.subheader("Kühlschrankinhalt:")
         for index, row in st.session_state.df_food.iterrows():
             st.write(f"{row['Lebensmittel']} - {row['Kategorie']} - {row['Lagerort']} - {row['Standort']} - {row['Ablaufdatum']}")
-            delete_button = st.button(f"Löschen ##{index}", key=f"delete_button_{index}")
+            delete_button = st.button(f"🗑️{index}", key=f"delete_button_{index}")
             if delete_button:
                 delete_food_entry(index)
             st.write("---")
