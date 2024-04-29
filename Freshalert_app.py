@@ -61,14 +61,19 @@ def init_dataframe_login():
         else:
             st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
 
-def init_dataframe_food(fridge_id):
+def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
-    data_file_food = f"{DATA_FILE_PREFIX}{fridge_id}.csv"
     if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(data_file_food):
-            st.session_state.df_food = st.session_state.github.read_df(data_file_food)
+        if 'fridge_id' in st.session_state:
+            fridge_id = st.session_state.fridge_id
+            data_file_food = f"{DATA_FILE_PREFIX}{fridge_id}.csv"
+            if st.session_state.github.file_exists(data_file_food):
+                st.session_state.df_food = st.session_state.github.read_df(data_file_food)
+            else:
+                st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
         else:
-            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+            st.error("Fridge ID is missing. Please make sure to assign a fridge first.")
+
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
