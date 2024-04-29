@@ -233,6 +233,10 @@ def add_food_to_fridge():
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
+        # Rufe assign_fridge(user_email) auf, um fridge_id festzulegen
+        user_email = "example@example.com"  # Benutzer-E-Mail hier einfügen
+        st.session_state.fridge_id = assign_fridge(user_email)  # Benutzer-E-Mail verwenden oder anpassen
+
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
