@@ -1,5 +1,5 @@
 import streamlit as st
-import panda as pd
+import pandas as pd
 from konstante import constants
 from PIL import Image
 from pages import Fresh_alert
