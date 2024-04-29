@@ -166,6 +166,8 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
+        if st.session_state.direct_to_fridge:
+            st.experimental_rerun()  # Reload the page to show the fridge page
 
 
 def save_data_to_database_food():
@@ -177,7 +179,9 @@ def show_my_friends():
     st.write("Meine Freunde")
 
 def show_settings():
-    st.write("Einstellungen")
+    st.title("Einstellungen")
+    direct_to_fridge = st.checkbox("Nach Eingabe direkt zum Kühlschrank gehen")
+    st.session_state.direct_to_fridge = direct_to_fridge
 
 
 def save_data_to_database_login():
