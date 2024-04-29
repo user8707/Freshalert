@@ -4,11 +4,11 @@ from github_contents import GithubContents
 from PIL import Image
 
 # Set constants for user registration
-DATA_FILE = "FreshAlert-Registration.csv"
+
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
 # Set constants for fridge contents
-DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
+
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 # Load the image
