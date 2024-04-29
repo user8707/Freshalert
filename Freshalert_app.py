@@ -186,12 +186,21 @@ def show_my_friends():
 
 def show_settings():
     st.title("Einstellungen")
-    direct_to_fridge = st.checkbox("Nach Eingabe direkt zum Kühlschrank gehen")
-    st.session_state.direct_to_fridge = direct_to_fridge
-    if direct_to_fridge:
-        st.write("Die direkte Weiterleitung zum Kühlschrank nach Eingabe ist aktiviert.")
+    if st.session_state.settings_enabled:
+        button_color = "success"
+        button_text = "Aktiviert"
     else:
-        st.write("Die direkte Weiterleitung zum Kühlschrank nach Eingabe ist deaktiviert.")
+        button_color = "danger"
+        button_text = "Deaktiviert"
+    
+    if st.button(button_text, key="settings_button", help="Aktiviere/deaktiviere die Einstellungen", 
+                 key="settings_button", color=button_color):
+        st.session_state.settings_enabled = not st.session_state.settings_enabled
+
+    if st.session_state.settings_enabled:
+        st.write("Die Einstellungen sind aktiviert.")
+    else:
+        st.write("Die Einstellungen sind deaktiviert.")
 
 
 def save_data_to_database_login():
