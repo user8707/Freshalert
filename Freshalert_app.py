@@ -26,7 +26,7 @@ st.set_page_config(
 )
 
 def init_github():
-    """Initialize the GithubContents object."""
+    """Initialize the GithubContents object and other session state variables."""
     if 'github' not in st.session_state:
         st.session_state.github = GithubContents(
             st.secrets["github"]["owner"],
@@ -34,8 +34,10 @@ def init_github():
             st.secrets["github"]["token"]
         )
 
-     if 'settings_enabled' not in st.session_state:
-            st.session_state.settings_enabled = True
+    # Initialize settings_enabled attribute
+    if 'settings_enabled' not in st.session_state:
+        st.session_state.settings_enabled = True
+
 
 def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
