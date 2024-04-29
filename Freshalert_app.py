@@ -126,34 +126,33 @@ def show_fresh_alert_page():
         logout()
 
 def show_mainpage():
-    st.write("HALLO IHR BEIDEN 🙈")
-
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
-        # Display entries as a table
+        # Allow the user to delete individual entries
         st.subheader("Kühlschrankinhalt:")
+        st.write("Klicken Sie auf die Checkbox neben einem Eintrag, um ihn zu löschen:")
+        
+        # Add a column for checkboxes to delete entries
+        st.session_state.df_food['Löschen'] = [st.checkbox(f"Löschen {index}") for index in st.session_state.df_food.index]
+        
+        # Display the dataframe with the delete checkboxes
         st.dataframe(st.session_state.df_food)
         
-        # Allow the user to delete individual entries
-        st.subheader("Ausgewählte Einträge löschen:")
-        selected_indices = []
-        
-        for index, row in st.session_state.df_food.iterrows():
-            checkbox = st.checkbox(f"Löschen {index}")
-            if checkbox:
-                selected_indices.append(index)
-        
+        # Button to delete selected entries
         if st.button("Ausgewählte löschen"):
-            st.session_state.df_food.drop(selected_indices, inplace=True)
+            # Filter the dataframe to keep only unchecked entries
+            st.session_state.df_food = st.session_state.df_food[~st.session_state.df_food['Löschen']]
+            st.session_state.df_food.drop(columns=['Löschen'], inplace=True)  # Remove the delete column
             save_data_to_database_food()  # Datenbank aktualisieren
             st.success("Ausgewählte Einträge erfolgreich gelöscht!")
         
     else:
         st.write("Der Kühlschrank ist leer.")
+
 
         
 def add_food_to_fridge():
