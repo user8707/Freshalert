@@ -52,7 +52,7 @@ def init_dataframe_food():
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
 def show_login_page():
-    st.title("Welcome to FreshAlert ☺️, Let's start together with saving food") 
+    st.title("Welcome to FreshAlert 😊, Let's start together with saving food") 
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
@@ -136,25 +136,12 @@ def show_my_fridge_page():
         # Allow the user to delete individual entries
         st.subheader("Kühlschrankinhalt:")
         for index, row in st.session_state.df_food.iterrows():
-            col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 0.5])
-            with col1:
-                st.write(row["Lebensmittel"])
-            with col2:
-                st.write(row["Kategorie"])
-            with col3:
-                st.write(row["Lagerort"])
-            with col4:
-                st.write(row["Standort"])
-            with col5:
-                st.write(row["Ablaufdatum"])
-            with col6:
-                if st.button(f"Löschen##{index}"):
-                    st.session_state.df_food.drop(index=index, inplace=True)
-                    save_data_to_database_food()  # Save the updated dataframe
-                    st.success("Eintrag erfolgreich gelöscht!")
+            st.write(f"{row['Lebensmittel']} - {row['Kategorie']} - {row['Lagerort']} - {row['Standort']} - {row['Ablaufdatum']}")
+            st.button("🗑️ Löschen")
+            st.write("---")
     else:
         st.write("Der Kühlschrank ist leer.")
-
+        
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
            
