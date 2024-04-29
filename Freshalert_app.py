@@ -54,6 +54,7 @@ def init_dataframe_food():
             st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+
 def show_login_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
@@ -142,8 +143,8 @@ def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
-        # Display the dataframe
-        st.dataframe(st.session_state.df_food)
+        # Display the dataframe with colored columns
+        st.dataframe(colorize_expiring_food(st.session_state.df_food))
 
         # Allow the user to delete a food entry
         index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
@@ -151,9 +152,7 @@ def show_my_fridge_page():
             st.session_state.df_food.drop(index=index_to_delete, inplace=True)
             save_data_to_database_food()  # Save the updated dataframe
             st.success("Eintrag erfolgreich gelöscht!")
-    else:
-        st.write("Der Kühlschrank ist leer.")
-
+   
 def colorize_expiring_food(df):
     def colorize(val):
         if val == 1:
@@ -213,10 +212,6 @@ def show_informations():
 def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
-def save_data_to_database_food():
-    if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
-
 def logout():
     """Logout function to reset user session and redirect to login page."""
     st.session_state.user_logged_in = False
@@ -236,4 +231,5 @@ def main():
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main()
+    main() 
+
