@@ -40,21 +40,25 @@ def init_github():
     if 'settings_enabled' not in st.session_state:
         st.session_state.settings_enabled = True
 
-
 def init_user_data():
-    """Initialize or load the user-specific data for the fridge."""
-    user_data_folder = f"{USER_DATA_FOLDER}/{st.session_state.user_id}"
-    if not st.session_state.github.folder_exists(user_data_folder):
-        st.session_state.github.create_folder(user_data_folder)
-    
-    if 'df_food' not in st.session_state:
-        st.session_state.df_food = pd.DataFrame(columns=USER_DATA_COLUMNS_FOOD)
-        st.session_state.data_file_food = f"{user_data_folder}/{USER_DATA_FILE_FOOD}"
+    """Initialize or load the dataframe for user's fridge contents."""
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = get_user_id()  # Get or generate user ID
 
-        if st.session_state.github.file_exists(st.session_state.data_file_food):
-            st.session_state.df_food = st.session_state.github.read_df(st.session_state.data_file_food)
+    user_data_folder = f"{USER_DATA_FOLDER}/{st.session_state.user_id}"
+    if not os.path.exists(user_data_folder):
+        os.makedirs(user_data_folder)
+
+    # Set constants for user-specific fridge contents
+    global DATA_FILE_FOOD_USER
+    DATA_FILE_FOOD_USER = f"{user_data_folder}/Kühlschrankinhalt.csv"
+
+    if 'df_food' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE_FOOD_USER):
+            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD_USER)
         else:
-            st.session_state.df_food.to_csv(st.session_state.data_file_food, index=False)
+            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+
 
 def init_user_registration():
     """Initialize or load the dataframe for user registration."""
