@@ -140,7 +140,7 @@ def show_expired_food_on_mainpage():
         st.markdown("---")
         st.subheader("Abgelaufene Lebensmittel:")
         for index, row in expired_food.iterrows():
-            st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}")
+            st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
 
 def show_mainpage():
