@@ -177,8 +177,6 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
-        if st.session_state.direct_to_fridge:
-            st.experimental_rerun()  # Reload the page to show the fridge page
 
 
 def save_data_to_database_food():
