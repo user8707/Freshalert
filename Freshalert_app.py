@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 from pages import login, fresh_alert
-from constants import DATA_FILE, DATA_COLUMNS, DATA_FILE_FOOD, DATA_COLUMNS_FOOD
+from konstante import constants
+from PIL import Image 
 
 # Set page configuration
 st.set_page_config(
