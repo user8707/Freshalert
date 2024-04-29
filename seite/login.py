@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from konstante import constants, github_contents
+from konstante import constants
+from github_contents import GithubContents
 from PIL import Image
 from seite import fresh_alert
 
