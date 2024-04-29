@@ -144,28 +144,13 @@ def show_my_fridge_page():
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
         # Colorize the expiring food entries
-        df_styled = colorize_expiring_food(st.session_state.df_food)
+        df_html = colorize_expiring_food(st.session_state.df_food)
         
-        # Convert styled dataframe to HTML
-        df_html = df_styled.render()
-        
-        # Define custom CSS for coloring
-        custom_css = """
-        <style>
-        .red {color: red;}
-        .orange {color: orange;}
-        </style>
-        """
-        
-        # Add custom CSS to HTML
-        df_html_with_css = custom_css + df_html
-        
-        # Display the HTML using st.markdown
-        st.markdown(df_html_with_css, unsafe_allow_html=True)
+        # Display the styled dataframe
+        st.write(df_html, unsafe_allow_html=True)
         
         # Allow the user to delete a food entry
-        index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0,
-        max_value=len(st.session_state.df_food)-1, step=1)
+        index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
         if st.button("Eintrag löschen", key="delete_entry_button"):
             st.session_state.df_food.drop(index=index_to_delete, inplace=True)
             save_data_to_database_food()  # Save the updated dataframe
@@ -190,7 +175,11 @@ def colorize_expiring_food(df):
     # Einfärbung der Tabellenspalten
     df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf'])
     
-    return df_styled
+    # Den DataFrame in HTML umwandeln
+    df_html = df_styled.render()
+
+    return df_html
+
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
