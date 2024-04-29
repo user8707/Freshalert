@@ -112,7 +112,7 @@ def show_fresh_alert_page():
     st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen", "Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
 
     # Check which page to display
     if navigation == "Startbildschirm":
@@ -123,6 +123,8 @@ def show_fresh_alert_page():
         add_food_to_fridge()
     elif navigation == "Freunde einladen":
         show_my_friends()
+    elif navigation == "Infod":
+        show_infromations()
     elif navigation == "Einstellungen":
         show_settings()
     elif navigation == "Ausloggen":
