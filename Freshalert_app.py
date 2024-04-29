@@ -138,6 +138,23 @@ def show_mainpage():
                  "#StopFoodwaste ")
     st.write("HALLO IHR BEIDEN 🙈")
 
+def colorize_expiring_food(df):
+    def colorize(val):
+        if val == 1:
+            return 'background-color: red'
+        elif val == 3:
+            return 'background-color: orange'
+        else:
+            return ''
+    
+    # Berechnung der Tage bis zum Ablaufdatum
+    df['Tage_bis_Ablauf'] = (pd.to_datetime(df['Ablaufdatum']) - pd.Timestamp.now()).dt.days
+    
+    # Einfärbung der Tabellenspalten
+    df['Tage_bis_Ablauf'] = df['Tage_bis_Ablauf'].apply(colorize)
+    
+    return df
+
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
@@ -146,8 +163,8 @@ def show_my_fridge_page():
         # Colorize the expiring food entries
         df_colorized = colorize_expiring_food(st.session_state.df_food)
         
-        # Display the styled dataframe
-        st.dataframe(df_colorized.style.apply(lambda row: row.styled, axis=1), unsafe_allow_html=True)
+        # Display the dataframe
+        st.dataframe(df_colorized, unsafe_allow_html=True)
         
         # Allow the user to delete a food entry
         index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
@@ -158,23 +175,6 @@ def show_my_fridge_page():
     else:
         st.write("Der Kühlschrank ist leer.")
 
-   
-def colorize_expiring_food(df):
-    def colorize(val):
-        if val == 1:
-            return 'color: red'
-        elif val == 3:
-            return 'color: orange'
-        else:
-            return ''
-    
-    # Berechnung der Tage bis zum Ablaufdatum
-    df['Tage_bis_Ablauf'] = (pd.to_datetime(df['Ablaufdatum']) - pd.Timestamp.now()).dt.days
-    
-    # Einfärbung der Tabellenspalten
-    df['styled'] = df['Tage_bis_Ablauf'].apply(lambda x: 'color: red' if x == 1 else ('color: orange' if x == 3 else ''))
-    
-    return df
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
