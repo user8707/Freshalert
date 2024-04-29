@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import hashlib
 from github_contents import GithubContents
 from PIL import Image
 
@@ -25,6 +26,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+def generate_hash(data):
+    # Verwende SHA-256-Hash-Funktion, um einen Hash-Code zu generieren
+    hasher = hashlib.sha256()
+    hasher.update(data.encode('utf-8'))
+    return hasher.hexdigest()
+
+def assign_fridge(user_email):
+    # Generiere einen Hash-Code aus der Nutzer-E-Mail
+    user_hash = generate_hash(user_email)
+    # Verwende den Hash-Code, um den Kühlschrank des Benutzers zu identifizieren
+    fridge_id = user_hash[:10]  # Verwende die ersten 10 Zeichen des Hash-Codes als Kühlschrank-ID
+    return fridge_id
+
 def init_github():
     """Initialize the GithubContents object and other session state variables."""
     if 'github' not in st.session_state:
@@ -47,11 +61,12 @@ def init_dataframe_login():
         else:
             st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
 
-def init_dataframe_food():
+def init_dataframe_food(fridge_id):
     """Initialize or load the dataframe for fridge contents."""
+    data_file_food = f"{DATA_FILE_PREFIX}{fridge_id}.csv"
     if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(DATA_FILE_FOOD):
-            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
+        if st.session_state.github.file_exists(data_file_food):
+            st.session_state.df_food = st.session_state.github.read_df(data_file_food)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
