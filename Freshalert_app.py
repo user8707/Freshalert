@@ -126,6 +126,8 @@ def show_fresh_alert_page():
         logout()
 
 def show_mainpage():
+    
+    
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
