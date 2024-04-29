@@ -189,6 +189,10 @@ def show_settings():
 def show_my_friends():
     st.title("Lade meine Freunde ein")
 
+def show_infromations():
+    st.title("Was ist Foodwaste?")
+    st.image ("Foodwaste1.png")
+    
 
 def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
