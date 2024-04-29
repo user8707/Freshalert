@@ -194,7 +194,7 @@ def show_settings():
         button_text = "Deaktiviert"
     
     if st.button(button_text, key="settings_button", help="Aktiviere/deaktiviere die Einstellungen", 
-                 key="settings_button", color=button_color):
+                 key="settings_button_enable", color=button_color):
         st.session_state.settings_enabled = not st.session_state.settings_enabled
 
     if st.session_state.settings_enabled:
