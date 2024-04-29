@@ -49,10 +49,9 @@ def init_dataframe_login():
 
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
-    data_file_food = f"{DATA_FILE_PREFIX}{fridge_id}.csv"
     if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(data_file_food):
-            st.session_state.df_food = st.session_state.github.read_df(data_file_food)
+        if st.session_state.github.file_exists(DATA_FILE_FOOD):
+            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
