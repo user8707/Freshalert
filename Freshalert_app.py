@@ -10,7 +10,7 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
-DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 # Lade das Bild
 image = Image.open('Logo_Freshalert-Photoroom.png')
