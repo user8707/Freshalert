@@ -1,4 +1,5 @@
 # constants.py
+from github_contents import GithubContents
 
 # Konstanten für die Benutzerregistrierung
 DATA_FILE = "FreshAlert-Registration.csv"
