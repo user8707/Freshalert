@@ -158,6 +158,7 @@ def show_my_fridge_page():
     else:
         st.write("Der Kühlschrank ist leer.")
 
+
    
 def colorize_expiring_food(df):
     def colorize(val):
