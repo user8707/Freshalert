@@ -218,7 +218,11 @@ def show_my_fridge_page():
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
-           
+    
+    if 'fridge_id' not in st.session_state:
+        st.error("Fridge ID is missing. Please make sure to assign a fridge first.")
+        return
+
     new_entry = {
         DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
         DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
@@ -237,11 +241,6 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
-
-        # Rufe assign_fridge(user_email) auf, um fridge_id festzulegen
-        user_email = "example@example.com"  # Benutzer-E-Mail hier einfügen
-        st.session_state.fridge_id = assign_fridge(user_email)  # Benutzer-E-Mail verwenden oder anpassen
-
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
