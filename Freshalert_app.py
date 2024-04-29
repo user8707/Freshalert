@@ -181,9 +181,6 @@ def save_data_to_database_food():
         st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 
-def show_my_friends():
-    st.write("Meine Freunde")
-
 def show_settings():
     st.title("Einstellungen")
     if st.session_state.settings_enabled:
@@ -193,14 +190,14 @@ def show_settings():
         button_color = "danger"
         button_text = "Deaktiviert"
     
-    if st.button(button_text, key="settings_button", help="Aktiviere/deaktiviere die Einstellungen", 
-                 key="settings_button_enable", color=button_color):
+    if st.button(button_text, key="settings_button", help="Aktiviere/deaktiviere die Einstellungen", color=button_color):
         st.session_state.settings_enabled = not st.session_state.settings_enabled
 
     if st.session_state.settings_enabled:
         st.write("Die Einstellungen sind aktiviert.")
     else:
         st.write("Die Einstellungen sind deaktiviert.")
+
 
 
 def save_data_to_database_login():
