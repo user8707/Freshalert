@@ -4,7 +4,6 @@ from github_contents import GithubContents
 from PIL import Image
 
 # Set constants for user registration
-
 DATA_FILE = "FreshAlert-Registration.csv"
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
@@ -97,14 +96,18 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-            new_entry_df = pd.DataFrame([new_entry])
-            st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
-            save_data_to_database_login()
-            st.success("Registrierung erfolgreich!")
-            st.session_state.show_registration = False  # Reset status
+        # Check if the user already exists
+        if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
+            st.error("Benutzer bereits vorhanden")
         else:
-            st.error("Die Passwörter stimmen nicht überein.")
+            if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+                new_entry_df = pd.DataFrame([new_entry])
+                st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
+                save_data_to_database_login()
+                st.success("Registrierung erfolgreich!")
+                st.session_state.show_registration = False  # Reset status
+            else:
+                st.error("Die Passwörter stimmen nicht überein.")
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -259,3 +262,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
