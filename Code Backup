@@ -157,11 +157,6 @@ def show_mainpage():
 
 def colorize_expiring_food(df):
     def colorize(val):
-        if val <= 1:
-            return 'color: red; font-weight: bold; font-size: 14px'
-        elif  val == 2 or val ==3:
-            return 'color: orange; font-weight: bold; font-size: 14px'
-        else:
             return 'color: green; font-weight: bold; font-size: 14px'
     
     # Berechnung der Tage bis zum Ablaufdatum
@@ -203,7 +198,7 @@ def add_food_to_fridge():
            
     new_entry = {
         DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
-        DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
+        DATA_COLUMNS_FOOD[1]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]), #Kategorie
         DATA_COLUMNS_FOOD[2]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
         DATA_COLUMNS_FOOD[3]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[4]: st.date_input("Ablaufdatum"), #Ablaufdatum
