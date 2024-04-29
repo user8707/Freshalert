@@ -132,25 +132,10 @@ def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
-    
     if not st.session_state.df_food.empty:
         # Display entries as a table
         st.subheader("Kühlschrankinhalt:")
-        selected_indices = []
-        
-        for index, row in st.session_state.df_food.iterrows():
-            checkbox = st.checkbox(f"Löschen {index}")
-            if checkbox:
-                selected_indices.append(index)
-
-            st.write(f"{row['Lebensmittel']} - {row['Kategorie']} - {row['Lagerort']} - {row['Standort']} - {row['Ablaufdatum']}")
-            st.write("---")
-        
-        if st.button("Ausgewählte löschen"):
-            st.session_state.df_food.drop(selected_indices, inplace=True)
-            save_data_to_database_food()  # Datenbank aktualisieren
-            st.success("Ausgewählte Einträge erfolgreich gelöscht!")
-        
+        st.dataframe(st.session_state.df_food)
     else:
         st.write("Der Kühlschrank ist leer.")
 
