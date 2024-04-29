@@ -1,7 +1,9 @@
 import streamlit as st
+import pandas as pd
 from konstante import constants
 from PIL import Image
 from pages import login
+
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
