@@ -151,9 +151,7 @@ def colorize_expiring_food(df):
     df['Tage_bis_Ablauf'] = (pd.to_datetime(df['Ablaufdatum']) - pd.Timestamp.now()).dt.days
     
     # Einfärbung der Tabellenspalten
-    df['Tage_bis_Ablauf'] = df['Tage_bis_Ablauf'].apply(colorize)
-    
-    return df
+    return df.style.applymap(colorize, subset=['Tage_bis_Ablauf'])
 
 def show_my_fridge_page():
     """Display the contents of the fridge."""
@@ -161,10 +159,7 @@ def show_my_fridge_page():
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
         # Colorize the expiring food entries
-        df_colorized = colorize_expiring_food(st.session_state.df_food)
-        
-        # Display the dataframe
-        st.dataframe(df_colorized, unsafe_allow_html=True)
+        st.dataframe(colorize_expiring_food(st.session_state.df_food).hide_index(), unsafe_allow_html=True)
         
         # Allow the user to delete a food entry
         index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
