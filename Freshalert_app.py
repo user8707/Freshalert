@@ -218,7 +218,7 @@ def add_food_to_fridge():
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
-        st.button("Zum Kühlschrank", key="fridge_button", on_click=show_my_fridge_page)
+        st.session_state.fridge_button_clicked = True
 
 
 
@@ -258,6 +258,12 @@ def main():
         show_login_page()
     else:
         show_fresh_alert_page()
+
+# Check if the fridge button has been clicked
+    if 'fridge_button_clicked' in st.session_state and st.session_state.fridge_button_clicked:
+        show_my_fridge_page()
+        # Reset the session state variable
+        st.session_state.fridge_button_clicked = False
 
 if __name__ == "__main__":
     main()
