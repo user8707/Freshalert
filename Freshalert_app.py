@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pages import login, fresh_alert
+from Seite import login, fresh_alert
 from konstante import constants
 from PIL import Image 
 
