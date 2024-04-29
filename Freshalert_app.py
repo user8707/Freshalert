@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 from PIL import Image
+import time
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -97,8 +98,6 @@ def show_registration_page():
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
-
-
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
@@ -123,9 +122,12 @@ def show_fresh_alert_page():
         show_my_friends()
     if st.sidebar.button("Einstellungen"):
         show_settings()
+    if st.sidebar.button("Ausloggen"):
+        logout()
 
 def show_mainpage():
     st.write("HALLO IHR BEIDEN 🙈")
+
 def show_my_fridge_page():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
@@ -177,6 +179,12 @@ def save_data_to_database_food():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
+def logout():
+    """Logout function to reset user session and redirect to login page."""
+    st.session_state.user_logged_in = False
+    st.success("Erfolgreich ausgeloggt!")
+    st.experimental_rerun()  # Rerun the app to go back to the login page
+
 def main():
     init_github()
     init_dataframe_login()
@@ -191,3 +199,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
