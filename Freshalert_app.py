@@ -102,6 +102,10 @@ def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     st.title("FreshAlert")
+    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
+                 "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+                 "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
+                 "#StopFoodwaste ")
     
     st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
     page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen"])
@@ -122,10 +126,6 @@ def show_fresh_alert_page():
         logout()
 
 def show_mainpage():
-    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
-                 "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
-                 "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
-                 "#StopFoodwaste ")
     st.write("HALLO IHR BEIDEN 🙈")
 
 def show_my_fridge_page():
@@ -133,15 +133,25 @@ def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
-        # Display the dataframe
-        st.dataframe(st.session_state.df_food)
-
-        # Allow the user to delete a food entry
-        index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
-        if st.button("Eintrag löschen", key="delete_entry_button"):
-            st.session_state.df_food.drop(index=index_to_delete, inplace=True)
-            save_data_to_database_food()  # Save the updated dataframe
-            st.success("Eintrag erfolgreich gelöscht!")
+        # Allow the user to delete individual entries
+        st.subheader("Kühlschrankinhalt:")
+        for index, row in st.session_state.df_food.iterrows():
+            col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 0.5])
+            with col1:
+                st.write(row["Lebensmittel"])
+            with col2:
+                st.write(row["Kategorie"])
+            with col3:
+                st.write(row["Lagerort"])
+            with col4:
+                st.write(row["Standort"])
+            with col5:
+                st.write(row["Ablaufdatum"])
+            with col6:
+                if st.button(f"Löschen##{index}"):
+                    st.session_state.df_food.drop(index=index, inplace=True)
+                    save_data_to_database_food()  # Save the updated dataframe
+                    st.success("Eintrag erfolgreich gelöscht!")
     else:
         st.write("Der Kühlschrank ist leer.")
 
