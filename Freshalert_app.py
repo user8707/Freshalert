@@ -121,6 +121,33 @@ def show_registration_page():
             st.error("Die Passwörter stimmen nicht überein.")
 
 
+def show_fresh_alert_page():
+    col1, col2 = st.columns([7, 1])
+    col2.image(small_image, use_column_width=False, clamp=True)
+    st.title("FreshAlert")
+    
+    st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
+
+    # Create buttons for navigation
+    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
+
+    # Check which page to display
+    if navigation == "Startbildschirm":
+        show_mainpage()
+    elif navigation == "Mein Kühlschrank":
+        show_my_fridge_page()
+    elif navigation == "Neues Lebensmittel hinzufügen":
+        add_food_to_fridge()
+    elif navigation == "Freunde einladen":
+        show_my_friends()
+    elif navigation == "Information":
+        show_informations()
+    elif navigation == "Einstellungen":
+        show_settings()
+    elif navigation == "Ausloggen":
+        logout()
+
+
 def show_expired_food_on_mainpage():
     # Filtern aller Lebensmittel, die rot markiert sind (Ablaufdatum erreicht oder überschritten)
     expired_food = st.session_state.df_food[st.session_state.df_food['Tage_bis_Ablauf'] <= 1]
