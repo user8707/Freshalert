@@ -145,7 +145,7 @@ def show_fresh_alert_page():
         add_food_to_fridge()
     elif navigation == "Freunde einladen":
         show_my_friends()
-        elif navigation == "Information":
+    elif navigation == "Information":
         show_informations()
     elif navigation == "Einstellungen":
         show_settings()
@@ -264,8 +264,22 @@ def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
 def logout():
-    """L
+    """Logout function to reset user session and redirect to login page."""
+    st.session_state.user_logged_in = False
+    st.success("Erfolgreich ausgeloggt!")
+    st.experimental_rerun()  # Rerun the app to go back to the login page
 
-       
+def main():
+    init_github()
+    init_dataframe_login()
+    if 'user_logged_in' not in st.session_state:
+        st.session_state.user_logged_in = False
 
+    if not st.session_state.user_logged_in:
+        show_login_page()
+    else:
+        show_fresh_alert_page()
+
+if __name__ == "__main__":
+    main() 
 
