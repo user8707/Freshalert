@@ -270,5 +270,5 @@ def main():
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main()
+    main() 
 
