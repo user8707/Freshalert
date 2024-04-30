@@ -15,11 +15,11 @@ st.set_page_config(
 )
 
 if st.button("Home"):
-    st.switch_page("your_app.py")
-if st.button("Page 1"):
-    st.switch_page("pages/page_1.py")
-if st.button("Page 2"):
-    st.switch_page("pages/page_2.py")
+    st.switch_page("Freshaler_app.py")
+if st.button("Login"):
+    st.switch_page("pages/login.py")
+if st.button("Kühlschrank"):
+    st.switch_page("pages/fresh_alert.py")
 
 
 # Bildpfade
