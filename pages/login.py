@@ -11,6 +11,11 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
+image = Image.open('Logo_Freshalert-Photoroom.png')
+
+# Resize the image
+small_image = image.resize((90, 105))
+
 def init_github():
     """Initialize the GithubContents object and other session state variables."""
     if 'github' not in st.session_state:
