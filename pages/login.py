@@ -1,11 +1,9 @@
-# pages/login.py
+# login.py
 
 import streamlit as st
 import pandas as pd
 from functions import init_dataframe_login, save_data_to_database_login
 from constants import DATA_COLUMNS
-
-DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
@@ -33,7 +31,7 @@ def show_login_page():
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
-        show_registration_page()  # Übergebe DATA_COLUMNS als Parameter
+        show_registration_page(DATA_COLUMNS)  # Übergebe DATA_COLUMNS als Parameter
 
 def show_registration_page(DATA_COLUMNS):
     st.title("Registrieren")
@@ -63,4 +61,3 @@ def show_registration_page(DATA_COLUMNS):
                 st.session_state.show_registration = False  # Reset status
             else:
                 st.error("Die Passwörter stimmen nicht überein.")
-
