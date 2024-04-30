@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from github_contents import GithubContents
+from pages.github_contents import GithubContents
 from PIL import Image
 from pages import login
 
