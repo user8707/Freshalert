@@ -52,6 +52,7 @@ def show_login_page(DATA_COLUMNS):
         show_registration_page(DATA_COLUMNS)
 
 
+
 def show_registration_page(DATA_COLUMNS):
     st.title("Registrieren")
            
