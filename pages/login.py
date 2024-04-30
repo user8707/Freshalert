@@ -30,6 +30,8 @@ def show_login_page(DATA_COLUMNS):
     
     # Initialisiere new_entry als leeres Dictionary
     new_entry = {}
+
+    login_successful = False
     
     if st.button("Login"):
         login_successful = False
