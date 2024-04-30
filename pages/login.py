@@ -11,7 +11,7 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
-def show_login_page(DATA_COLUMNS):
+def show_login_page(DATA_COLUMNS, small_image):
     # Initialisierung der Sitzungsvariablen, falls nicht vorhanden
     if "df_login" not in st.session_state:
         st.session_state.df_login = init_dataframe_login(DATA_FILE)
