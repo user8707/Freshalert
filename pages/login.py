@@ -12,6 +12,14 @@ DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 def show_login_page(DATA_COLUMNS):
+    # Initialisierung der Sitzungsvariablen, falls nicht vorhanden
+    if "df_login" not in st.session_state:
+        st.session_state.df_login = init_dataframe_login(DATA_FILE)
+    if "user_logged_in" not in st.session_state:
+        st.session_state.user_logged_in = False
+    if "show_registration" not in st.session_state:
+        st.session_state.show_registration = False
+
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     
@@ -22,10 +30,6 @@ def show_login_page(DATA_COLUMNS):
     
     # Initialisiere new_entry als leeres Dictionary
     new_entry = {}
-    
-    # Initialisiere show_registration, falls noch nicht vorhanden
-    if "show_registration" not in st.session_state:
-        st.session_state.show_registration = False
     
     if st.button("Login"):
         login_successful = False
@@ -39,11 +43,9 @@ def show_login_page(DATA_COLUMNS):
         else:
             st.error("Ungültige E-Mail oder Passwort.")
     
-    # Wenn der Registrierungsbutton geklickt wurde
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     
-    # Überprüfen, ob show_registration im session_state vorhanden ist
     if st.session_state.show_registration:
         show_registration_page(DATA_COLUMNS)
 
