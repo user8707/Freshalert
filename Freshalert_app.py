@@ -4,6 +4,7 @@ from pages import login, fresh_alert
 from konstante import constants
 from github_contents import GithubContents
 from PIL import Image 
+streamlit run Freshalert_app.py
 
 # Set page configuration
 st.set_page_config(
