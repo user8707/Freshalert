@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from konstante import constants
+from konstante.constants import DATA_FILE, DATA_COLUMNS, DATA_FILE_FOOD, DATA_COLUMNS_FOOD
 from github_contents import GithubContents
 from PIL import Image
 from pages import fresh_alert
