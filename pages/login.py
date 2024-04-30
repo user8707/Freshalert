@@ -35,16 +35,20 @@ def show_login_page(DATA_COLUMNS):
         else:
             st.error("Ungültige E-Mail oder Passwort.")
     
+    # Initialisiere show_registration, falls noch nicht vorhanden
+    if "show_registration" not in st.session_state:
+        st.session_state.show_registration = False
+    
     # Wenn der Registrierungsbutton geklickt wurde
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     
     # Überprüfen, ob show_registration im session_state vorhanden ist
-    if "show_registration" in st.session_state:
+    if st.session_state.show_registration:
         show_registration_page(DATA_COLUMNS)
 
 
-def show_registration_page():
+def show_registration_page(DATA_COLUMNS):
     st.title("Registrieren")
            
     new_entry = {
