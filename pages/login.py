@@ -1,9 +1,15 @@
 import streamlit as st
 import pandas as pd
-from konstante.constants import DATA_FILE, DATA_COLUMNS, DATA_FILE_FOOD, DATA_COLUMNS_FOOD
 from github_contents import GithubContents
 from PIL import Image
 from pages import fresh_alert
+
+DATA_FILE = "FreshAlert-Registration.csv"
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
+
+# Konstanten für den Kühlschrankinhalt
+DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 def init_github():
     """Initialize the GithubContents object and other session state variables."""
