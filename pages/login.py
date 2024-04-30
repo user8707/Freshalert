@@ -3,6 +3,7 @@
 import streamlit as st
 import pandas as pd
 from functions import init_dataframe_login, save_data_to_database_login
+from PIL import Image
 
 DATA_FILE = "FreshAlert-Registration.csv"
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
@@ -11,12 +12,12 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
-image = Image.open('images/Logo_Freshalert-Photoroom.png')
 
-# Resize the image
-small_image = image.resize((90, 105))
+def show_login_page(DATA_COLUMNS):
+    # Definition des Bildes
+    image = Image.open('images/Logo_Freshalert-Photoroom.png')
+    small_image = image.resize((90, 105))
 
-def show_login_page(DATA_COLUMNS, small_image):
     # Initialisierung der Sitzungsvariablen, falls nicht vorhanden
     if "df_login" not in st.session_state:
         st.session_state.df_login = init_dataframe_login(DATA_FILE)
@@ -36,9 +37,10 @@ def show_login_page(DATA_COLUMNS, small_image):
     # Initialisiere new_entry als leeres Dictionary
     new_entry = {}
     
+    # Initialisiere login_successful
+    login_successful = False
     
     if st.button("Login"):
-        login_successful = False
         for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
