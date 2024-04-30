@@ -10,6 +10,9 @@ def show_login_page():
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
+
+    new_entry = {}
+    
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
