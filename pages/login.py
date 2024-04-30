@@ -12,12 +12,12 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
+# Definition des Bildes
+image = Image.open('images/Logo_Freshalert-Photoroom.png')
+small_image = image.resize((90, 105))
+
 
 def show_login_page(DATA_COLUMNS):
-    # Definition des Bildes
-    image = Image.open('images/Logo_Freshalert-Photoroom.png')
-    small_image = image.resize((90, 105))
-
     # Initialisierung der Sitzungsvariablen, falls nicht vorhanden
     if "df_login" not in st.session_state:
         st.session_state.df_login = init_dataframe_login(DATA_FILE)
