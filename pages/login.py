@@ -37,9 +37,9 @@ def show_login_page():
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
-        show_registration_page(DATA_COLUMNS)  # Übergebe DATA_COLUMNS als Parameter
+        show_registration_page()  # Übergebe DATA_COLUMNS als Parameter
 
-def show_registration_page(DATA_COLUMNS):
+def show_registration_page():
     st.title("Registrieren")
            
     new_entry = {
