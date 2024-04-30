@@ -62,11 +62,11 @@ def main():
 
 def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
-    login.init_dataframe_login()
+    init_dataframe_login()
 
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
-    fresh_alert.init_dataframe_food()
+    init_dataframe_food()
 
 if __name__ == "__main__":
     main()
