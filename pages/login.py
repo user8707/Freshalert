@@ -11,7 +11,7 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
-def show_login_page():
+def show_login_page(DATA_COLUMNS):
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     
@@ -36,8 +36,9 @@ def show_login_page():
             st.error("Ungültige E-Mail oder Passwort.")
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
+        show_registration_page(DATA_COLUMNS)  # Übergeben Sie DATA_COLUMNS als Parameter
     if st.session_state.get("show_registration", False):
-        show_registration_page()  # Übergebe DATA_COLUMNS als Parameter
+        show_registration_page(DATA_COLUMNS)  # Übergeben Sie DATA_COLUMNS als Parameter
 
 def show_registration_page():
     st.title("Registrieren")
