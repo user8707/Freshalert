@@ -16,7 +16,7 @@ st.set_page_config(
 st.page_link("Freshalert_app.py", label="Home", icon="🏠")
 st.page_link("pages/login.py", label="Page 1", icon="1️⃣")
 st.page_link("pages/fresh_alert.py", label="Page 2", icon="2️⃣", disabled=True)
-
+showSidebarNavigation = false
 
 # Bildpfade
 LOGO_IMAGE_PATH = "images/Logo_Freshalert-Photoroom.png"
