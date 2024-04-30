@@ -1,55 +1,11 @@
+# pages/login.py
+
 import streamlit as st
 import pandas as pd
-from pages.github_contents import GithubContents
-from PIL import Image
-from pages import fresh_alert
-
-DATA_FILE = "FreshAlert-Registration.csv"
-DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
-
-# Konstanten für den Kühlschrankinhalt
-DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
-DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
-
-image = Image.open('images/Logo_Freshalert-Photoroom.png')
-
-# Resize the image
-small_image = image.resize((90, 105))
-
-def init_github():
-    """Initialize the GithubContents object and other session state variables."""
-    if 'github' not in st.session_state:
-        st.session_state.github = GithubContents(
-            st.secrets["github"]["owner"],
-            st.secrets["github"]["repo"],
-            st.secrets["github"]["token"]
-        )
-
-    # Initialize settings_enabled attribute
-    if 'settings_enabled' not in st.session_state:
-        st.session_state.settings_enabled = True
-
-
-def init_dataframe_login():
-    """Initialize or load the dataframe for user registration."""
-    if 'df_login' not in st.session_state:
-        if st.session_state.github.file_exists(DATA_FILE):
-            st.session_state.df_login = st.session_state.github.read_df(DATA_FILE)
-        else:
-            st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
-
-def init_dataframe_food():
-    """Initialize or load the dataframe for fridge contents."""
-    if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(DATA_FILE_FOOD):
-            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
-        else:
-            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+from functions import init_dataframe_login, save_data_to_database_login
+from constants import DATA_COLUMNS
 
 def show_login_page():
-    col1, col2 = st.columns([7, 1])
-    col2.image(small_image, use_column_width=False, clamp=True)
-    
     st.title("Welcome to FreshAlert 😀, Let's start together with saving food") 
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
@@ -99,5 +55,3 @@ def show_registration_page():
             else:
                 st.error("Die Passwörter stimmen nicht überein.")
 
-def save_data_to_database_login():
-    st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
