@@ -23,6 +23,10 @@ def show_login_page(DATA_COLUMNS):
     # Initialisiere new_entry als leeres Dictionary
     new_entry = {}
     
+    # Initialisiere show_registration, falls noch nicht vorhanden
+    if "show_registration" not in st.session_state:
+        st.session_state.show_registration = False
+    
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
@@ -34,10 +38,6 @@ def show_login_page(DATA_COLUMNS):
             st.success("Erfolgreich eingeloggt!")
         else:
             st.error("Ungültige E-Mail oder Passwort.")
-    
-    # Initialisiere show_registration, falls noch nicht vorhanden
-    if "show_registration" not in st.session_state:
-        st.session_state.show_registration = False
     
     # Wenn der Registrierungsbutton geklickt wurde
     if st.button("Registrieren", key="registration_button"):
