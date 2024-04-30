@@ -3,7 +3,7 @@ import pandas as pd
 from konstante import constants
 from github_contents import GithubContents
 from PIL import Image
-from seite import login
+from pages import login
 
 
 def show_fresh_alert_page():
