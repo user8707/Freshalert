@@ -31,7 +31,7 @@ def show_login_page(DATA_COLUMNS):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and row["Passwort"] == password:
-                login_successful = True
+                login_successful = False
                 break
         if login_successful:
             st.session_state.user_logged_in = True
