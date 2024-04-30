@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pages import login, fresh_alert
+from pages import login, fresh_alert, github_contents
 from github_contents import GithubContents
 from PIL import Image 
 
