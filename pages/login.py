@@ -5,10 +5,9 @@ import pandas as pd
 from functions import init_dataframe_login, save_data_to_database_login
 from constants import DATA_COLUMNS
 
-import streamlit as st
-import pandas as pd
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
-def show_login_page(DATA_COLUMNS):
+def show_login_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     
@@ -34,7 +33,7 @@ def show_login_page(DATA_COLUMNS):
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
-        show_registration_page(DATA_COLUMNS)  # Übergebe DATA_COLUMNS als Parameter
+        show_registration_page()  # Übergebe DATA_COLUMNS als Parameter
 
 def show_registration_page(DATA_COLUMNS):
     st.title("Registrieren")
