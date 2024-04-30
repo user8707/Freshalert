@@ -30,14 +30,15 @@ def show_login_page(DATA_COLUMNS):
     
     # Initialisiere new_entry als leeres Dictionary
     new_entry = {}
-
+    
+    # Initialisiere login_successful
     login_successful = False
     
     if st.button("Login"):
         for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
-                break
+                break  # Beende die Schleife, wenn ein erfolgreicher Login erfolgt ist
         if login_successful:
             st.session_state.user_logged_in = True
             st.success("Erfolgreich eingeloggt!")
