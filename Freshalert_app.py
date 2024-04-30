@@ -13,9 +13,13 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-st.page_link("Freshalert_app.py", label="Home", icon="🏠")
-st.page_link("pages/login.py", label="Page 1", icon="1️⃣")
-st.page_link("pages/fresh_alert.py", label="Page 2", icon="2️⃣", disabled=True)
+
+if st.button("Home"):
+    st.switch_page("your_app.py")
+if st.button("Page 1"):
+    st.switch_page("pages/page_1.py")
+if st.button("Page 2"):
+    st.switch_page("pages/page_2.py")
 
 
 # Bildpfade
