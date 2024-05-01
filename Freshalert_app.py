@@ -242,7 +242,9 @@ def show_informations():
     st.write("- wir mehr kochen, als wir brauchen und Reste nicht verwerten.")
 
     st.image ("images/Foodwaste2.png")
-    
+    st.image ("images/Foodwaste3.png")
+
+
     st.title("5 Einfache Tipps")
     st.subheader("**1. Clever Einkaufen - nur so viel wie man braucht**")
     st.write("Plane deinen Wochenbedarf und erstelle eine Einkaufsliste. Bevor du einkaufen gehst, wirf einen Blick in den Kühlschrank, um zu sehen, was noch da ist.")
