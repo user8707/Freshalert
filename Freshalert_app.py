@@ -17,6 +17,10 @@ image = Image.open('images/Logo_Freshalert-Photoroom.png')
 # Resize the image
 small_image = image.resize((90, 105))
 
+image2 = Image2.open('images/foodwaste2')
+
+small_image2 = image2.resize((90, 105))
+
 # Set page configuration
 st.set_page_config(
     page_title="FreshAlert",
@@ -240,7 +244,7 @@ def show_informations():
     st.write("- wir Lebensmittel nicht korrekt lagern und sich so die Haltbarkeit verringert.")
     st.write("- wir das Mindesthaltbarkeitsdatum falsch interpretieren und Produkte nicht mit unseren Sinnen beurteilen.")
     st.write("- wir mehr kochen, als wir brauchen und Reste nicht verwerten.")
-    st.image ("images/foodwaste2.png")
+    st.image2 ("images/foodwaste2.png")
     st.title("5 Einfache Tipps")
     st.subheader("**1. Clever Einkaufen - nur so viel wie man braucht**")
     st.write("Plane deinen Wochenbedarf und erstelle eine Einkaufsliste. Bevor du einkaufen gehst, wirf einen Blick in den Kühlschrank, um zu sehen, was noch da ist.")
