@@ -7,6 +7,7 @@ In den Haushalten entsteht Food Waste zum Beispiel, weil
 - wir Lebensmittel nicht korrekt lagern und sich so die Haltbarkeit verringert.
 - wir das Mindesthaltbarkeitsdatum falsch interpretieren und Produkte nicht mit unseren Sinnen beurteilen.
 - wir mehr kochen, als wir brauchen und Resten nicht verwerten.
+
 INFOGRAFIK 2a
 https://foodwaste.ch/was-ist-food-waste/
 
