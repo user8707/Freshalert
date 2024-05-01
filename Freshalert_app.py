@@ -245,7 +245,7 @@ def show_informations():
     st.write("- wir das Mindesthaltbarkeitsdatum falsch interpretieren und Produkte nicht mit unseren Sinnen beurteilen.")
     st.write("- wir mehr kochen, als wir brauchen und Reste nicht verwerten.")
 
-    st.small.image ("images/Foodwaste2.png")
+    st.image ("images/Foodwaste2.png")
     st.image ("images/Foodwaste3.png")
 
     st.title("5 Einfache Tipps")
