@@ -113,7 +113,7 @@ def show_fresh_alert_page():
     col2.image(small_image, use_column_width=False, clamp=True)
     st.title("FreshAlert")
     
-    st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
+    st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
     navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
@@ -229,7 +229,7 @@ def show_my_friends():
 
 def show_informations():
     st.title("Was ist Foodwaste?")
-    st.image ("Foodwaste1.png")
+    st.image ("images/Foodwaste1.png")
 
 def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
