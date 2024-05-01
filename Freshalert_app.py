@@ -17,10 +17,6 @@ image = Image.open('images/Logo_Freshalert-Photoroom.png')
 # Resize the image
 small_image = image.resize((90, 105))
 
-image2 = Image.open('images/foodwaste2')
-
-small_image2 = image.resize((90, 105))
-
 # Set page configuration
 st.set_page_config(
     page_title="FreshAlert",
