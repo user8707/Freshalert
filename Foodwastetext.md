@@ -47,7 +47,7 @@ import streamlit as st
 def main():
     st.title("Tipps zur Reduzierung von Food Waste")
     
-    image = Image.open("foodwaste2")
+    image = Image.open("images/foodwaste2")
         resized_image = image.resize((300, 300))
     st.image(resized_image, caption='Wo geschieht Foodwaste')
     
@@ -61,7 +61,7 @@ def main():
     st.write("- wir das Mindesthaltbarkeitsdatum falsch interpretieren und Produkte nicht mit unseren Sinnen beurteilen.")
     st.write("- wir mehr kochen, als wir brauchen und Reste nicht verwerten.")
 
-    image = Image.open("foodwaste3")
+    image = Image.open("images/foodwaste3")
         resized_image = image.resize((300, 300))
     st.image(resized_image, caption='Wodurch wird Foodwaste veruracht?')
     
