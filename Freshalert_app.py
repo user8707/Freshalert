@@ -232,8 +232,6 @@ def show_informations():
     st.image ("Foodwaste1.png")
     def main():
     st.title("Tipps zur Reduzierung von Food Waste")
-
-    
     st.header("Wo geschieht Foodwaste?")
     st.write("Die Gastronomie und die Haushalte verursachen zusammen 35% der Lebensmittelabfälle.")
     st.write("In den Haushalten entsteht Food Waste zum Beispiel, weil:")
