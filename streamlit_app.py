@@ -99,11 +99,11 @@ def show_fresh_alert_page():
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
 
-    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
+    page = st.sidebar.selectbox("Navigation", ["Startbildschirm", "Meine Vorrräte", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
 
     if page == "Startbildschirm":
         show_mainpage()
-    elif page == "Mein Kühlschrank":
+    elif page == "Meine Vorrräte":
         show_my_fridge_page()
     elif page == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
@@ -116,7 +116,7 @@ def show_mainpage():
     st.write("HALLO IHR BEIDEN 🙈")
 def show_my_fridge_page():
     """Display the contents of the fridge."""
-    st.title("Mein Kühlschrank")
+    st.title("Meine Vorrräte")
     init_dataframe_food()  # Daten laden
     if not st.session_state.df_food.empty:
         st.dataframe(st.session_state.df_food)
