@@ -284,10 +284,6 @@ def show_informations():
     st.write("https://foodwaste.ch/was-ist-food-waste/")
     st.write("https://foodwaste.ch/was-ist-food-waste/5-schritte/")
 
-    if __name__ == "__main__":
-    main()
-
-
 
 def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
