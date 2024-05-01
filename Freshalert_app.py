@@ -225,7 +225,10 @@ def show_settings():
     st.title("Einstellungen")
 
 def show_my_friends():
-    st.title("Lade meine Freunde ein")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
+    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.write("Wir als Entwickler-Team würden uns riesig freuen")
+    st.write("Liebe Grüsse von Mirco, Sarah und Sebastian, welche die App mit viel Liebe und noch mehr Schweiss und Tränen entwickelt haben")
 
 def show_informations():
     st.title("Was ist Foodwaste?")
