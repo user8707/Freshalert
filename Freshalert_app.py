@@ -157,6 +157,11 @@ def show_mainpage():
 
 def colorize_expiring_food(df):
     def colorize(val):
+        if val <= 1:
+            return 'color: red; font-weight: bold; font-size: 14px'
+        elif  val == 2 or val ==3:
+            return 'color: orange; font-weight: bold; font-size: 14px'
+        else:
             return 'color: green; font-weight: bold; font-size: 14px'
     
     # Berechnung der Tage bis zum Ablaufdatum
