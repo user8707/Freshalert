@@ -76,6 +76,12 @@ def show_login_page():
         else:
             st.error("Ungültige E-Mail oder Passwort.")
 
+    if not st.session_state.user_logged_in:  # Zeige den "Registrieren" Button nur wenn der Benutzer nicht eingeloggt ist
+        if st.button("Registrieren", key="registration_button"):
+            st.session_state.show_registration = True
+    if st.session_state.get("show_registration", False):
+        show_registration_page()
+
 def show_registration_page():
     st.title("Registrieren")
            
