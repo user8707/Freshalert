@@ -2,15 +2,14 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 from PIL import Image
-import bcrypt  # Importiere die bcrypt-Bibliothek
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
-DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "UserID"]  # Neue Spalte für die User-ID hinzugefügt
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
-DATA_COLUMNS_FOOD = ["UserID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]  # Neue Spalte für die User-ID hinzugefügt
+DATA_COLUMNS_FOOD = ["UserID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -67,9 +66,9 @@ def show_login_page():
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
-            if row["E-Mail"] == email and bcrypt.checkpw(password.encode('utf-8'), row["Passwort"].encode('utf-8')):  # Hashed password comparison
+            if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
-                st.session_state.current_user_id = row["UserID"]  # Speichere die User-ID in der Session
+                st.session_state.current_user_id = email  # Set current user ID
                 break
         if login_successful:
             st.session_state.user_logged_in = True
@@ -102,14 +101,6 @@ def show_registration_page():
             st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
             if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-                # Generiere eine eindeutige User-ID für den neuen Benutzer
-                user_id = bcrypt.hashpw(new_entry["E-Mail"].encode('utf-8'), bcrypt.gensalt())
-                new_entry["UserID"] = user_id.decode('utf-8')
-                
-                # Hash the password before storing it
-                hashed_password = bcrypt.hashpw(new_entry["Passwort"].encode('utf-8'), bcrypt.gensalt())
-                new_entry["Passwort"] = hashed_password.decode('utf-8')
-                
                 new_entry_df = pd.DataFrame([new_entry])
                 st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
                 save_data_to_database_login()
@@ -144,6 +135,7 @@ def show_fresh_alert_page():
     elif navigation == "Ausloggen":
         logout()
 
+
 def show_expired_food_on_mainpage():
     # Filtern aller Lebensmittel, die rot markiert sind (Ablaufdatum erreicht oder überschritten)
     expired_food = st.session_state.df_food[st.session_state.df_food['Tage_bis_Ablauf'] <= 1]
@@ -153,6 +145,16 @@ def show_expired_food_on_mainpage():
         st.subheader("Deine Lebensmittel, welche bald ablaufen!:")
         for index, row in expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
+
+
+def show_mainpage():
+    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! ")            
+    st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+                 "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
+                 "#StopFoodwaste ")
+    st.write("HALLO IHR BEIDEN 🙈")
+    #Zeigt die bald ablaufenden Lebensmittel an
+    show_expired_food_on_mainpage()
 
 def colorize_expiring_food(df):
     def colorize(val):
@@ -178,9 +180,9 @@ def show_my_fridge_page():
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
-        # Filtere die Einträge basierend auf der aktuellen User-ID
+        # Filter entries based on current user ID (email)
         user_fridge = st.session_state.df_food[st.session_state.df_food['UserID'] == st.session_state.current_user_id]
-        
+
         if not user_fridge.empty:
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
@@ -194,7 +196,7 @@ def show_my_fridge_page():
             # Allow the user to delete a food entry
             index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(user_fridge)-1, step=1)
             if st.button("Eintrag löschen", key="delete_entry_button"):
-                user_fridge.drop(index=user_fridge.index[index_to_delete], inplace=True)
+                st.session_state.df_food = st.session_state.df_food.drop(index=user_fridge.index[index_to_delete])
                 save_data_to_database_food()  # Save the updated dataframe
                 st.success("Eintrag erfolgreich gelöscht!")
         else:
@@ -204,10 +206,9 @@ def show_my_fridge_page():
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
-    
-    # Erstelle ein neues DataFrame mit der User-ID
+           
     new_entry = {
-        "UserID": st.session_state.current_user_id,  # Füge die aktuelle User-ID hinzu
+        DATA_COLUMNS_FOOD[0]: st.session_state.current_user_id,  # UserID
         DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Lebensmittel
         DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]), #Kategorie
         DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
@@ -216,7 +217,7 @@ def add_food_to_fridge():
     }
 
     for key, value in new_entry.items():
-        if value == "" or value is None:
+        if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
@@ -225,6 +226,7 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
+
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
@@ -250,38 +252,31 @@ def show_informations():
     st.write("- wir größere Verpackungen kaufen, als wir brauchen.")
     st.write("- wir Lebensmittel im Kühlschrank vergessen.")
     st.write("- wir Lebensmittel nicht korrekt lagern und sich so die Haltbarkeit verringert.")
-    st.write("- wir das Mindesthaltbarkeitsdatum falsch interpretieren und Produkte nicht mit unseren Sinnen beurteilen.")
-    st.write("- wir mehr kochen, als wir brauchen und Reste nicht verwerten.")
+    st.write("- wir das Mindesthaltbarkeitsdatum mit dem Verbrauchsdatum verwechseln.")
 
-    st.image ("images/Foodwaste2.png")
-    
-    st.header("Wie können wir Lebensmittelverschwendung reduzieren?")
-    st.write("1. Einkaufsliste schreiben:")
-    st.write("Überlege dir vor dem Einkaufen, was du tatsächlich benötigst. Plane die Mahlzeiten und schreibe eine Einkaufsliste. So kaufst du weniger ein und sparst Geld.")
-    st.write("2. Richtig lagern:")
-    st.write("Achte darauf, Lebensmittel richtig zu lagern. Dies erhöht ihre Haltbarkeit. Einige Lebensmittel verderben schneller, wenn sie im Kühlschrank lagern, während sie andere vor der Reifung schützen.")
-    st.write("3. Lebensmittelreste verwerten:")
-    st.write("Koche Reste von Lebensmitteln und variiere das Gericht, indem du beispielsweise Gemüsereste in Suppen oder Smoothies verwendest.")
-    st.write("4. Aufmerksam einkaufen:")
-    st.write("Achte beim Einkauf auf das Mindesthaltbarkeitsdatum. Produkte, die kurz vor Ablauf des Mindesthaltbarkeitsdatums stehen, sollten zeitnah verzehrt werden.")
-    st.write("5. Portionen richtig kalkulieren:")
-    st.write("Koche nur so viel, wie du essen kannst. Überlege dir vor dem Kochen, wie viele Portionen du benötigst und passe die Mengen entsprechend an.")
-    st.write("6. Kreative Rezepte ausprobieren:")
-    st.write("Probiere neue Rezepte aus, um übrig gebliebene Zutaten zu verwenden. Es gibt viele kreative Rezepte, die Reste zu leckeren Gerichten verwandeln.")
+    st.write("Die Folgen von Food Waste sind:")
+    st.write("Es belastet nicht nur die Umwelt und das Klima, sondern kostet auch Geld und Ressourcen.")
 
-def save_data_to_database_login():
-    if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated login data")
+    st.write("Quelle: https://www.foodwaste.ch/de/")
 
 def logout():
     st.session_state.user_logged_in = False
     st.session_state.current_user_id = None
 
+def save_data_to_database_login():
+    if 'github' in st.session_state:
+        st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated login data")
+
 def main():
     init_github()
-    if st.session_state.get("user_logged_in", False):
+    init_dataframe_login()
+    init_dataframe_food()
+    
+    if st.session_state.user_logged_in:
         show_fresh_alert_page()
     else:
         show_login_page()
 
-main()
+
+if __name__ == "__main__":
+    main()
