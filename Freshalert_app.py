@@ -199,15 +199,11 @@ def show_my_fridge_page():
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
-            # Ausblenden der 'User ID' Spalte, bevor sie angezeigt wird
-            user_fridge_hidden = user_fridge.copy()
-            user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID'])
-            
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
             # Colorize the expiring food entries
-            df_styled = colorize_expiring_food(user_fridge_hidden)
+            df_styled = colorize_expiring_food(user_fridge)
             
             # Display the formatted DataFrame
             st.write(df_styled)
