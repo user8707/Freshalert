@@ -1,7 +1,10 @@
+import binascii
 import streamlit as st
 import pandas as pd
+import bcrypt
 from github_contents import GithubContents
 from PIL import Image
+
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -54,6 +57,9 @@ def init_dataframe_food():
             st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+            
+
+
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
@@ -79,6 +85,8 @@ def show_login_page():
     if st.session_state.get("show_registration", False):
         show_registration_page()
 
+
+
 def show_registration_page():
     st.title("Registrieren")
            
@@ -96,8 +104,12 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
+        hashed_password = bcrypt.hashpw(new_password.encode('utf8'), bcrypt.gensalt()) # Hash the password
+        hashed_password_hex = binascii.hexlify(hashed_password).decode() # Convert hash to hexadecimal string
+        
         if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
             st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
+            return
         else:
             if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
                 new_entry_df = pd.DataFrame([new_entry])
@@ -107,6 +119,31 @@ def show_registration_page():
                 st.session_state.show_registration = False  # Reset status
             else:
                 st.error("Die Passwörter stimmen nicht überein.")
+
+def authenticate(username, password):
+    """ 
+    Initialize the authentication status.
+
+    Parameters:
+    username (str): The username to authenticate.
+    password (str): The password to authenticate.    
+    """
+    login_df = st.session_state.df_users
+    login_df['email'] = login_df['email'].astype(str)
+
+    if username in login_df['email'].values:
+        stored_hashed_password = login_df.loc[login_df['email'] == email, 'password'].values[0]
+        stored_hashed_password_bytes = binascii.unhexlify(stored_hashed_password) # convert hex to bytes
+        
+        # Check the input password
+        if bcrypt.checkpw(password.encode('utf8'), stored_hashed_password_bytes): 
+            st.session_state['authentication'] = True
+            st.success('Login successful')
+            st.rerun()
+        else:
+            st.error('Incorrect password')
+    else:
+        st.error('E-mail wurde nicht gefunden')
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -307,5 +344,4 @@ def main():
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main()
-    
+    main()$
