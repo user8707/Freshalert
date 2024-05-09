@@ -267,8 +267,8 @@ def show_informations():
 
 def logout():
     st.session_state.user_logged_in = False
-    st.session_state.current_user_id = None
     st.success("Erfolgreich ausgeloggt!")
+    st.session_state.current_user_id = None
     st.experimental_rerun()  # Rerun the app to go back to the login page
 
 def save_data_to_database_login():
