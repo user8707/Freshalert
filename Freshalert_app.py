@@ -250,7 +250,7 @@ def show_my_friends():
     st.write("Liebe Grüsse von Mirco, Sarah und Sebastian, welche die App mit viel Liebe und noch mehr Schweiss und Tränen entwickelt haben")
 
 def show_informations():
-       st.title("Was ist Foodwaste?")
+    st.title("Was ist Foodwaste?")
     st.image ("images/Foodwaste1.png")
     st.title("Tipps zur Reduzierung von Food Waste")
     st.header("Wo geschieht Foodwaste?")
