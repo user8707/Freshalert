@@ -2,6 +2,7 @@ import binascii
 import streamlit as st
 import pandas as pd
 import bcrypt
+import datetime
 from github_contents import GithubContents
 from PIL import Image
 
@@ -172,18 +173,14 @@ def show_mainpage():
 
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
-    init_dataframe_food()  # Daten laden
+    init_dataframe_food()
 
     if not st.session_state.df_food.empty:
-        # Filtere die Einträge nach der User ID
         user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
         
         if not user_fridge.empty:
-            # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
-            
-            # Display the formatted DataFrame
-            st.write(user_fridge)
+            st.write(user_fridge[['Lebensmittel', 'Ablaufdatum', 'Tage_bis_Ablauf']])
         else:
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
@@ -192,14 +189,14 @@ def show_my_fridge_page():
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
-           
+    
     new_entry = {
-        DATA_COLUMNS_FOOD[0]: st.session_state.user_id,  # Setze die User ID als UserID
-        DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Lebensmittel
-        DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]), #Kategorie
-        DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
-        DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
-        DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
+        DATA_COLUMNS_FOOD[0]: st.session_state.user_id,
+        DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]),
+        DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]),
+        DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]),
+        DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]),
+        DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"),
     }
 
     for key, value in new_entry.items():
@@ -209,6 +206,10 @@ def add_food_to_fridge():
 
     if st.button("Hinzufügen"):
         new_entry_df = pd.DataFrame([new_entry])
+        
+        # Berechne die verbleibenden Tage bis zum Ablaufdatum
+        new_entry_df['Tage_bis_Ablauf'] = (new_entry_df['Ablaufdatum'] - datetime.datetime.now()).dt.days
+        
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
