@@ -207,8 +207,8 @@ def add_food_to_fridge():
     if st.button("Hinzufügen"):
         new_entry_df = pd.DataFrame([new_entry])
         
-        # Berechne die verbleibenden Tage bis zum Ablaufdatum
-        new_entry_df['Tage_bis_Ablauf'] = (new_entry_df['Ablaufdatum'] - datetime.datetime.now()).dt.days
+        remaining_days = (new_entry_df['Ablaufdatum'] - datetime.datetime.now()).dt.days
+        new_entry_df['Tage_bis_Ablauf'] = remaining_days.apply(lambda x: max(x, 0))  # Negative Werte auf 0 setzen
         
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
