@@ -104,7 +104,7 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        hashed_password = bcrypt.hashpw(new_password.encode('utf8'), bcrypt.gensalt()) # Hash the password
+        hashed_password = bcrypt.hashpw(new_entry.encode('utf8'), bcrypt.gensalt()) # Hash the password
         hashed_password_hex = binascii.hexlify(hashed_password).decode() # Convert hash to hexadecimal string
         
         if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
