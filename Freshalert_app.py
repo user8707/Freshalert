@@ -1,9 +1,10 @@
 import binascii
 import streamlit as st
 import pandas as pd
+import bcrypt
 from github_contents import GithubContents
 from PIL import Image
-import bcrypt
+
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
