@@ -205,8 +205,9 @@ def add_food_to_fridge():
             return
 
     if st.button("Hinzufügen"):
-        new_entry_df = pd.DataFrame([new_entry])
-        
+        new_entry_df['Ablaufdatum'] = pd.to_datetime(new_entry_df['Ablaufdatum'])
+
+        # Berechne die verbleibenden Tage bis zum Ablaufdatum
         remaining_days = (new_entry_df['Ablaufdatum'] - datetime.datetime.now()).dt.days
         new_entry_df['Tage_bis_Ablauf'] = remaining_days.apply(lambda x: max(x, 0))  # Negative Werte auf 0 setzen
         
