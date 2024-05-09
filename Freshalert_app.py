@@ -127,7 +127,7 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     if st.session_state.user_logged_in:
-        show_user_fridge()
+        show_my_fridge_page()
     else:
         st.error("Sie sind nicht angemeldet.")
 
