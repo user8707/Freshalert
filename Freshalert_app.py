@@ -5,11 +5,11 @@ from PIL import Image
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
-DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen", "User ID"]  # Neue Spalte für User ID
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
-DATA_COLUMNS_FOOD = ["UserID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "User ID"]  # Neue Spalte für User ID
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -66,19 +66,15 @@ def show_login_page():
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
-            if row["E-Mail"] == email and row["Passwort"] == password:
+            if row["E-Mail"] == email and bcrypt.checkpw(password.encode('utf-8'), row["Passwort"].encode('utf-8')):  # Hashed password comparison
                 login_successful = True
-                st.session_state.current_user_id = email  # Set current user ID
+                st.session_state.user_logged_in = True
+                st.session_state.user_id = row["User ID"]  # Setze die User ID in der Session
                 break
         if login_successful:
-            st.session_state.user_logged_in = True
             st.success("Erfolgreich eingeloggt!")
         else:
             st.error("Ungültige E-Mail oder Passwort.")
-    if st.button("Registrieren", key="registration_button"):
-        st.session_state.show_registration = True
-    if st.session_state.get("show_registration", False):
-        show_registration_page()
 
 def show_registration_page():
     st.title("Registrieren")
@@ -101,11 +97,17 @@ def show_registration_page():
             st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
             if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+                # Hash the password before storing it
+                hashed_password = bcrypt.hashpw(new_entry["Passwort"].encode('utf-8'), bcrypt.gensalt())
+                new_entry["Passwort"] = hashed_password.decode('utf-8')
+                
+                # Setze die User ID als E-Mail Adresse
+                new_entry["User ID"] = new_entry["E-Mail"]
+                
                 new_entry_df = pd.DataFrame([new_entry])
                 st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
                 save_data_to_database_login()
                 st.success("Registrierung erfolgreich!")
-                st.session_state.show_registration = False  # Reset status
             else:
                 st.error("Die Passwörter stimmen nicht überein.")
 
@@ -115,6 +117,11 @@ def show_fresh_alert_page():
     st.title("FreshAlert")
     
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
+
+     if st.session_state.user_logged_in:
+        show_user_fridge()
+    else:
+        st.error("Sie sind nicht angemeldet.")
 
     # Create buttons for navigation
     navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
@@ -175,32 +182,23 @@ def colorize_expiring_food(df):
     return df_styled
 
 def show_my_fridge_page():
-    """Display the contents of the fridge."""
-    st.title("Mein Kühlschrank")
+   st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
-        # Filter entries based on current user ID (email)
-        user_fridge = st.session_state.df_food[st.session_state.df_food['UserID'] == st.session_state.current_user_id]
-
+        # Filtere die Einträge nach der User ID
+        user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
+        
         if not user_fridge.empty:
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
-            user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
-            
-            # Colorize the expiring food entries
-            df_styled = colorize_expiring_food(user_fridge)
+            user_fridge = user_fridge.sort_values(by='Ablaufdatum', ascending=True)
             
             # Display the formatted DataFrame
-            st.write(df_styled)
-            
-            # Allow the user to delete a food entry
-            index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(user_fridge)-1, step=1)
-            if st.button("Eintrag löschen", key="delete_entry_button"):
-                st.session_state.df_food = st.session_state.df_food.drop(index=user_fridge.index[index_to_delete])
-                save_data_to_database_food()  # Save the updated dataframe
-                st.success("Eintrag erfolgreich gelöscht!")
+            st.write(user_fridge)
         else:
-            st.write("Der Kühlschrank ist leer für diesen Benutzer.")
+            st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
+    else:
+        st.write("Der Kühlschrank ist leer.")
     else:
         st.write("Der Kühlschrank ist leer.")
 
@@ -265,18 +263,19 @@ def logout():
 
 def save_data_to_database_login():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated login data")
+        st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
 def main():
     init_github()
     init_dataframe_login()
     init_dataframe_food()
-    
-    if st.session_state.user_logged_in:
-        show_fresh_alert_page()
-    else:
-        show_login_page()
+    if 'user_logged_in' not in st.session_state:
+        st.session_state.user_logged_in = False
 
+    if not st.session_state.user_logged_in:
+        show_login_page()
+    else:
+        show_fresh_alert_page()
 
 if __name__ == "__main__":
     main()
