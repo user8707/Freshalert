@@ -198,27 +198,28 @@ def show_my_fridge_page():
         user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
 
         if not user_fridge.empty:
-        user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
+            user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
             # Ausblenden der 'User ID' Spalte, bevor sie angezeigt wird
-        user_fridge_hidden = user_fridge.copy()
-        user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID'])
+            user_fridge_hidden = user_fridge.copy()
+            user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID'])
         
-        # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
-        st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
+            # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
+            st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
         
-        # Colorize the expiring food entries
-        df_styled = colorize_expiring_food(user_fridge_hidden)
+            # Colorize the expiring food entries
+            df_styled = colorize_expiring_food(user_fridge_hidden)
         
-        # Display the formatted DataFrame
-        st.write(df_styled)
+            # Display the formatted DataFrame
+            st.write(df_styled)
         
-        # Allow the user to delete a food entry
-        index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
-        if st.button("Eintrag löschen", key="delete_entry_button"):
-            st.session_state.df_food.drop(index=index_to_delete, inplace=True)
-            save_data_to_database_food()  # Save the updated dataframe
-            st.success("Eintrag erfolgreich gelöscht!")
+            # Allow the user to delete a food entry
+            index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
+            if st.button("Eintrag löschen", key="delete_entry_button"):
+                st.session_state.df_food.drop(index=index_to_delete, inplace=True)
+                save_data_to_database_food()  # Save the updated dataframe
+                st.success("Eintrag erfolgreich gelöscht!")
+
     else:
         st.write("Der Kühlschrank ist leer.")
 
