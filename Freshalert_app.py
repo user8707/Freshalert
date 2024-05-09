@@ -199,8 +199,6 @@ def show_my_fridge_page():
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
-    else:
-        st.write("Der Kühlschrank ist leer.")
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
