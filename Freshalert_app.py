@@ -194,6 +194,9 @@ def show_my_fridge_page():
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
+
+        user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
+        
         # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
         st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
         
