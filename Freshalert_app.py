@@ -182,7 +182,7 @@ def colorize_expiring_food(df):
     return df_styled
 
 def show_my_fridge_page():
-   st.title("Mein Kühlschrank")
+    st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
