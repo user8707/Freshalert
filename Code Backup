@@ -12,7 +12,7 @@ DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]
 
 # Load the image
-image = Image.open('Logo_Freshalert-Photoroom.png')
+image = Image.open('images/Logo_Freshalert-Photoroom.png')
 
 # Resize the image
 small_image = image.resize((90, 105))
@@ -113,7 +113,7 @@ def show_fresh_alert_page():
     col2.image(small_image, use_column_width=False, clamp=True)
     st.title("FreshAlert")
     
-    st.sidebar.image('18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
+    st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
     navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
@@ -230,18 +230,15 @@ def show_settings():
     st.title("Einstellungen")
 
 def show_my_friends():
-    st.title("Lade meine Freunde ein")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
+    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.write("Wir als Entwickler-Team würden uns riesig freuen")
+    st.write("Liebe Grüsse von Mirco, Sarah und Sebastian, welche die App mit viel Liebe und noch mehr Schweiss und Tränen entwickelt haben")
 
 def show_informations():
     st.title("Was ist Foodwaste?")
-    st.image ("Foodwaste1.png")
-    def main():
+    st.image ("images/Foodwaste1.png")
     st.title("Tipps zur Reduzierung von Food Waste")
-    
-    image = Image.open("images/foodwaste2")
-        resized_image = image.resize((300, 300))
-    st.image(resized_image, caption='Wo geschieht Foodwaste')
-    
     st.header("Wo geschieht Foodwaste?")
     st.write("Die Gastronomie und die Haushalte verursachen zusammen 35% der Lebensmittelabfälle.")
     st.write("In den Haushalten entsteht Food Waste zum Beispiel, weil:")
@@ -252,10 +249,9 @@ def show_informations():
     st.write("- wir das Mindesthaltbarkeitsdatum falsch interpretieren und Produkte nicht mit unseren Sinnen beurteilen.")
     st.write("- wir mehr kochen, als wir brauchen und Reste nicht verwerten.")
 
-    image = Image.open("images/foodwaste3")
-        resized_image = image.resize((300, 300))
-    st.image(resized_image, caption='Wodurch wird Foodwaste veruracht?')
-    
+    st.image ("images/Foodwaste2.png")
+    st.image ("images/Foodwaste3.png")
+
     st.title("5 Einfache Tipps")
     st.subheader("**1. Clever Einkaufen - nur so viel wie man braucht**")
     st.write("Plane deinen Wochenbedarf und erstelle eine Einkaufsliste. Bevor du einkaufen gehst, wirf einen Blick in den Kühlschrank, um zu sehen, was noch da ist.")
@@ -288,11 +284,6 @@ def show_informations():
     st.title("Quellen")
     st.write("https://foodwaste.ch/was-ist-food-waste/")
     st.write("https://foodwaste.ch/was-ist-food-waste/5-schritte/")
-
-    if __name__ == "__main__":
-    main()
-
-
 
 def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
