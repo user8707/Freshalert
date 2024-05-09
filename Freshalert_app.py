@@ -205,7 +205,9 @@ def show_my_fridge_page():
             # Colorize the expiring food entries
             df_styled = colorize_expiring_food(user_fridge)
             
-            st.write(pd.concat([df_styled[['Lebensmittel', 'Ablaufdatum', 'Tage_bis_Ablauf']], user_fridge[['Lebensmittel', 'Ablaufdatum', 'Tage_bis_Ablauf']]], axis=1))
+            st.write(df_styled)
+
+            st.write(user_fridge[['Lebensmittel','Tage_bis_Ablauf']]
             
             # Allow the user to delete a food entry
             index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(user_fridge)-1, step=1)
