@@ -122,6 +122,7 @@ def show_registration_page():
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
+    st.title("FreshAlert")
     
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
@@ -157,7 +158,6 @@ def show_expired_food_on_mainpage():
 
 
 def show_mainpage():
-    st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! ")            
     st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
@@ -170,21 +170,20 @@ def colorize_expiring_food(df):
     def colorize(val):
         if val <= 1:
             return 'color: red; font-weight: bold; font-size: 14px'
-        elif val == 2 or val == 3:
+        elif  val == 2 or val ==3:
             return 'color: orange; font-weight: bold; font-size: 14px'
         else:
             return 'color: green; font-weight: bold; font-size: 14px'
-
+    
     # Convert 'Ablaufdatum' column to datetime with error handling
     df['Ablaufdatum'] = pd.to_datetime(df['Ablaufdatum'], errors='coerce')
-
+    
     # Calculate days until expiration date
     df['Tage_bis_Ablauf'] = (df['Ablaufdatum'] - pd.Timestamp.now()).dt.days
     df['Tage_bis_Ablauf'] = df['Tage_bis_Ablauf'].apply(lambda x: 0 if x == -1 else x)  # Set -1 to 0
-
+    
     # Apply colorization to table columns and format numbers
-    df_styled = df.copy()
-    df_styled['Tage_bis_Ablauf'] = df_styled['Tage_bis_Ablauf'].apply(lambda x: f'<span style="{colorize(x)}">{x}</span>')
+    df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf']).format({'Tage_bis_Ablauf': '{:.0f}'})
     
     return df_styled
 
@@ -193,7 +192,8 @@ def colorize_expiring_food(df):
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
-    
+    colorize_expiring_food(st.session_state.df_food)  # Farben für ablaufende Lebensmittel anwenden
+
     if not st.session_state.df_food.empty:
         # Filtere die Einträge nach der User ID
         user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
@@ -202,19 +202,13 @@ def show_my_fridge_page():
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
-            # Anwenden von Farbumschlägen auf ablaufende Lebensmittel
-            user_fridge_styled = colorize_expiring_food(user_fridge)
-            
-            # Display the formatted DataFrame using st.dataframe
-            st.dataframe(user_fridge_styled, unsafe_allow_html=True, hide_index=True)
+            # Display the formatted DataFrame
+            st.write(user_fridge)
         else:
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
 
-
-
-   
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
