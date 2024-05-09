@@ -203,7 +203,7 @@ def show_my_fridge_page():
             
             # Ausblenden der 'User ID' Spalte, bevor sie angezeigt wird
             user_fridge_hidden = user_fridge.copy()
-            user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID, Ablaufdatum'])
+            user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID'])
             
             # Display the formatted DataFrame
             st.write(user_fridge_hidden)
