@@ -200,7 +200,7 @@ def show_my_fridge_page():
         
         if not user_fridge.empty:
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
-            user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
+            user_fridge = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
             # Display the formatted DataFrame
             st.write(user_fridge)
