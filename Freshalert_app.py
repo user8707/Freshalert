@@ -72,7 +72,7 @@ def show_login_page():
     if st.button("Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
-            if row["E-Mail"] == email and row["Passwort"] == password:
+            if row["E-Mail"] == email and bcrypt.checkpw(password.encode('utf-8'), row["Passwort"].encode('utf-8')):  # Hashed password comparison
                 login_successful = True
                 break
         if login_successful:
@@ -104,14 +104,14 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        hashed_password = bcrypt.hashpw(new_entry.encode('utf8'), bcrypt.gensalt()) # Hash the password
-        hashed_password_hex = binascii.hexlify(hashed_password).decode() # Convert hash to hexadecimal string
-        
         if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
             st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
-            return
         else:
             if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+                # Hash the password before storing it
+                hashed_password = bcrypt.hashpw(new_entry["Passwort"].encode('utf-8'), bcrypt.gensalt())
+                new_entry["Passwort"] = hashed_password.decode('utf-8')
+                
                 new_entry_df = pd.DataFrame([new_entry])
                 st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
                 save_data_to_database_login()
@@ -119,31 +119,8 @@ def show_registration_page():
                 st.session_state.show_registration = False  # Reset status
             else:
                 st.error("Die Passwörter stimmen nicht überein.")
+                
 
-def authenticate(username, password):
-    """ 
-    Initialize the authentication status.
-
-    Parameters:
-    username (str): The username to authenticate.
-    password (str): The password to authenticate.    
-    """
-    login_df = st.session_state.df_users
-    login_df['email'] = login_df['email'].astype(str)
-
-    if username in login_df['email'].values:
-        stored_hashed_password = login_df.loc[login_df['email'] == email, 'password'].values[0]
-        stored_hashed_password_bytes = binascii.unhexlify(stored_hashed_password) # convert hex to bytes
-        
-        # Check the input password
-        if bcrypt.checkpw(password.encode('utf8'), stored_hashed_password_bytes): 
-            st.session_state['authentication'] = True
-            st.success('Login successful')
-            st.rerun()
-        else:
-            st.error('Incorrect password')
-    else:
-        st.error('E-mail wurde nicht gefunden')
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -258,9 +235,10 @@ def add_food_to_fridge():
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 
-def save_data_to_database_food():
+def save_data_to_database_login():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+        st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
+
 
 
 def show_settings():
