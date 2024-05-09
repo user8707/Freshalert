@@ -212,7 +212,7 @@ def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
            
     new_entry = {
-        DATA_COLUMNS_FOOD[0]: st.session_state.current_user_id,  # UserID
+        DATA_COLUMNS_FOOD[0]: st.session_state.user_id,  # Setze die User ID als UserID
         DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Lebensmittel
         DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]), #Kategorie
         DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
