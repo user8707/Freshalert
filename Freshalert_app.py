@@ -194,6 +194,7 @@ def show_my_fridge_page():
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
+        # Filtere die Einträge nach der User ID
         user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
 
         if not user_fridge.empty:
