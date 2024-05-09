@@ -192,8 +192,7 @@ def colorize_expiring_food(df):
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
-    colorize_expiring_food(st.session_state.df_food)  # Farben für ablaufende Lebensmittel anwenden
-
+    
     if not st.session_state.df_food.empty:
         # Filtere die Einträge nach der User ID
         user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
@@ -202,13 +201,16 @@ def show_my_fridge_page():
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
+            # Ausblenden der 'User ID' Spalte, bevor sie angezeigt wird
+            user_fridge_hidden = user_fridge.copy()
+            user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID, Ablaufdatum'])
+            
             # Display the formatted DataFrame
-            st.write(user_fridge)
+            st.write(user_fridge_hidden)
         else:
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
-
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
