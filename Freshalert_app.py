@@ -187,8 +187,6 @@ def colorize_expiring_food(df):
     
     return df_styled
 
-
-
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
@@ -196,32 +194,35 @@ def show_my_fridge_page():
     if not st.session_state.df_food.empty:
         # Filtere die Einträge nach der User ID
         user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
-
+        
         if not user_fridge.empty:
+            # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
             # Ausblenden der 'User ID' Spalte, bevor sie angezeigt wird
             user_fridge_hidden = user_fridge.copy()
             user_fridge_hidden = user_fridge_hidden.drop(columns=['User ID'])
-        
+            
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
-        
+            
             # Colorize the expiring food entries
             df_styled = colorize_expiring_food(user_fridge_hidden)
-        
+            
             # Display the formatted DataFrame
             st.write(df_styled)
-        
+            
             # Allow the user to delete a food entry
-            index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(st.session_state.df_food)-1, step=1)
+            index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(user_fridge)-1, step=1)
             if st.button("Eintrag löschen", key="delete_entry_button"):
-                st.session_state.df_food.drop(index=index_to_delete, inplace=True)
+                st.session_state.df_food.drop(index=user_fridge.index[index_to_delete], inplace=True)
                 save_data_to_database_food()  # Save the updated dataframe
                 st.success("Eintrag erfolgreich gelöscht!")
-
+        else:
+            st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
+
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
