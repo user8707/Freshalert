@@ -203,15 +203,13 @@ def show_my_fridge_page():
             # Anwenden von Farbumschlägen auf ablaufende Lebensmittel
             user_fridge_styled = colorize_expiring_food(user_fridge)
             
-            # Ausblenden der 'User ID' Spalte, bevor sie angezeigt wird
-            user_fridge_hidden = user_fridge_styled.drop(columns=['User ID'])
-            
             # Display the formatted DataFrame using st.dataframe
-            st.dataframe(user_fridge_hidden, unsafe_allow_html=True)  # unsafe_allow_html=True erforderlich, um CSS-Formatierungen anzuwenden
+            st.dataframe(user_fridge_styled, unsafe_allow_html=True, hide_index=True)
         else:
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
+
 
 
    
