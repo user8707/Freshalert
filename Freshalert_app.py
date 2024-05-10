@@ -194,8 +194,8 @@ def show_fridge_items(user_id):
     # Set a custom index for the DataFrame
     fridge_items.index = [f"Item {i+1}" for i in range(len(fridge_items))]
     
-    # Display the fridge items
-    st.write(fridge_items)
+    # Display the fridge items without the index column
+    st.write(fridge_items.to_string(index=False))
 
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
