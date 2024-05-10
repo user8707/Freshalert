@@ -170,18 +170,17 @@ def show_mainpage():
 def colorize_expiring_food(df):
     def colorize(val):
         if val <= 0:
-            return 'color: red; font-weight: bold; font-size: 18px'
-        elif  val == 1:
-            return 'color: orange; font-weight: bold; font-size: 18px'
+            return 'color: red; font-weight: bold; font-size: 14px'
+        elif val == 1:
+            return 'color: orange; font-weight: bold; font-size: 14px'
         else:
-            return 'color: green; font-weight: bold; font-size: 18px'
+            return 'color: green; font-weight: bold; font-size: 14px'
     
     # Convert 'Ablaufdatum' column to datetime with error handling
     df['Ablaufdatum'] = pd.to_datetime(df['Ablaufdatum'], errors='coerce')
     
     # Calculate days until expiration date
     df['Tage_bis_Ablauf'] = (df['Ablaufdatum'] - pd.Timestamp.now()).dt.days
-    df['Tage_bis_Ablauf'] = df['Tage_bis_Ablauf'].apply(lambda x: 0 if x <= 1 else x)  # Adjusted condition
     
     # Apply colorization to table columns and format numbers
     df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf']).format({'Tage_bis_Ablauf': '{:.0f}'})
