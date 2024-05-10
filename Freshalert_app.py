@@ -264,10 +264,7 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
-        st.write("")  # Leerer Platzhalter für Layout
-        if st.button("Zum Mein Kühlschrank"):
-            st.session_state.current_page = "Mein Kühlschrank"
-            st.experimental_rerun()
+    
         
 
 
@@ -286,7 +283,7 @@ def show_my_friends():
 
 def show_informations():
     st.title("Was ist Foodwaste?")
-    st.image ("images/Foodwaste1.png")
+    st.image ("images/Foodwaste1.png", width=150, height=2)
     st.title("Tipps zur Reduzierung von Food Waste")
     st.header("Wo geschieht Foodwaste?")
     st.write("Die Gastronomie und die Haushalte verursachen zusammen 35% der Lebensmittelabfälle.")
