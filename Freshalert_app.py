@@ -180,7 +180,7 @@ def colorize_expiring_food(df):
     df['Ablaufdatum'] = pd.to_datetime(df['Ablaufdatum'], errors='coerce')
     
     # Calculate days until expiration date
-    df['Tage_bis_Ablauf'] = (df['Ablaufdatum'] - pd.Timestamp.now() - timedelta(days=1)).dt.days
+    df['Tage_bis_Ablauf'] = (df['Ablaufdatum'] - pd.Timestamp.now() - timedelta(days=-1)).dt.days
     
     # Apply colorization to table columns and format numbers
     df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf']).format({'Tage_bis_Ablauf': '{:.0f}'})
