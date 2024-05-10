@@ -170,11 +170,11 @@ def show_mainpage():
 def colorize_expiring_food(df):
     def colorize(val):
         if val <= 0:
-            return 'color: red; font-weight: bold; font-size: 14px'
+            return 'color: red; font-weight: bold; font-size: 18px'
         elif  val == 1:
-            return 'color: orange; font-weight: bold; font-size: 14px'
+            return 'color: orange; font-weight: bold; font-size: 18px'
         else:
-            return 'color: green; font-weight: bold; font-size: 14px'
+            return 'color: green; font-weight: bold; font-size: 18px'
     
     # Convert 'Ablaufdatum' column to datetime with error handling
     df['Ablaufdatum'] = pd.to_datetime(df['Ablaufdatum'], errors='coerce')
