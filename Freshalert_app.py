@@ -283,7 +283,7 @@ def show_my_friends():
 
 def show_informations():
     st.title("Was ist Foodwaste?")
-    st.image("images/Foodwaste1.png", width=300)  # Ändere die Breite auf 150 Pixel und die Höhe auf 200 Pixel
+    st.image("images/Foodwaste1.png", width=150)  # Ändere die Breite auf 150 Pixel und die Höhe auf 200 Pixel
     st.title("Tipps zur Reduzierung von Food Waste")
     st.header("Wo geschieht Foodwaste?")
     st.write("Die Gastronomie und die Haushalte verursachen zusammen 35% der Lebensmittelabfälle.")
