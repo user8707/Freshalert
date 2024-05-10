@@ -216,6 +216,7 @@ def show_my_fridge_page():
                 st.session_state.df_food.drop(index=index_to_delete, inplace=True)
                 save_data_to_database_food()  # Save the updated dataframe
                 st.success("Eintrag erfolgreich gelöscht!")
+                st.experimental_rerun()  # Rerun the app to refresh the page
         else:
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
