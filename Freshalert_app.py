@@ -187,6 +187,16 @@ def colorize_expiring_food(df):
     
     return df_styled
 
+def show_fridge_items(user_id):
+    # Load fridge items for the given user_id
+    fridge_items = load_fridge_items(user_id)
+    
+    # Set a custom index for the DataFrame
+    fridge_items.index = [f"Item {i+1}" for i in range(len(fridge_items))]
+    
+    # Display the fridge items
+    st.write(fridge_items
+
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
