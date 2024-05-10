@@ -201,7 +201,7 @@ def show_my_fridge_page():
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
              # Zeige nur die gewünschten Spalten an
-            user_fridge_display = user_fridge[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Tage_bis_Ablauf']]
+            user_fridge_display = user_fridge[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort','Ablaufdatum', 'Tage_bis_Ablauf']]
             
             # Colorize the expiring food entries
             df_styled = colorize_expiring_food(user_fridge_display)
