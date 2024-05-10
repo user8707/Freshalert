@@ -209,9 +209,11 @@ def show_my_fridge_page():
             st.write(df_styled)
 
             # Allow the user to delete a food entry
-            index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(user_fridge)-1, step=1)
+            food_names = user_fridge_display['Lebensmittel'].tolist()
+            food_index_to_delete = st.selectbox("Lebensmittel auswählen", food_names, index=0)
             if st.button("Eintrag löschen", key="delete_entry_button"):
-                st.session_state.df_food.drop(index=user_fridge.index[index_to_delete], inplace=True)
+                index_to_delete = user_fridge_display[user_fridge_display['Lebensmittel'] == food_index_to_delete].index
+                st.session_state.df_food.drop(index=index_to_delete, inplace=True)
                 save_data_to_database_food()  # Save the updated dataframe
                 st.success("Eintrag erfolgreich gelöscht!")
         else:
