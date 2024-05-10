@@ -4,7 +4,7 @@ import pandas as pd
 import bcrypt
 from github_contents import GithubContents
 from PIL import Image
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -169,9 +169,9 @@ def show_mainpage():
 
 def colorize_expiring_food(df):
     def colorize(val):
-        if val <= 1:
+        if val <= 0:
             return 'color: red; font-weight: bold; font-size: 14px'
-        elif  val == 2 or val ==3:
+        elif  val == 1:
             return 'color: orange; font-weight: bold; font-size: 14px'
         else:
             return 'color: green; font-weight: bold; font-size: 14px'
@@ -181,7 +181,7 @@ def colorize_expiring_food(df):
     
     # Calculate days until expiration date
     df['Tage_bis_Ablauf'] = (df['Ablaufdatum'] - pd.Timestamp.now()).dt.days
-    df['Tage_bis_Ablauf'] = df['Tage_bis_Ablauf'].apply(lambda x: 0 if x == -1 else x)  # Set -1 to 0
+    df['Tage_bis_Ablauf'] = df['Tage_bis_Ablauf'].apply(lambda x: 0 if x <= 1 else x)  # Adjusted condition
     
     # Apply colorization to table columns and format numbers
     df_styled = df.style.applymap(colorize, subset=['Tage_bis_Ablauf']).format({'Tage_bis_Ablauf': '{:.0f}'})
