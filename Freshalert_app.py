@@ -199,16 +199,14 @@ def show_my_fridge_page():
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
             user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
             
-            # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
-            st.session_state.df_food = st.session_state.df_food.sort_values(by='Tage_bis_Ablauf', ascending=True)
+             # Zeige nur die gewünschten Spalten an
+            user_fridge_display = user_fridge[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Tage_bis_Ablauf']]
             
             # Colorize the expiring food entries
-            df_styled = colorize_expiring_food(user_fridge)
-            
+            df_styled = colorize_expiring_food(user_fridge_display)
+                               
             st.write(df_styled)
 
-            st.write(user_fridge[['Lebensmittel','Tage_bis_Ablauf']])
-            
             # Allow the user to delete a food entry
             index_to_delete = st.number_input("Index des zu löschenden Eintrags", min_value=0, max_value=len(user_fridge)-1, step=1)
             if st.button("Eintrag löschen", key="delete_entry_button"):
