@@ -147,13 +147,13 @@ def show_fresh_alert_page():
 
 
 def show_expired_food_on_mainpage():
-    # Filtern aller Lebensmittel, die rot markiert sind (Ablaufdatum erreicht oder überschritten)
-    expired_food = st.session_state.df_food[st.session_state.df_food['Tage_bis_Ablauf'] <= 1]
+    # Filtern aller Lebensmittel des aktuellen Benutzers, die bald ablaufen
+    user_expired_food = st.session_state.df_food[(st.session_state.df_food['User ID'] == st.session_state.user_id) & (st.session_state.df_food['Tage_bis_Ablauf'] <= 1)]
 
-    if not expired_food.empty:
+    if not user_expired_food.empty:
         st.markdown("---")
         st.subheader("Deine Lebensmittel, welche bald ablaufen!:")
-        for index, row in expired_food.iterrows():
+        for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
 
