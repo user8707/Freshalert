@@ -235,6 +235,11 @@ def add_food_to_fridge():
         DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
+
+    if not new_entry[DATA_COLUMNS_FOOD[1]] or not new_entry[DATA_COLUMNS_FOOD[5]]:
+        st.error("Bitte geben Sie das Lebensmittel und das Ablaufdatum ein.")
+        return
+        
     # Überprüfe, ob das Ablaufdatum gültig ist
     if 'Ablaufdatum' in new_entry and new_entry['Ablaufdatum'] < datetime.now().date():
         st.error("Das Ablaufdatum muss in der Zukunft liegen.")
@@ -259,6 +264,10 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
+        st.write("")  # Leerer Platzhalter für Layout
+        if st.button("Zum Mein Kühlschrank"):
+            st.session_state.current_page = "Mein Kühlschrank"
+            st.experimental_rerun()
         
 
 
