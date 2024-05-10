@@ -4,6 +4,7 @@ import pandas as pd
 import bcrypt
 from github_contents import GithubContents
 from PIL import Image
+from datetime import datetime
 
 # Set constants for user registration
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -230,7 +231,20 @@ def add_food_to_fridge():
         DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
+    # Überprüfe, ob das Ablaufdatum gültig ist
+    if 'Ablaufdatum' in new_entry and new_entry['Ablaufdatum'] < datetime.now().date():
+        st.error("Das Ablaufdatum muss in der Zukunft liegen.")
+        return
 
+    # Berechne die Tage bis zum Ablaufdatum
+    if 'Ablaufdatum' in new_entry:
+        days_until_expiry = (new_entry['Ablaufdatum'] - datetime.now().date()).days
+    else:
+        days_until_expiry = None
+
+    # Füge die Tage_bis_Ablauf-Spalte zum neuen Eintrag hinzu
+    new_entry['Tage_bis_Ablauf'] = days_until_expiry
+    
     for key, value in new_entry.items():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
