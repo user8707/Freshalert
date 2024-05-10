@@ -195,7 +195,7 @@ def show_fridge_items(user_id):
     fridge_items.index = [f"Item {i+1}" for i in range(len(fridge_items))]
     
     # Display the fridge items
-    st.write(fridge_items
+    st.write(fridge_items)
 
 def show_my_fridge_page():
     st.title("Mein Kühlschrank")
