@@ -223,6 +223,7 @@ def show_my_fridge_page():
     else:
         st.write("Der Kühlschrank ist leer.")
 
+
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
            
@@ -234,11 +235,11 @@ def add_food_to_fridge():
         DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
-    # Überprüfe, ob das Lebensmittel und das Ablaufdatum eingegeben wurden
+
     if not new_entry[DATA_COLUMNS_FOOD[1]] or not new_entry[DATA_COLUMNS_FOOD[5]]:
         st.error("Bitte geben Sie das Lebensmittel und das Ablaufdatum ein.")
         return
-
+        
     # Überprüfe, ob das Ablaufdatum gültig ist
     if 'Ablaufdatum' in new_entry and new_entry['Ablaufdatum'] < datetime.now().date():
         st.error("Das Ablaufdatum muss in der Zukunft liegen.")
@@ -253,15 +254,20 @@ def add_food_to_fridge():
     # Füge die Tage_bis_Ablauf-Spalte zum neuen Eintrag hinzu
     new_entry['Tage_bis_Ablauf'] = days_until_expiry
     
+    for key, value in new_entry.items():
+        if value == "":
+            st.error(f"Bitte ergänze das Feld '{key}'")
+            return
+
     if st.button("Hinzufügen"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
-        
-        # Setze den aktuellen Seitenstatus auf "Mein Kühlschrank"
-        st.session_state.current_page = "Mein Kühlschrank"
-
+        st.write("")  # Leerer Platzhalter für Layout
+        if st.button("Zum Mein Kühlschrank"):
+            st.session_state.current_page = "Mein Kühlschrank"
+            st.experimental_rerun()
         
 
 
@@ -345,27 +351,10 @@ def main():
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
-    # Setze den Standardseitenstatus auf "Startbildschirm"
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = "Startbildschirm"
-
     if not st.session_state.user_logged_in:
         show_login_page()
     else:
-        if st.session_state.current_page == "Startbildschirm":
-            show_mainpage()
-        elif st.session_state.current_page == "Mein Kühlschrank":
-            show_my_fridge_page()
-        elif st.session_state.current_page == "Neues Lebensmittel hinzufügen":
-            add_food_to_fridge()
-        elif st.session_state.current_page == "Freunde einladen":
-            show_my_friends()
-        elif st.session_state.current_page == "Information":
-            show_informations()
-        elif st.session_state.current_page == "Einstellungen":
-            show_settings()
-        elif st.session_state.current_page == "Ausloggen":
-            logout()
+        show_fresh_alert_page()
 
 if __name__ == "__main__":
     main()
