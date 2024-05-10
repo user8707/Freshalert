@@ -261,9 +261,6 @@ def add_food_to_fridge():
         st.success("Lebensmittel erfolgreich hinzugefügt!")
         st.write("")  # Leerer Platzhalter für Layout
         
-    if st.button("Zum Mein Kühlschrank"):
-        st.session_state.current_page = "Mein Kühlschrank"
-        st.experimental_rerun()  # Rerun the app to navigate to the My Fridge page
 
 
 def save_data_to_database_food():
