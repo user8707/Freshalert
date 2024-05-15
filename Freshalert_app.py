@@ -163,7 +163,6 @@ def show_mainpage():
     st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
-    st.write("HALLO IHR BEIDEN 🙈")
     #Zeigt die bald ablaufenden Lebensmittel an
     show_expired_food_on_mainpage()
 
@@ -198,7 +197,7 @@ def show_fridge_items(user_id):
     st.write(fridge_items.to_string(index=False))
 
 def show_my_fridge_page():
-    st.title("Mein Kühlschrank")
+    st.title("Meine Vorräte")
     init_dataframe_food()  # Daten laden
     
     if not st.session_state.df_food.empty:
