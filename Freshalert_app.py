@@ -181,7 +181,7 @@ def show_mainpage():
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
-    show_expired_food_on_mainpage()
+    show_expired_food_on_mainpage(kuehlschraenke)
 
     # Auswahl des Kühlschranks
     selected_fridge = st.selectbox("Wähle deinen Kühlschrank aus:", [kuehlschrank.name for kuehlschrank in kuehlschraenke])
@@ -388,4 +388,4 @@ def main():
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main()
+    main(kuehlschraenke)
