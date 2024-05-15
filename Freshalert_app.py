@@ -31,8 +31,6 @@ class Kuehlschrank:
         for lebensmittel, menge in self.inhalt.items():
             st.write(f"{lebensmittel}: {menge}")
 
-
-
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
 
@@ -149,7 +147,7 @@ def show_fresh_alert_page():
     navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
 
     # Check which page to display
-    if navigation == "Startbildschirm":
+    if navigation == "Übersicht":
         show_mainpage()
     elif navigation == "Mein Kühlschrank":
         show_my_fridge_page()
@@ -184,6 +182,15 @@ def show_mainpage():
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
     show_expired_food_on_mainpage()
+
+    # Auswahl des Kühlschranks
+    selected_fridge = st.selectbox("Wähle deinen Kühlschrank aus:", [kuehlschrank.name for kuehlschrank in kuehlschraenke])
+
+    # Anzeigen des ausgewählten Kühlschranks
+    for kuehlschrank in kuehlschraenke:
+        if kuehlschrank.name == selected_fridge:
+            kuehlschrank.anzeigen()
+
 
 def colorize_expiring_food(df):
     def colorize(val):
