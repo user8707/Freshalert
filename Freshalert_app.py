@@ -75,7 +75,7 @@ def init_dataframe_food():
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
-def show_login_page():
+def show_login_page(kuehlschraenke):
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     
@@ -375,7 +375,7 @@ def save_data_to_database_login():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
-def main():
+def main(kuehlschraenke):
     init_github()
     init_dataframe_login()
     init_dataframe_food()
@@ -383,9 +383,9 @@ def main():
         st.session_state.user_logged_in = False
 
     if not st.session_state.user_logged_in:
-        show_login_page()
+        show_login_page(kuehlschraenke)
     else:
         show_fresh_alert_page()
 
 if __name__ == "__main__":
-    main()
+    main(kuehlschraenke)
