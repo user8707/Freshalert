@@ -383,7 +383,7 @@ def main():
         st.session_state.user_logged_in = False
 
     if not st.session_state.user_logged_in:
-        show_login_page(kuehlschraenke)
+        show_login_page()
     else:
         show_fresh_alert_page()
 
