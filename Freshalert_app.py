@@ -174,14 +174,14 @@ def show_expired_food_on_mainpage():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
 
-def show_mainpage(kuehlschraenke):
+def show_mainpage():
     st.title("FreshAlert")
     st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! ")            
     st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
-    show_expired_food_on_mainpage(kuehlschraenke)
+    show_expired_food_on_mainpage()
 
     # Auswahl des Kühlschranks
     selected_fridge = st.selectbox("Wähle deinen Kühlschrank aus:", [kuehlschrank.name for kuehlschrank in kuehlschraenke])
