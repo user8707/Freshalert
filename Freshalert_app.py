@@ -14,6 +14,25 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]  # Neue Spalte für User ID
 
+# Define the Kuehlschrank class
+class Kuehlschrank:
+    def __init__(self, name):
+        self.name = name
+        self.inhalt = {}
+
+    def lebensmittel_hinzufuegen(self, lebensmittel, menge):
+        if lebensmittel in self.inhalt:
+            self.inhalt[lebensmittel] += menge
+        else:
+            self.inhalt[lebensmittel] = menge
+
+    def anzeigen(self):
+        st.write(f"Kühlschrank '{self.name}' Inhalt:")
+        for lebensmittel, menge in self.inhalt.items():
+            st.write(f"{lebensmittel}: {menge}")
+
+
+
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
 
