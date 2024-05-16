@@ -262,17 +262,18 @@ def show_shared_fridge_page():
     if st.button("Neuen geteilten Kühlschrank erstellen"):
         new_fridge_id = generate_random_code()
         st.session_state.shared_fridge_id = new_fridge_id
+        
+        # Save the new shared fridge information along with the user ID
+        new_shared_fridge_entry = {
+            "User ID": st.session_state.user_id,
+            "Kuehlschrank_ID": new_fridge_id
+        }
+        st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append(new_shared_fridge_entry, ignore_index=True)
+        save_data_to_database_shared_fridge()  # Save the updated shared fridge data
+        
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
         
-        # Überprüfe, ob df_shared_fridge bereits im Session-State vorhanden ist
-        if 'df_shared_fridge' not in st.session_state:
-            # Initialisiere df_shared_fridge, wenn es nicht vorhanden ist
-            if st.session_state.github.file_exists(DATA_FILE_SHARED_FRIDGE):
-                st.session_state.df_shared_fridge = st.session_state.github.read_df(DATA_FILE_SHARED_FRIDGE)
-            else:
-                st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
-        
-        # Aktualisiere die Seite, um die Änderungen anzuzeigen
+        # Update the page to reflect the changes
         st.experimental_rerun()
         
     if 'shared_fridge_id' in st.session_state:
