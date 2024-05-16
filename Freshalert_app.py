@@ -342,8 +342,8 @@ def show_settings():
     st.title("Einstellungen")
 
 def show_my_friends():
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
-    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
+    st.write("Teile die App FreshAlert, indem du ihnen den Link zu unserer App schickst: https://fresh-alert.streamlit.app/")
     
     friend_code = st.text_input("Freundecode eingeben")
     if st.button("Freundecode hinzufügen"):
@@ -353,6 +353,14 @@ def show_my_friends():
         else:
             st.error("Ungültiger Freundecode.")
 
+    if 'shared_fridge_id' in st.session_state:
+        fridge_id = st.session_state.shared_fridge_id
+        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
+        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+        if not shared_items.empty:
+            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+        else:
+            st.write("Der geteilte Kühlschrank ist leer.")
 
     
     st.write("Wir als Entwickler-Team würden uns riesig freuen")
