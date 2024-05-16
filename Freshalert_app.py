@@ -255,15 +255,20 @@ def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
 
     if st.button("Neuen geteilten Kühlschrank erstellen"):
+        st.session_state.create_new_fridge = True
+
+    if st.session_state.get("create_new_fridge"):
         # Benutzereingabe für den Namen des neuen geteilten Kühlschranks
         new_fridge_name = st.text_input("Name des neuen geteilten Kühlschranks")
-        
-        # Kühlschrank-ID generieren
-        new_fridge_id = generate_new_fridge_id()
-        
-        # Überprüfen, ob der Benutzer einen Namen eingegeben hat
         if new_fridge_name:
+            st.session_state.new_fridge_name = new_fridge_name
+
+        # Button zum Erstellen des Kühlschranks und Generieren des Codes
+        if st.button("Kühlschrank erstellen und Code generieren"):
+            new_fridge_name = st.session_state.get("new_fridge_name")
+            new_fridge_id = generate_random_code()
             st.session_state.shared_fridge_id = new_fridge_id
+            st.session_state.create_new_fridge = False
             st.success(f"Neuer geteilter Kühlschrank '{new_fridge_name}' erfolgreich erstellt! Kühlschrank-ID: {new_fridge_id}")
             
             # Neue Zeile im Datenrepository hinzufügen
