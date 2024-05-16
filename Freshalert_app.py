@@ -266,7 +266,7 @@ def show_shared_fridge_page():
         # Button zum Erstellen des Kühlschranks und Generieren des Codes
         if st.button("Kühlschrank erstellen und Code generieren"):
             new_fridge_name = st.session_state.get("new_fridge_name")
-            new_fridge_id = generate_random_code()
+            new_fridge_id = generate_new_fridge_id()
             st.session_state.shared_fridge_id = new_fridge_id
             st.session_state.create_new_fridge = False
             st.success(f"Neuer geteilter Kühlschrank '{new_fridge_name}' erfolgreich erstellt! Kühlschrank-ID: {new_fridge_id}")
