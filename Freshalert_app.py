@@ -291,12 +291,17 @@ def show_shared_fridge_page():
             selected_fridge_name = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_names)
             
             if selected_fridge_name:
-                selected_fridge_id = user_fridges.loc[user_fridges['Benutzername'] == selected_fridge_name, 'Kuehlschrank_ID'].iloc[0]
-                show_selected_fridge(selected_fridge_id)
+                selected_fridge_id = user_fridges.loc[user_fridges['Benutzername'] == selected_fridge_name, 'Kuehlschrank_ID']
+                if not selected_fridge_id.empty:
+                    selected_fridge_id = selected_fridge_id.iloc[0]
+                    show_selected_fridge(selected_fridge_id)
+                else:
+                    st.write("Fehler: Der ausgewählte Kühlschrankname ist im DataFrame nicht vorhanden.")
         else:
             st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
         st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
+
 
 
 def show_selected_fridge(fridge_id):
