@@ -253,7 +253,18 @@ def show_my_fridge_page():
 
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
-    init_dataframe_shared_fridge()  # Daten laden
+    
+    if st.button("Neuen geteilten Kühlschrank erstellen"):
+        new_fridge_id = generate_random_code()
+        st.session_state.shared_fridge_id = new_fridge_id
+        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
+        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
+            "Kuehlschrank_ID": new_fridge_id,
+            "User ID": st.session_state.user_id
+        }])], ignore_index=True)
+        save_data_to_database_shared_fridge()
+
+      init_dataframe_shared_fridge()  # Daten laden
     
     if not st.session_state.df_food.empty:
         # Filtere die Einträge nach der User ID
@@ -270,16 +281,6 @@ def show_shared_fridge_page():
             df_styled = colorize_expiring_food(user_fridge_display)
                                
             st.write(df_styled)
-    
-    if st.button("Neuen geteilten Kühlschrank erstellen"):
-        new_fridge_id = generate_random_code()
-        st.session_state.shared_fridge_id = new_fridge_id
-        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-            "Kuehlschrank_ID": new_fridge_id,
-            "User ID": st.session_state.user_id
-        }])], ignore_index=True)
-        save_data_to_database_shared_fridge()
 
     # Prüfen, ob ein geteilter Kühlschrank vorhanden ist
     if 'shared_fridge_id' in st.session_state:
