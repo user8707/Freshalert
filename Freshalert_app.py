@@ -19,7 +19,7 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 
 # Konstante für das  Datenrepo für den geteilten Kühlschrank
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
-DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf"]
+DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername"]
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -269,11 +269,12 @@ def show_shared_fridge_page():
             
             # Neue Zeile im Datenrepository hinzufügen
             if st.session_state.user_logged_in:
-                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
+                new_fridge_data = {
                     "Kuehlschrank_ID": new_fridge_id,
                     "User ID": st.session_state.user_id,
-                    "Kuehlschrank_Name": new_fridge_name  # Hinzufügen des Kühlschranknamens
-                }])], ignore_index=True)
+                    "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
+                }
+                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
                 save_data_to_database_shared_fridge()
             
             # Automatisch die Seite neu laden
