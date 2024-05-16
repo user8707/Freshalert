@@ -14,23 +14,6 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
 DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]  # Neue Spalte für User ID
 
-# Define the Kuehlschrank class
-class Kuehlschrank:
-    def __init__(self, name):
-        self.name = name
-        self.inhalt = {}
-
-    def lebensmittel_hinzufuegen(self, lebensmittel, menge):
-        if lebensmittel in self.inhalt:
-            self.inhalt[lebensmittel] += menge
-        else:
-            self.inhalt[lebensmittel] = menge
-
-    def anzeigen(self):
-        st.write(f"Kühlschrank '{self.name}' Inhalt:")
-        for lebensmittel, menge in self.inhalt.items():
-            st.write(f"{lebensmittel}: {menge}")
-
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
 
@@ -144,10 +127,10 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["Übersicht", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
 
     # Check which page to display
-    if navigation == "Übersicht":
+    if navigation == "Startbildschirm":
         show_mainpage()
     elif navigation == "Mein Kühlschrank":
         show_my_fridge_page()
@@ -182,15 +165,6 @@ def show_mainpage():
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
     show_expired_food_on_mainpage()
-
-    # Auswahl des Kühlschranks
-    selected_fridge = st.selectbox("Wähle deinen Kühlschrank aus:", [kuehlschrank.name for kuehlschrank in kuehlschraenke])
-
-    # Anzeigen des ausgewählten Kühlschranks
-    for kuehlschrank in kuehlschraenke:
-        if kuehlschrank.name == selected_fridge:
-            kuehlschrank.anzeigen()
-
 
 def colorize_expiring_food(df):
     def colorize(val):
