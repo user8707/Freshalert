@@ -254,7 +254,7 @@ def show_my_fridge_page():
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
     
-    st.subheader("Liste aller geteilten Kühlschränke:")
+    st.subheader("Liste aller geteilten Kühlschänke:")
     
     # Initialize df_shared_fridge if it doesn't exist
     if 'df_shared_fridge' not in st.session_state:
@@ -285,6 +285,8 @@ def show_shared_fridge_page():
         st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({'Kuehlschrank_ID': new_fridge_id, 'User ID': st.session_state.user_id}, ignore_index=True)
         save_data_to_database_shared_fridge()
         st.success(f"Neuer Kühlschrank mit ID {new_fridge_id} erstellt!")
+
+
 
 
 
