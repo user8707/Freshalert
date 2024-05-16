@@ -259,12 +259,11 @@ def show_shared_fridge_page():
         st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
         shared_fridge_ids = st.session_state.df_shared_fridge['Kuehlschrank_ID'].unique()
-        selected_fridge_id = st.selectbox("Wähle einen Kühlschrank aus", shared_fridge_ids)
+        selected_fridge_id = st.radio("Wähle einen Kühlschrank aus", shared_fridge_ids)
 
         if selected_fridge_id:
             st.session_state.selected_fridge_id = selected_fridge_id
             show_selected_fridge(selected_fridge_id)
-
 
 def show_selected_fridge(fridge_id):
     st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
