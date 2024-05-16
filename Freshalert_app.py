@@ -258,28 +258,16 @@ def show_shared_fridge_page():
         new_fridge_id = generate_new_fridge_id()
         st.session_state.shared_fridge_id = new_fridge_id
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-            "Kuehlschrank_ID": new_fridge_id,
-            "User ID": st.session_state.user_id
-        }])], ignore_index=True)
         save_data_to_database_shared_fridge()
-
         # Automatisch die Seite neu laden
         st.experimental_rerun()
 
     if 'shared_fridge_id' in st.session_state:
-        # Filter the shared fridge DataFrame for the current user
-        user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+        fridge_ids = st.session_state.df_shared_fridge['Kuehlschrank_ID'].unique().tolist()
+        selected_fridge_id = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_ids)
         
-        if not user_fridges.empty:
-            # Extract unique fridge IDs belonging to the current user
-            fridge_ids = user_fridges['Kuehlschrank_ID'].unique().tolist()
-            selected_fridge_id = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_ids)
-            
-            if selected_fridge_id:
-                show_selected_fridge(selected_fridge_id)
-        else:
-            st.write("Sie haben keinen geteilten Kühlschrank.")
+        if selected_fridge_id:
+            show_selected_fridge(selected_fridge_id)
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
 
