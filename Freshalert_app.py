@@ -262,17 +262,12 @@ def show_shared_fridge_page():
     if len(shared_fridge_ids) > 0:
         st.subheader("Wählen Sie einen geteilten Kühlschrank aus:")
         
-        # Aufteilen des Bildschirms in zwei Spalten
-        col1, col2 = st.columns(2)
-        
-        # Anzeigen der Buttons für jeden geteilten Kühlschrank in der rechten Spalte
-        with col2:
-            for fridge_id in shared_fridge_ids:
-                if st.button(f"Kühlschrank: {fridge_id}"):
-                    # Hier kannst du die Logik einfügen, um die Details des ausgewählten Kühlschranks anzuzeigen
-                    st.write(f"Details für Kühlschrank {fridge_id}")
+        # Anzeigen der Buttons für jeden geteilten Kühlschrank horizontal
+        for fridge_id in shared_fridge_ids:
+            st.button(f"Kühlschrank: {fridge_id}")
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
+
 
 
 def show_selected_fridge(fridge_id):
