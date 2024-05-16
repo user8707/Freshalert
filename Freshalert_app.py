@@ -74,7 +74,7 @@ def init_github():
     # Initialize all dataframes
     init_dataframe_login()
     init_dataframe_food()
-    init_dataframe_shared_fridge() 
+    init_dataframe_shared_fridge()
 
 
 def show_login_page():
@@ -265,13 +265,7 @@ def show_shared_fridge_page():
         # Save the new shared fridge information along with the user ID
         new_shared_fridge_entry = {
             "User ID": st.session_state.user_id,
-            "Kuehlschrank_ID": new_fridge_id,
-            "Lebensmittel": "Hier das Lebensmittel",  # Hier setzen Sie den Namen des Lebensmittels ein
-            "Kategorie": "Hier die Kategorie",  # Hier setzen Sie die Kategorie ein
-            "Lagerort": "Hier der Lagerort",  # Hier setzen Sie den Lagerort ein
-            "Standort": "Hier der Standort",  # Hier setzen Sie den Standort ein
-            "Ablaufdatum": "Hier das Ablaufdatum",  # Hier setzen Sie das Ablaufdatum ein
-            "Tage_bis_Ablauf": "Hier die Tage bis zum Ablauf"  # Hier setzen Sie die Tage bis zum Ablauf ein
+            "Kuehlschrank_ID": new_fridge_id
         }
         st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append(new_shared_fridge_entry, ignore_index=True)
         save_data_to_database_shared_fridge()  # Save the updated shared fridge data
