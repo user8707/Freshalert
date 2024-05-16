@@ -383,17 +383,17 @@ def show_settings():
         user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
         
         if not user_shared_fridges.empty:
-            fridge_ids = user_shared_fridges['Kuehlschrank_ID'].unique().tolist()
-            selected_fridge_id_to_delete = st.selectbox("Wählen Sie einen geteilten Kühlschrank zum Löschen aus:", fridge_ids)
+            fridge_names = user_shared_fridges['Benutzername'].unique().tolist()  # Get unique fridge names
+            selected_fridge_name_to_delete = st.selectbox("Wählen Sie einen geteilten Kühlschrank zum Löschen aus:", fridge_names)
+            selected_fridge_id_to_delete = user_shared_fridges.loc[user_shared_fridges['Benutzername'] == selected_fridge_name_to_delete, 'Kuehlschrank_ID'].iloc[0]
             
             if st.button("Geteilten Kühlschrank löschen"):
                 # Lösche den ausgewählten geteilten Kühlschrank
                 st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != selected_fridge_id_to_delete]
                 save_data_to_database_shared_fridge()
-                st.success(f"Geteilter Kühlschrank mit ID {selected_fridge_id_to_delete} erfolgreich gelöscht!")
+                st.success(f"Geteilter Kühlschrank mit dem Namen '{selected_fridge_name_to_delete}' erfolgreich gelöscht!")
                 #für eine Verzögerung der Aktualisierung
                 time.sleep(2)
-
                 
                 st.experimental_rerun()
         else:
@@ -405,6 +405,7 @@ def show_settings():
     if 'fridge_deleted' in st.session_state and st.session_state.fridge_deleted:
         st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
         st.session_state.fridge_deleted = False  # Reset the flag
+
 
 def show_my_friends():
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
