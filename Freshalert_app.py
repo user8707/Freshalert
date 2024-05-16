@@ -284,6 +284,7 @@ def show_shared_fridge_page():
 
 
 
+
         
 def show_selected_fridge(fridge_id):
     st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
