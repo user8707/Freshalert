@@ -256,7 +256,7 @@ def show_shared_fridge_page():
     
     st.subheader("Liste aller geteilten Kühlschänke:")
     
-    # Initialize df_shared_fridge if it doesn't exist
+    # Ensure df_shared_fridge DataFrame exists
     if 'df_shared_fridge' not in st.session_state:
         st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
 
@@ -277,14 +277,11 @@ def show_shared_fridge_page():
     if st.button("Neuen Kühlschrank erstellen"):
         new_fridge_id = generate_new_fridge_id()
         
-        # Check if df_shared_fridge exists in session state
-        if 'df_shared_fridge' not in st.session_state:
-            st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
-        
         # Append new fridge ID
         st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({'Kuehlschrank_ID': new_fridge_id, 'User ID': st.session_state.user_id}, ignore_index=True)
         save_data_to_database_shared_fridge()
         st.success(f"Neuer Kühlschrank mit ID {new_fridge_id} erstellt!")
+
 
 
 
