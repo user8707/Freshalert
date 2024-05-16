@@ -283,29 +283,6 @@ def show_shared_fridge_page():
         st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
 
 
-def create_shared_fridge():
-    st.title("Neuen geteilten Kühlschrank erstellen")
-
-    fridge_name = st.text_input("Name des Kühlschranks")
-    shared_user_email = st.text_input("E-Mail des Benutzers zum Teilen")
-
-    if st.button("Kühlschrank erstellen"):
-        if fridge_name and shared_user_email:
-            if shared_user_email in st.session_state.df_login["E-Mail"].values:
-                new_fridge_entry = {
-                    "Fridge Name": fridge_name,
-                    "User ID": shared_user_email,
-                }
-                st.session_state.df_shared_fridge = pd.concat(
-                    [st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_entry])],
-                    ignore_index=True
-                )
-                save_data_to_database_shared_fridge()
-                st.success("Geteilter Kühlschrank erfolgreich erstellt!")
-            else:
-                st.error("Die angegebene E-Mail ist nicht registriert.")
-        else:
-            st.error("Bitte geben Sie sowohl den Namen des Kühlschranks als auch die E-Mail des Benutzers ein.")
 
 
         
@@ -336,41 +313,6 @@ def show_selected_fridge(fridge_id):
     else:
         st.write("Dieser Kühlschrank ist leer.")
 
-def add_food_to_shared_fridge():
-    st.title("Lebensmittel zum geteilten Kühlschrank hinzufügen")
-
-    selected_fridge = st.selectbox(
-        "Wählen Sie den geteilten Kühlschrank aus",
-        st.session_state.df_shared_fridge["Fridge Name"].unique()
-    )
-
-    new_food_entry = {
-        "Lebensmittel": st.text_input("Lebensmittel"),
-        "Kategorie": st.selectbox("Kategorie", ["Obst", "Gemüse", "Fleisch", "Milchprodukte", "Getreide", "Sonstiges"]),
-        "Lagerort": st.selectbox("Lagerort", ["Kühlschrank", "Gefrierschrank", "Speisekammer"]),
-        "Standort": st.text_input("Standort"),
-        "Ablaufdatum": st.date_input("Ablaufdatum"),
-    }
-
-    if st.button("Hinzufügen"):
-        if all(value for value in new_food_entry.values()):
-            ablaufdatum = datetime.strptime(str(new_food_entry["Ablaufdatum"]), "%Y-%m-%d")
-            tage_bis_ablauf = (ablaufdatum - datetime.now()).days
-            new_food_entry["Tage_bis_Ablauf"] = tage_bis_ablauf
-
-            # Add fridge name and user ID to the food entry
-            new_food_entry["Fridge Name"] = selected_fridge
-            new_food_entry["User ID"] = st.session_state.user_id
-
-            # Convert the entry to a DataFrame
-            new_food_entry_df = pd.DataFrame([new_food_entry])
-
-            # Add the new food entry to the shared fridge DataFrame
-            st.session_state.df_food = pd.concat([st.session_state.df_food, new_food_entry_df], ignore_index=True)
-            save_data_to_database_food()
-            st.success("Lebensmittel erfolgreich hinzugefügt!")
-        else:
-            st.error("Bitte füllen Sie alle Felder aus.")
 
 
 def add_food_to_fridge():
