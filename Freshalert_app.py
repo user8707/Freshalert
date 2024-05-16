@@ -58,6 +58,7 @@ def init_dataframe_shared_fridge():
         else:
             st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
 
+
 def init_github():
     """Initialize the GithubContents object and other session state variables."""
     if 'github' not in st.session_state:
