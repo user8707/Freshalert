@@ -7,6 +7,8 @@ from PIL import Image
 from datetime import datetime, timedelta
 import random
 import string
+from streamlit.script_runner import RerunException
+from streamlit.report_thread import get_report_ctx
 
 # Konstante für das Login
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -254,24 +256,24 @@ def show_my_fridge_page():
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
     
-    if st.button("Neuen geteilten Kühlschrank erstellen"):
-        new_fridge_id = generate_random_code()
-        st.session_state.shared_fridge_id = new_fridge_id
-        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-            "Kuehlschrank_ID": new_fridge_id,
-            "User ID": st.session_state.user_id
-        }])], ignore_index=True)
-        save_data_to_database_shared_fridge()
-
-        # Automatisch die Seite neu laden
-        st.experimental_rerun()
-
+    # Prüfe, ob ein neuer geteilter Kühlschrank erstellt wurde
     if 'shared_fridge_id' in st.session_state:
         fridge_id = st.session_state.shared_fridge_id
+        if 'last_shared_fridge_id' in st.session_state:
+            last_fridge_id = st.session_state.last_shared_fridge_id
+            if last_fridge_id != fridge_id:
+                # Frage nach dem Löschen des alten Kühlschranks
+                delete_old_fridge = st.sidebar.checkbox("Alten Kühlschrank löschen?")
+                if delete_old_fridge:
+                    st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != last_fridge_id]
+                    save_data_to_database_shared_fridge()
+        
+        st.session_state.last_shared_fridge_id = fridge_id
         st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-        if not shared_items.empty:
+        
+        # Füge die Bedingung hinzu, um die Tabelle nur anzuzeigen, wenn Lebensmittel vorhanden sind
+        if st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id].shape[0] > 0:
+            shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
             st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
         else:
             st.write("Der geteilte Kühlschrank ist leer.")
@@ -413,6 +415,9 @@ def save_data_to_database_food():
 def save_data_to_database_shared_fridge():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE_SHARED_FRIDGE, st.session_state.df_shared_fridge, "Updated shared fridge data")
+
+def save_last_shared_fridge_id(shared_fridge_id):
+    st.session_state.last_shared_fridge_id = shared_fridge_id
 
 
 def main():
