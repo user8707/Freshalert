@@ -307,8 +307,8 @@ def show_selected_fridge(fridge_id):
             index_to_delete = fridge_items_display[fridge_items_display['Lebensmittel'] == food_index_to_delete].index
             st.session_state.df_shared_fridge.drop(index=index_to_delete, inplace=True)
             save_data_to_database_shared_fridge()  # Save the updated dataframe
-            st.experimental_rerun()  # Rerun the app to refresh the page
             st.success("Lebensmittel erfolgreich gelöscht!")
+            st.experimental_rerun()  # Rerun the app to refresh the page
     else:
         st.write("Dieser Kühlschrank ist leer.")
 
