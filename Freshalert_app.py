@@ -268,16 +268,17 @@ def show_shared_fridge_page():
     if 'shared_fridge_id' in st.session_state:
         fridge_id = st.session_state.shared_fridge_id
         st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        
-        # Prüfen, ob der geteilte Kühlschrank Einträge hat
-        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-        
-        if not shared_items.empty:
-            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
-        elif st.button("Lebensmittel hinzufügen"):
-            add_food_to_fridge()  # Nur wenn der Button geklickt wird, wird die Funktion aufgerufen
+        if st.session_state.df_shared_fridge.empty:
+            st.write("Sie haben keinen geteilten Kühlschrank.")
+        else:
+            shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+            if not shared_items.empty:
+                st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+            elif st.button("Lebensmittel hinzufügen"):
+                add_food_to_fridge()  # Nur wenn der Button geklickt wird, wird die Funktion aufgerufen
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
+
 
 
 
