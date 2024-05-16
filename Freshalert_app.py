@@ -256,19 +256,28 @@ def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
 
     if st.button("Neuen geteilten Kühlschrank erstellen"):
+        # Benutzereingabe für den Namen des neuen geteilten Kühlschranks
+        new_fridge_name = st.text_input("Name des neuen geteilten Kühlschranks")
+        
+        # Kühlschrank-ID generieren
         new_fridge_id = generate_new_fridge_id()
-        st.session_state.shared_fridge_id = new_fridge_id
-        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        # Füge den neuen Kühlschrank nur dann hinzu, wenn er von einem berechtigten Benutzer erstellt wurde
-        if st.session_state.user_logged_in:
-            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-                "Kuehlschrank_ID": new_fridge_id,
-                "User ID": st.session_state.user_id
-            }])], ignore_index=True)
-            save_data_to_database_shared_fridge()
-
-        # Automatisch die Seite neu laden
-        st.experimental_rerun()
+        
+        # Überprüfen, ob der Benutzer einen Namen eingegeben hat
+        if new_fridge_name:
+            st.session_state.shared_fridge_id = new_fridge_id
+            st.success(f"Neuer geteilter Kühlschrank '{new_fridge_name}' erfolgreich erstellt! Kühlschrank-ID: {new_fridge_id}")
+            
+            # Neue Zeile im Datenrepository hinzufügen
+            if st.session_state.user_logged_in:
+                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
+                    "Kuehlschrank_ID": new_fridge_id,
+                    "User ID": st.session_state.user_id,
+                    "Kuehlschrank_Name": new_fridge_name  # Hinzufügen des Kühlschranknamens
+                }])], ignore_index=True)
+                save_data_to_database_shared_fridge()
+            
+            # Automatisch die Seite neu laden
+            st.experimental_rerun()
 
     if st.session_state.user_logged_in:
         user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
@@ -282,9 +291,6 @@ def show_shared_fridge_page():
             st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
         st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
-
-
-
 
         
 def show_selected_fridge(fridge_id):
