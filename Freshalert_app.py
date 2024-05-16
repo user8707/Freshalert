@@ -254,38 +254,34 @@ def show_my_fridge_page():
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
     
-    st.subheader("Liste aller geteilten Kühlschänke:")
-    
-    # Ensure df_shared_fridge DataFrame exists
-    if 'df_shared_fridge' not in st.session_state:
-        st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
+    # Button to generate a new shared fridge ID
+    if st.button("Neuen geteilten Kühlschrank erstellen"):
+        new_fridge_id = generate_random_code()
+        st.session_state.shared_fridge_id = new_fridge_id
+        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
 
-    # Filter the shared fridges based on the user ID
-    user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
-    
-    if not user_shared_fridges.empty:
-        shared_fridge_ids = user_shared_fridges['Kuehlschrank_ID'].unique()
-        selected_fridge_id = st.radio("Wähle einen Kühlschrank aus", shared_fridge_ids)
+        # Ensure df_shared_fridge DataFrame exists
+        if 'df_shared_fridge' not in st.session_state:
+            st.session_state.df_shared_fridge = pd.DataFrame(columns=["Kuehlschrank_ID", "User ID"])
 
-        if selected_fridge_id:
-            st.session_state.selected_fridge_id = selected_fridge_id
-            show_selected_fridge(selected_fridge_id)
-    else:
-        st.write("Sie haben keine Berechtigungen für geteilte Kühlschränke.")
-
-    # Button to generate a new fridge ID
-    if st.button("Neuen Kühlschrank erstellen"):
-        new_fridge_id = generate_new_fridge_id()
-        
         # Append new fridge ID
         st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({'Kuehlschrank_ID': new_fridge_id, 'User ID': st.session_state.user_id}, ignore_index=True)
         save_data_to_database_shared_fridge()
-        st.success(f"Neuer Kühlschrank mit ID {new_fridge_id} erstellt!")
 
+        # Automatically reload the page
+        st.experimental_rerun()
 
-
-
-
+    # Check if a shared fridge ID exists in the session state
+    if 'shared_fridge_id' in st.session_state:
+        fridge_id = st.session_state.shared_fridge_id
+        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
+        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+        if not shared_items.empty:
+            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+        else:
+            st.write("Der geteilte Kühlschrank ist leer.")
+    else:
+        st.write("Sie haben keinen geteilten Kühlschrank.")
 
 
 
