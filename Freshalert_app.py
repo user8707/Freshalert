@@ -148,7 +148,7 @@ def show_fresh_alert_page():
         show_mainpage()
     elif navigation == "Mein Kühlschrank":
         show_my_fridge_page()
-    elif navigation == "geteilter Kühlschrank":
+    elif navigation == "Geteilter Kühlschrank":
         show_shared_fridge_page()
     elif navigation == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
