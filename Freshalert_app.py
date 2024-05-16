@@ -287,7 +287,7 @@ def show_shared_fridge_page():
     if st.session_state.user_logged_in:
         user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
         if not user_fridges.empty:
-            fridge_names = user_fridges['Benutzername'].unique().tolist()
+            fridge_names = user_fridges['Benutzername'].unique().tolist()  # Get unique fridge names
             selected_fridge_name = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_names)
             
             if selected_fridge_name:
@@ -301,7 +301,6 @@ def show_shared_fridge_page():
             st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
         st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
-
 
 
 def show_selected_fridge(fridge_id):
@@ -336,6 +335,7 @@ def show_selected_fridge(fridge_id):
             st.write("Keine Lebensmitteleinträge vorhanden, die einen Standort haben.")
     else:
         st.write("Dieser Kühlschrank ist leer oder enthält keine Standortinformationen.")
+
 
 
 def add_food_to_fridge():
