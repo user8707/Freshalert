@@ -267,15 +267,16 @@ def show_shared_fridge_page():
         st.experimental_rerun()
 
     if 'shared_fridge_id' in st.session_state:
-        fridge_id = st.session_state.shared_fridge_id
-        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-        if not shared_items.empty:
-            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
-        else:
-            st.write("Der geteilte Kühlschrank ist leer.")
+        fridge_ids = st.session_state.df_shared_fridge['Kuehlschrank_ID'].unique().tolist()
+        selected_fridge_id = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_ids)
+        
+        if selected_fridge_id:
+            show_selected_fridge(selected_fridge_id)
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
+
+
+        
 def show_selected_fridge(fridge_id):
     st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
 
