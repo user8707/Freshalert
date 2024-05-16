@@ -298,7 +298,7 @@ def show_shared_fridge_page():
     else:
         st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
 
-        
+
 def show_selected_fridge(fridge_id):
     st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
 
@@ -306,26 +306,31 @@ def show_selected_fridge(fridge_id):
     fridge_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
 
     if not fridge_items.empty:
-        # Sort the DataFrame by expiration date
-        fridge_items = fridge_items.sort_values(by='Tage_bis_Ablauf', ascending=True)
-        
-        # Display the fridge items
-        fridge_items_display = fridge_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']]
-        df_styled = colorize_expiring_food(fridge_items_display)
-        st.write(df_styled)
+        # Filter items where Standort is not empty
+        fridge_items = fridge_items[fridge_items['Standort'].notna()]
 
-        # Allow the user to delete a food entry
-        food_names = fridge_items_display['Lebensmittel'].tolist()
-        food_index_to_delete = st.selectbox("Lebensmittel auswählen, um zu löschen:", food_names, index=0)
-        if st.button("Lebensmittel löschen", key="delete_food_button"):
-            index_to_delete = fridge_items_display[fridge_items_display['Lebensmittel'] == food_index_to_delete].index
-            st.session_state.df_shared_fridge.drop(index=index_to_delete, inplace=True)
-            save_data_to_database_shared_fridge()  # Save the updated dataframe
-            st.success("Lebensmittel erfolgreich gelöscht!")
-            st.experimental_rerun()  # Rerun the app to refresh the page
+        if not fridge_items.empty:
+            # Sort the DataFrame by expiration date
+            fridge_items = fridge_items.sort_values(by='Tage_bis_Ablauf', ascending=True)
+            
+            # Display the fridge items
+            fridge_items_display = fridge_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']]
+            df_styled = colorize_expiring_food(fridge_items_display)
+            st.write(df_styled)
+
+            # Allow the user to delete a food entry
+            food_names = fridge_items_display['Lebensmittel'].tolist()
+            food_index_to_delete = st.selectbox("Lebensmittel auswählen, um zu löschen:", food_names, index=0)
+            if st.button("Lebensmittel löschen", key="delete_food_button"):
+                index_to_delete = fridge_items_display[fridge_items_display['Lebensmittel'] == food_index_to_delete].index
+                st.session_state.df_shared_fridge.drop(index=index_to_delete, inplace=True)
+                save_data_to_database_shared_fridge()  # Save the updated dataframe
+                st.success("Lebensmittel erfolgreich gelöscht!")
+                st.experimental_rerun()  # Rerun the app to refresh the page
+        else:
+            st.write("Keine Lebensmitteleinträge vorhanden, die einen Standort haben.")
     else:
-        st.write("Dieser Kühlschrank ist leer.")
-
+        st.write("Dieser Kühlschrank ist leer oder enthält keine Standortinformationen.")
 
 
 def add_food_to_fridge():
