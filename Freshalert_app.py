@@ -362,6 +362,7 @@ def show_my_friends():
         else:
             st.write("Der geteilte Kühlschrank ist leer.")
 
+
     
     st.write("Wir als Entwickler-Team würden uns riesig freuen")
     st.write("Liebe Grüsse von Mirco, Sarah und Sebastian, welche die App mit viel Liebe und noch mehr Schweiss und Tränen entwickelt haben")
