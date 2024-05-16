@@ -7,6 +7,7 @@ from PIL import Image
 from datetime import datetime, timedelta
 import random
 import string
+import time
 
 # Konstante für das Login
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -378,6 +379,10 @@ def show_settings():
                 st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != selected_fridge_id_to_delete]
                 save_data_to_database_shared_fridge()
                 st.success(f"Geteilter Kühlschrank mit ID {selected_fridge_id_to_delete} erfolgreich gelöscht!")
+                #für eine Verzögerung der Aktualisierung
+                time.sleep(2)
+
+                
                 st.experimental_rerun()
         else:
             st.write("Sie haben keinen geteilten Kühlschrank.")
