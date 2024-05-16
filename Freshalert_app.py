@@ -74,7 +74,7 @@ def init_github():
     # Initialize all dataframes
     init_dataframe_login()
     init_dataframe_food()
-    init_dataframe_shared_fridge()
+    init_dataframe_shared_fridge() 
 
 
 def show_login_page():
