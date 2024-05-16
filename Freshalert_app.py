@@ -5,14 +5,20 @@ import bcrypt
 from github_contents import GithubContents
 from PIL import Image
 from datetime import datetime, timedelta
+import random
+import string
 
-# Set constants for user registration
+# Konstante für das Login
 DATA_FILE = "FreshAlert-Registration.csv"
-DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen", "User ID"]  # Neue Spalte für User ID
+DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen", "User ID"]  
 
-# Set constants for fridge contents
+# Konstante für das Datenrepo von meinem Kühlschrank
 DATA_FILE_FOOD = "Kühlschrankinhalt.csv"
-DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"]  # Neue Spalte für User ID
+DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum"] 
+
+# Konstante für das  Datenrepo für den geteilten Kühlschrank
+DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
+DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf"]
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -57,6 +63,14 @@ def init_dataframe_food():
             st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
             st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+
+def init_dataframe_shared_fridge():
+    """Initialize or load the dataframe for shared fridge contents."""
+    if 'df_shared_fridge' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE_SHARED_FRIDGE):
+            st.session_state.df_shared_fridge = st.session_state.github.read_df(DATA_FILE_SHARED_FRIDGE)
+        else:
+            st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
@@ -127,13 +141,15 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "geteilter Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
 
     # Check which page to display
     if navigation == "Startbildschirm":
         show_mainpage()
     elif navigation == "Mein Kühlschrank":
         show_my_fridge_page()
+    elif navigation == "geteilter Kühlschrank":
+        show_shared_fridge_page()
     elif navigation == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
     elif navigation == "Freunde einladen":
@@ -144,6 +160,10 @@ def show_fresh_alert_page():
         show_settings()
     elif navigation == "Ausloggen":
         logout()
+        
+def generate_random_code(length=6):
+    """Generate a random code of given length."""
+    return ''.join(random.choices(string.digits, k=length))
 
 
 def show_expired_food_on_mainpage():
@@ -231,6 +251,30 @@ def show_my_fridge_page():
     else:
         st.write("Der Kühlschrank ist leer.")
 
+def show_shared_fridge_page():
+    st.title("Geteilter Kühlschrank")
+    
+    if st.button("Neuen geteilten Kühlschrank erstellen"):
+        new_fridge_id = generate_random_code()
+        st.session_state.shared_fridge_id = new_fridge_id
+        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
+        st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({
+            "Kuehlschrank_ID": new_fridge_id,
+            "User ID": st.session_state.user_id
+        }, ignore_index=True)
+        save_data_to_database_shared_fridge()
+
+    if 'shared_fridge_id' in st.session_state:
+        fridge_id = st.session_state.shared_fridge_id
+        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
+        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+        if not shared_items.empty:
+            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+        else:
+            st.write("Der geteilte Kühlschrank ist leer.")
+    else:
+        st.write("Sie haben keinen geteilten Kühlschrank.")
+
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
@@ -268,17 +312,16 @@ def add_food_to_fridge():
             return
 
     if st.button("Hinzufügen"):
-        new_entry_df = pd.DataFrame([new_entry])
-        st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
-        save_data_to_database_food()
-        st.success("Lebensmittel erfolgreich hinzugefügt!")
-    
+        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+            new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+            save_data_to_database_shared_fridge()
+        else:
+            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+            save_data_to_database_food()
+        st.success("Lebensmittel erfolgreich hinzugefügt!")   
         
 
-
-def save_data_to_database_food():
-    if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 def show_settings():
     st.title("Einstellungen")
@@ -286,6 +329,17 @@ def show_settings():
 def show_my_friends():
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
     st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    
+    friend_code = st.text_input("Freundecode eingeben")
+    if st.button("Freundecode hinzufügen"):
+        if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
+            st.session_state.shared_fridge_id = friend_code
+            st.success("Freundecode erfolgreich hinzugefügt!")
+        else:
+            st.error("Ungültiger Freundecode.")
+
+
+    
     st.write("Wir als Entwickler-Team würden uns riesig freuen")
     st.write("Liebe Grüsse von Mirco, Sarah und Sebastian, welche die App mit viel Liebe und noch mehr Schweiss und Tränen entwickelt haben")
 
@@ -349,10 +403,20 @@ def save_data_to_database_login():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
+def save_data_to_database_food():
+    if 'github' in st.session_state:
+        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+
+def save_data_to_database_shared_fridge():
+    if 'github' in st.session_state:
+        st.session_state.github.write_df(DATA_FILE_SHARED_FRIDGE, st.session_state.df_shared_fridge, "Updated shared fridge data")
+
+
 def main():
     init_github()
     init_dataframe_login()
     init_dataframe_food()
+    init_dataframe_shared_fridge()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
