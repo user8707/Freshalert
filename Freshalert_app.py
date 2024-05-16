@@ -34,20 +34,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-def init_github():
-    """Initialize the GithubContents object and other session state variables."""
-    if 'github' not in st.session_state:
-        st.session_state.github = GithubContents(
-            st.secrets["github"]["owner"],
-            st.secrets["github"]["repo"],
-            st.secrets["github"]["token"]
-        )
-
-    # Initialize settings_enabled attribute
-    if 'settings_enabled' not in st.session_state:
-        st.session_state.settings_enabled = True
-
-
 def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
     if 'df_login' not in st.session_state:
@@ -71,6 +57,25 @@ def init_dataframe_shared_fridge():
             st.session_state.df_shared_fridge = st.session_state.github.read_df(DATA_FILE_SHARED_FRIDGE)
         else:
             st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
+
+def init_github():
+    """Initialize the GithubContents object and other session state variables."""
+    if 'github' not in st.session_state:
+        st.session_state.github = GithubContents(
+            st.secrets["github"]["owner"],
+            st.secrets["github"]["repo"],
+            st.secrets["github"]["token"]
+        )
+
+    # Initialize settings_enabled attribute
+    if 'settings_enabled' not in st.session_state:
+        st.session_state.settings_enabled = True
+
+    # Initialize all dataframes
+    init_dataframe_login()
+    init_dataframe_food()
+    init_dataframe_shared_fridge()
+
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
@@ -258,6 +263,10 @@ def show_shared_fridge_page():
         new_fridge_id = generate_random_code()
         st.session_state.shared_fridge_id = new_fridge_id
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
+        
+        if 'df_shared_fridge' not in st.session_state:
+            init_dataframe_shared_fridge()  # Sicherstellen, dass df_shared_fridge initialisiert ist
+        
         st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({
             "Kuehlschrank_ID": new_fridge_id,
             "User ID": st.session_state.user_id
@@ -414,9 +423,7 @@ def save_data_to_database_shared_fridge():
 
 def main():
     init_github()
-    init_dataframe_login()
-    init_dataframe_food()
-    init_dataframe_shared_fridge()
+    
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
