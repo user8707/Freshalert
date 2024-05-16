@@ -264,7 +264,7 @@ def show_shared_fridge_page():
         }])], ignore_index=True)
         save_data_to_database_shared_fridge()
 
-      init_dataframe_shared_fridge()  # Daten laden
+    init_dataframe_shared_fridge()  # Daten laden
     
     if not st.session_state.df_food.empty:
         # Filtere die Einträge nach der User ID
