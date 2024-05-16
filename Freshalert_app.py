@@ -256,7 +256,7 @@ def show_shared_fridge_page():
     
     # Button to generate a new shared fridge ID
     if st.button("Neuen geteilten Kühlschrank erstellen"):
-        new_fridge_id = generate_random_code()
+        new_fridge_id = generate_new_fridge_id()
         st.session_state.shared_fridge_id = new_fridge_id
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
 
