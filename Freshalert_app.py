@@ -149,7 +149,7 @@ def show_fresh_alert_page():
     # Check which page to display
     if navigation == "Übersicht":
         show_mainpage()
-    elif navigation == "Mein Kühlschrank":
+    elif navigation == "Meine Vorräte":
         show_my_fridge_page()
     elif navigation == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
