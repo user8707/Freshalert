@@ -258,12 +258,19 @@ def show_shared_fridge_page():
     if st.session_state.df_shared_fridge.empty:
         st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
-        shared_fridge_ids = st.session_state.df_shared_fridge['Kuehlschrank_ID'].unique()
-        selected_fridge_id = st.radio("Wähle einen Kühlschrank aus", shared_fridge_ids)
+        # Filter the shared fridges based on the user ID
+        user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+        
+        if not user_shared_fridges.empty:
+            shared_fridge_ids = user_shared_fridges['Kuehlschrank_ID'].unique()
+            selected_fridge_id = st.radio("Wähle einen Kühlschrank aus", shared_fridge_ids)
 
-        if selected_fridge_id:
-            st.session_state.selected_fridge_id = selected_fridge_id
-            show_selected_fridge(selected_fridge_id)
+            if selected_fridge_id:
+                st.session_state.selected_fridge_id = selected_fridge_id
+                show_selected_fridge(selected_fridge_id)
+        else:
+            st.write("Sie haben keine Berechtigungen für geteilte Kühlschränke.")
+
 
 
 
