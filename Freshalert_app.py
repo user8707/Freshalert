@@ -272,16 +272,16 @@ def show_shared_fridge_page():
         user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
         
         if not user_fridges.empty:
-            # Extract unique fridge IDs belonging to the current user
-            fridge_ids = user_fridges['Kuehlschrank_ID'].unique().tolist()
-            selected_fridge_id = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_ids)
-            
-            if selected_fridge_id:
-                show_selected_fridge(selected_fridge_id)
+            st.subheader("Wählen Sie einen geteilten Kühlschrank aus:")
+            # Display buttons for each shared fridge belonging to the current user
+            for fridge_id in user_fridges['Kuehlschrank_ID'].unique():
+                if st.button(f"Fridge ID: {fridge_id}"):
+                    show_selected_fridge(fridge_id)
         else:
             st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
+
 
 
 
