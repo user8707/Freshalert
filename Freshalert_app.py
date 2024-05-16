@@ -261,7 +261,6 @@ def show_shared_fridge_page():
     
     if st.button("Neuen geteilten Kühlschrank erstellen"):
         new_fridge_id = generate_random_code()
-        st.session_state.shared_fridge_id = new_fridge_id
         
         # Save the new shared fridge information along with the user ID
         new_shared_fridge_entry = {
@@ -276,16 +275,20 @@ def show_shared_fridge_page():
         # Update the page to reflect the changes
         st.experimental_rerun()
         
-    if 'shared_fridge_id' in st.session_state:
-        fridge_id = st.session_state.shared_fridge_id
-        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-        if not shared_items.empty:
-            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
-        else:
-            st.write("Der geteilte Kühlschrank ist leer.")
+    # Filter shared fridges based on the current user ID
+    user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+    if not user_shared_fridges.empty:
+        for index, row in user_shared_fridges.iterrows():
+            fridge_id = row["Kuehlschrank_ID"]
+            st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
+            shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+            if not shared_items.empty:
+                st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+            else:
+                st.write("Der geteilte Kühlschrank ist leer.")
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
+
 
 
 def add_food_to_fridge():
