@@ -254,50 +254,34 @@ def show_my_fridge_page():
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
     
-    if st.button("Neuen geteilten Kühlschrank erstellen"):
-        new_fridge_id = generate_random_code()
-        st.session_state.shared_fridge_id = new_fridge_id
-        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-            "Kuehlschrank_ID": new_fridge_id,
-            "User ID": st.session_state.user_id
-        }])], ignore_index=True)
-        save_data_to_database_shared_fridge()
-
-    init_dataframe_shared_fridge()  # Daten laden
-    
-    if not st.session_state.df_food.empty:
-        # Filtere die Einträge nach der User ID
-        user_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
-        
-        if not user_fridge.empty:
-            # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
-            user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
-            
-             # Zeige nur die gewünschten Spalten an
-            user_fridge_display = user_fridge[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort','Ablaufdatum', 'Tage_bis_Ablauf']]
-            
-            # Colorize the expiring food entries
-            df_styled = colorize_expiring_food(user_fridge_display)
-                               
-            st.write(df_styled)
-
-    # Prüfen, ob ein geteilter Kühlschrank vorhanden ist
-    if 'shared_fridge_id' in st.session_state:
-        fridge_id = st.session_state.shared_fridge_id
-        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        if st.session_state.df_shared_fridge.empty:
-            st.write("Sie haben keinen geteilten Kühlschrank.")
-        else:
-            shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-            if not shared_items.empty:
-                st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
-            elif st.button("Lebensmittel hinzufügen"):
-                add_food_to_fridge()  # Nur wenn der Button geklickt wird, wird die Funktion aufgerufen
-    else:
+    st.subheader("Liste aller geteilten Kühlschränke:")
+    if st.session_state.df_shared_fridge.empty:
         st.write("Sie haben keinen geteilten Kühlschrank.")
+    else:
+        shared_fridge_ids = st.session_state.df_shared_fridge['Kuehlschrank_ID'].unique()
+        selected_fridge_id = st.selectbox("Wähle einen Kühlschrank aus", shared_fridge_ids)
+
+        if selected_fridge_id:
+            st.session_state.selected_fridge_id = selected_fridge_id
+            show_selected_fridge(selected_fridge_id)
 
 
+def show_selected_fridge(fridge_id):
+    st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
+
+    # Filter the shared fridge DataFrame based on the selected fridge_id
+    fridge_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+
+    if not fridge_items.empty:
+        # Sort the DataFrame by expiration date
+        fridge_items = fridge_items.sort_values(by='Tage_bis_Ablauf', ascending=True)
+        
+        # Display the fridge items
+        fridge_items_display = fridge_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']]
+        df_styled = colorize_expiring_food(fridge_items_display)
+        st.write(df_styled)
+    else:
+        st.write("Dieser Kühlschrank ist leer.")
 
 
 def add_food_to_fridge():
