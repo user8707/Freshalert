@@ -364,6 +364,24 @@ def add_food_to_fridge():
 
 def show_settings():
     st.title("Einstellungen")
+    
+    # Get the user's shared fridges
+    if st.session_state.user_logged_in:
+        user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+        
+        if not user_shared_fridges.empty:
+            fridge_ids = user_shared_fridges['Kuehlschrank_ID'].unique().tolist()
+            selected_fridge_id_to_delete = st.selectbox("Wählen Sie einen geteilten Kühlschrank zum Löschen aus:", fridge_ids)
+            
+            if st.button("Geteilten Kühlschrank löschen"):
+                # Lösche den ausgewählten geteilten Kühlschrank
+                st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != selected_fridge_id_to_delete]
+                save_data_to_database_shared_fridge()
+                st.success(f"Geteilter Kühlschrank mit ID {selected_fridge_id_to_delete} erfolgreich gelöscht!")
+        else:
+            st.write("Sie haben keinen geteilten Kühlschrank.")
+    else:
+        st.write("Sie müssen angemeldet sein, um Ihre geteilten Kühlschränke zu verwalten.")
 
 def show_my_friends():
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
