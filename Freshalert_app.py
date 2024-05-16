@@ -383,6 +383,11 @@ def show_settings():
             st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
         st.write("Sie müssen angemeldet sein, um Ihre geteilten Kühlschränke zu verwalten.")
+        
+        # Show success message if fridge_deleted flag is set
+    if 'fridge_deleted' in st.session_state and st.session_state.fridge_deleted:
+        st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
+        st.session_state.fridge_deleted = False  # Reset the flag
 
 def show_my_friends():
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
