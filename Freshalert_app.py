@@ -255,28 +255,37 @@ def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
     
     st.subheader("Liste aller geteilten Kühlschränke:")
-    if st.session_state.df_shared_fridge.empty:
-        st.write("Sie haben keinen geteilten Kühlschrank.")
-    else:
-        # Filter the shared fridges based on the user ID
-        user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
-        
-        if not user_shared_fridges.empty:
-            shared_fridge_ids = user_shared_fridges['Kuehlschrank_ID'].unique()
-            selected_fridge_id = st.radio("Wähle einen Kühlschrank aus", shared_fridge_ids)
+    
+    # Initialize df_shared_fridge if it doesn't exist
+    if 'df_shared_fridge' not in st.session_state:
+        st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
 
-            if selected_fridge_id:
-                st.session_state.selected_fridge_id = selected_fridge_id
-                show_selected_fridge(selected_fridge_id)
-        else:
-            st.write("Sie haben keine Berechtigungen für geteilte Kühlschränke.")
+    # Filter the shared fridges based on the user ID
+    user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+    
+    if not user_shared_fridges.empty:
+        shared_fridge_ids = user_shared_fridges['Kuehlschrank_ID'].unique()
+        selected_fridge_id = st.radio("Wähle einen Kühlschrank aus", shared_fridge_ids)
+
+        if selected_fridge_id:
+            st.session_state.selected_fridge_id = selected_fridge_id
+            show_selected_fridge(selected_fridge_id)
+    else:
+        st.write("Sie haben keine Berechtigungen für geteilte Kühlschränke.")
 
     # Button to generate a new fridge ID
     if st.button("Neuen Kühlschrank erstellen"):
         new_fridge_id = generate_new_fridge_id()
+        
+        # Check if df_shared_fridge exists in session state
+        if 'df_shared_fridge' not in st.session_state:
+            st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
+        
+        # Append new fridge ID
         st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({'Kuehlschrank_ID': new_fridge_id, 'User ID': st.session_state.user_id}, ignore_index=True)
         save_data_to_database_shared_fridge()
         st.success(f"Neuer Kühlschrank mit ID {new_fridge_id} erstellt!")
+
 
 
 
