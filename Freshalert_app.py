@@ -268,7 +268,7 @@ def show_shared_fridge_page():
     
     if not st.session_state.df_food.empty:
         # Filtere die Einträge nach der User ID
-        user_fridge = st.session_state.df_food[st.session_state.df_food['User ID'] == st.session_state.user_id]
+        user_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
         
         if not user_fridge.empty:
             # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
