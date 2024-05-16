@@ -255,17 +255,17 @@ def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
     
     if st.button("Neuen geteilten Kühlschrank erstellen"):
-    new_fridge_id = generate_random_code()
-    st.session_state.shared_fridge_id = new_fridge_id
-    st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-    st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({
-        "Kuehlschrank_ID": new_fridge_id,
-        "User ID": st.session_state.user_id
-    }, ignore_index=True)
-    save_data_to_database_shared_fridge()
+        new_fridge_id = generate_random_code()
+        st.session_state.shared_fridge_id = new_fridge_id
+        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
+        st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({
+            "Kuehlschrank_ID": new_fridge_id,
+            "User ID": st.session_state.user_id
+        }, ignore_index=True)
+        save_data_to_database_shared_fridge()
 
-    # Automatisch die Seite neu laden
-    st.experimental_rerun()
+        # Automatisch die Seite neu laden
+        st.experimental_rerun()
 
     if 'shared_fridge_id' in st.session_state:
         fridge_id = st.session_state.shared_fridge_id
