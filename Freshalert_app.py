@@ -268,7 +268,10 @@ def show_shared_fridge_page():
             "User ID": st.session_state.user_id,
             "Kuehlschrank_ID": new_fridge_id
         }
-        st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append(new_shared_fridge_entry, ignore_index=True)
+        new_entry_df = pd.DataFrame([new_shared_fridge_entry])
+        
+        # Concatenate the existing DataFrame with the new entry DataFrame
+        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, new_entry_df], ignore_index=True)
         save_data_to_database_shared_fridge()  # Save the updated shared fridge data
         
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
