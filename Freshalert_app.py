@@ -378,6 +378,7 @@ def show_settings():
                 st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != selected_fridge_id_to_delete]
                 save_data_to_database_shared_fridge()
                 st.success(f"Geteilter Kühlschrank mit ID {selected_fridge_id_to_delete} erfolgreich gelöscht!")
+                st.experimental_rerun()
         else:
             st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
