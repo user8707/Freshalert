@@ -161,9 +161,9 @@ def show_fresh_alert_page():
     elif navigation == "Ausloggen":
         logout()
         
-def generate_random_code(length=6):
-    """Generate a random code of given length."""
-    return ''.join(random.choices(string.digits, k=length))
+def generate_new_fridge_id():
+    # Generate a random 6-digit fridge ID
+    return ''.join(random.choices(string.digits, k=6))
 
 
 def show_expired_food_on_mainpage():
@@ -270,6 +270,13 @@ def show_shared_fridge_page():
                 show_selected_fridge(selected_fridge_id)
         else:
             st.write("Sie haben keine Berechtigungen für geteilte Kühlschränke.")
+
+    # Button to generate a new fridge ID
+    if st.button("Neuen Kühlschrank erstellen"):
+        new_fridge_id = generate_new_fridge_id()
+        st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append({'Kuehlschrank_ID': new_fridge_id, 'User ID': st.session_state.user_id}, ignore_index=True)
+        save_data_to_database_shared_fridge()
+        st.success(f"Neuer Kühlschrank mit ID {new_fridge_id} erstellt!")
 
 
 
