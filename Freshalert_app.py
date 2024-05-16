@@ -264,7 +264,13 @@ def show_shared_fridge_page():
         st.session_state.shared_fridge_id = new_fridge_id
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
         
-        ensure_df_shared_fridge_initialized()  # Sicherstellen, dass der DataFrame initialisiert ist
+        # Überprüfe, ob df_shared_fridge bereits im Session-State vorhanden ist
+        if 'df_shared_fridge' not in st.session_state:
+            # Initialisiere df_shared_fridge, wenn es nicht vorhanden ist
+            if st.session_state.github.file_exists(DATA_FILE_SHARED_FRIDGE):
+                st.session_state.df_shared_fridge = st.session_state.github.read_df(DATA_FILE_SHARED_FRIDGE)
+            else:
+                st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
         
         # Aktualisiere die Seite, um die Änderungen anzuzeigen
         st.experimental_rerun()
@@ -279,7 +285,6 @@ def show_shared_fridge_page():
             st.write("Der geteilte Kühlschrank ist leer.")
     else:
         st.write("Sie haben keinen geteilten Kühlschrank.")
-
 
 
 def add_food_to_fridge():
