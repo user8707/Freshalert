@@ -251,7 +251,6 @@ def show_my_fridge_page():
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
-
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
 
