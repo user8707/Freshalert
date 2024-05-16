@@ -253,27 +253,35 @@ def show_my_fridge_page():
 
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
-    
+
     if st.button("Neuen geteilten Kühlschrank erstellen"):
         new_fridge_id = generate_new_fridge_id()
         st.session_state.shared_fridge_id = new_fridge_id
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-            "Kuehlschrank_ID": new_fridge_id,
-            "User ID": st.session_state.user_id
-        }])], ignore_index=True)
-        save_data_to_database_shared_fridge()
+        # Füge den neuen Kühlschrank nur dann hinzu, wenn er von einem berechtigten Benutzer erstellt wurde
+        if st.session_state.user_logged_in:
+            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
+                "Kuehlschrank_ID": new_fridge_id,
+                "User ID": st.session_state.user_id
+            }])], ignore_index=True)
+            save_data_to_database_shared_fridge()
+
         # Automatisch die Seite neu laden
         st.experimental_rerun()
 
-    if 'shared_fridge_id' in st.session_state:
-        fridge_ids = st.session_state.df_shared_fridge['Kuehlschrank_ID'].unique().tolist()
-        selected_fridge_id = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_ids)
-        
-        if selected_fridge_id:
-            show_selected_fridge(selected_fridge_id)
+    if st.session_state.user_logged_in:
+        user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+        if not user_fridges.empty:
+            fridge_ids = user_fridges['Kuehlschrank_ID'].unique().tolist()
+            selected_fridge_id = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_ids)
+            
+            if selected_fridge_id:
+                show_selected_fridge(selected_fridge_id)
+        else:
+            st.write("Sie haben keinen geteilten Kühlschrank.")
     else:
-        st.write("Sie haben keinen geteilten Kühlschrank.")
+        st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
+
 
 
         
