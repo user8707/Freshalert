@@ -257,9 +257,9 @@ def show_my_fridge_page():
         st.write("Der Kühlschrank ist leer.")
 
 def show_shared_fridge_page():
-       st.title("Geteilter Kühlschrank")
+    st.title("Geteilter Kühlschrank")
     
-    if st.button("Neuen geteilten Kühlschrank erstellen"): 
+    if st.button("Neuen geteilten Kühlschrank erstellen"):
         new_fridge_id = generate_random_code()
         st.session_state.shared_fridge_id = new_fridge_id
         st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
@@ -275,14 +275,26 @@ def show_shared_fridge_page():
         # Aktualisiere die Seite, um die Änderungen anzuzeigen
         st.experimental_rerun()
         
-    if 'shared_fridge_id' in st.session_state:
-        fridge_id = st.session_state.shared_fridge_id
-        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-        if not shared_items.empty:
-            st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+        if 'shared_fridge_id' in st.session_state:
+            fridge_id = st.session_state.shared_fridge_id
+            st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
+            shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+            if not shared_items.empty:
+                st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
+            else:
+                st.write("Der geteilte Kühlschrank ist leer.")
+
+def show_my_friends():
+    st.title("Freunde einladen")
+    st.write("Teilen Sie die App FreshAlert, indem Sie ihnen den Link unserer App schicken: https://fresh-alert.streamlit.app/")
+    
+    friend_code = st.text_input("Freundecode eingeben")
+    if st.button("Freundecode hinzufügen"):
+        if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
+            st.session_state.shared_fridge_id = friend_code
+            st.success("Freundecode erfolgreich hinzugefügt!")
         else:
-            st.write("Der geteilte Kühlschrank ist leer.")
+            st.error("Ungültiger Freundecode.")
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
