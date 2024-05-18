@@ -377,9 +377,9 @@ def add_food_to_fridge():
                 new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
                 st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
                 save_data_to_database_shared_fridge()
-        else:
-            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
-            save_data_to_database_food()
+            elif:
+                st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+                save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 
