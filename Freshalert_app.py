@@ -197,7 +197,7 @@ def show_mainpage():
         user_info = st.session_state.logged_in_user
         
         # Vorname des eingeloggten Benutzers abrufen
-        user_first_name = user_info.get("Vorname", "Gast")
+        user_first_name = user_info.get("Vorname")
         
         # Willkommensnachricht mit dem Namen des Benutzers anzeigen
         st.subheader(f"Herzlich Willkommen {user_first_name}, bei FreshAlert. Deine App für deine Lebensmittel!")                      
