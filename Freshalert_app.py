@@ -481,8 +481,12 @@ def show_my_friends():
                 "geteilter Account": True  # Annahme: Markieren Sie, dass dies ein geteilter Account ist
             }
             
-            # Daten speichern
-            st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append(new_entry, ignore_index=True)
+            # DataFrame mit der neuen Zeile erstellen
+            new_row_df = pd.DataFrame([new_entry])
+            
+            # DataFrames zusammenfügen
+            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, new_row_df], ignore_index=True)
+            
             # Speichern Sie die Daten in der Datenbank oder einer anderen Persistenzschicht
             save_data_to_database_shared_fridge()
         else:
