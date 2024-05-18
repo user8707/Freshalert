@@ -77,7 +77,7 @@ def show_login_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     
-    st.title("Welcome to FreshAlert '\U0001F600'😀, Let's start together with saving food") 
+    st.title("Welcome to FreshAlert \U0001F600😀, Let's start together with saving food") 
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
