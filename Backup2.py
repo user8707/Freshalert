@@ -7,6 +7,7 @@ from PIL import Image
 from datetime import datetime, timedelta
 import random
 import string
+import time
 
 # Konstante für das Login
 DATA_FILE = "FreshAlert-Registration.csv"
@@ -18,7 +19,7 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 
 # Konstante für das  Datenrepo für den geteilten Kühlschrank
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
-DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf"]
+DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername"]
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -80,7 +81,7 @@ def show_login_page():
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
-    if st.button("Login"):
+    if st.button("🔓 Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and bcrypt.checkpw(password.encode('utf-8'), row["Passwort"].encode('utf-8')):  # Hashed password comparison
@@ -94,7 +95,7 @@ def show_login_page():
             st.error("Ungültige E-Mail oder Passwort.")
 
     if not st.session_state.user_logged_in:  # Zeige den "Registrieren" Button nur wenn der Benutzer nicht eingeloggt ist
-        if st.button("Registrieren", key="registration_button"):
+        if st.button("🆕 Neu Registrieren", key="registration_button"):
             st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
         show_registration_page()
@@ -116,23 +117,26 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
-            st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
+      # Überprüfen, ob der Standort der geteilte Kühlschrank ist und ob die shared_fridge_id vorhanden ist
+        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+            # Setzen der Kühlschrank-ID für das geteilte Kühlschrank-Eintrag
+            new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+            # Hinzufügen des neuen Eintrags zum geteilten Kühlschrank-Datenframe
+            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+            # Speichern in die geteilte Kühlschrank-Datenbank
+            save_data_to_database_shared_fridge()
+            # Erfolgsmeldung anzeigen
+            st.success("Lebensmittel erfolgreich im geteilten Kühlschrank hinzugefügt!")
+        elif new_entry["Standort"] == "geteilter Kühlschrank":
+            # Fehlermeldung anzeigen, wenn die geteilte Kühlschrank-ID nicht vorhanden ist
+            st.error("Fehler: Die ID des geteilten Kühlschranks fehlt!")
         else:
-            if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-                # Hash the password before storing it
-                hashed_password = bcrypt.hashpw(new_entry["Passwort"].encode('utf-8'), bcrypt.gensalt())
-                new_entry["Passwort"] = hashed_password.decode('utf-8')
-                
-                # Setze die User ID als E-Mail Adresse
-                new_entry["User ID"] = new_entry["E-Mail"]
-                
-                new_entry_df = pd.DataFrame([new_entry])
-                st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
-                save_data_to_database_login()
-                st.success("Registrierung erfolgreich!")
-            else:
-                st.error("Die Passwörter stimmen nicht überein.")
+            # Hinzufügen des neuen Eintrags zum persönlichen Kühlschrank-Datenframe
+            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+            # Speichern in die persönliche Kühlschrank-Datenbank
+            save_data_to_database_food()
+            # Erfolgsmeldung anzeigen
+            st.success("Lebensmittel erfolgreich im persönlichen Kühlschrank hinzugefügt!")
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -141,29 +145,29 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["Startbildschirm", "Mein Kühlschrank", "geteilter Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen","Information", "Einstellungen", "Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 Geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔐 Ausloggen"])
 
     # Check which page to display
-    if navigation == "Startbildschirm":
+    if navigation == "🏠 Startbildschirm":
         show_mainpage()
-    elif navigation == "Mein Kühlschrank":
+    elif navigation == "🗄️ Mein Kühlschrank":
         show_my_fridge_page()
-    elif navigation == "geteilter Kühlschrank":
+    elif navigation == "🤝 Geteilter Kühlschrank":
         show_shared_fridge_page()
-    elif navigation == "Neues Lebensmittel hinzufügen":
+    elif navigation == "🛒 Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
-    elif navigation == "Freunde einladen":
+    elif navigation == "📧 Freunde einladen":
         show_my_friends()
-    elif navigation == "Information":
+    elif navigation == "ℹ️ Information":
         show_informations()
-    elif navigation == "Einstellungen":
+    elif navigation == "⚙️ Einstellungen":
         show_settings()
-    elif navigation == "Ausloggen":
+    elif navigation == "🔐 Ausloggen":
         logout()
         
-def generate_random_code(length=6):
-    """Generate a random code of given length."""
-    return ''.join(random.choices(string.digits, k=length))
+def generate_new_fridge_id():
+    # Generate a random 6-digit fridge ID
+    return ''.join(random.choices(string.digits, k=6))
 
 
 def show_expired_food_on_mainpage():
@@ -172,7 +176,7 @@ def show_expired_food_on_mainpage():
 
     if not user_expired_food.empty:
         st.markdown("---")
-        st.subheader("Deine Lebensmittel, welche bald ablaufen!:")
+        st.subheader("Deine Lebensmittel, welche bald ablaufen⚠️:")
         for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
@@ -239,7 +243,7 @@ def show_my_fridge_page():
             # Allow the user to delete a food entry
             food_names = user_fridge_display['Lebensmittel'].tolist()
             food_index_to_delete = st.selectbox("Lebensmittel auswählen", food_names, index=0)
-            if st.button("Eintrag löschen", key="delete_entry_button"):
+            if st.button("🚮 Lebensmittel löschen", key="delete_entry_button"):
                 index_to_delete = user_fridge_display[user_fridge_display['Lebensmittel'] == food_index_to_delete].index
                 st.session_state.df_food.drop(index=index_to_delete, inplace=True)
                 save_data_to_database_food()  # Save the updated dataframe
@@ -250,55 +254,86 @@ def show_my_fridge_page():
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
-
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
-    
-    if st.button("Neuen geteilten Kühlschrank erstellen"):
-        new_fridge_id = generate_random_code()
-        st.session_state.shared_fridge_id = new_fridge_id
-        st.success(f"Neuer geteilter Kühlschrank erstellt! Code: {new_fridge_id}")
-        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([{
-            "Kuehlschrank_ID": new_fridge_id,
-            "User ID": st.session_state.user_id
-        }])], ignore_index=True)
-        save_data_to_database_shared_fridge()
 
-    init_dataframe_shared_fridge()  # Daten laden
-    
-    if not st.session_state.df_food.empty:
-        # Filtere die Einträge nach der User ID
-        user_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
-        
-        if not user_fridge.empty:
-            # Sortiere das DataFrame nach den Tagen bis zum Ablaufdatum
-            user_fridge = user_fridge.sort_values(by='Tage_bis_Ablauf', ascending=True)
+    if st.button("Neuen geteilten Kühlschrank erstellen"):
+        st.session_state.create_new_fridge = True
+
+    if st.session_state.get("create_new_fridge"):
+        # Benutzereingabe für den Namen des neuen geteilten Kühlschranks
+        new_fridge_name = st.text_input("Name des neuen geteilten Kühlschranks")
+        if new_fridge_name:
+            st.session_state.new_fridge_name = new_fridge_name
+
+        # Button zum Erstellen des Kühlschranks und Generieren des Codes
+        if st.button("Kühlschrank erstellen und Code generieren"):
+            new_fridge_name = st.session_state.get("new_fridge_name")
+            new_fridge_id = generate_new_fridge_id()
+            st.session_state.shared_fridge_id = new_fridge_id
+            st.session_state.create_new_fridge = False
+            st.success(f"Neuer geteilter Kühlschrank '{new_fridge_name}' erfolgreich erstellt! Kühlschrank-ID: {new_fridge_id}")
             
-             # Zeige nur die gewünschten Spalten an
-            user_fridge_display = user_fridge[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort','Ablaufdatum', 'Tage_bis_Ablauf']]
+            # Neue Zeile im Datenrepository hinzufügen
+            if st.session_state.user_logged_in:
+                new_fridge_data = {
+                    "Kuehlschrank_ID": new_fridge_id,
+                    "User ID": st.session_state.user_id,
+                    "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
+                }
+                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
+                save_data_to_database_shared_fridge()
             
-            # Colorize the expiring food entries
-            df_styled = colorize_expiring_food(user_fridge_display)
-                               
+            # Automatisch die Seite neu laden
+            st.experimental_rerun()
+
+    if st.session_state.user_logged_in:
+        user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+        if not user_fridges.empty:
+            fridge_names = user_fridges['Benutzername'].unique().tolist()
+            selected_fridge_name = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_names)
+            
+            if selected_fridge_name:
+                selected_fridge_id = user_fridges.loc[user_fridges['Benutzername'] == selected_fridge_name, 'Kuehlschrank_ID'].iloc[0]
+                show_selected_fridge(selected_fridge_id)
+        else:
+            st.write("Sie haben keinen geteilten Kühlschrank.")
+    else:
+        st.write("Sie müssen angemeldet sein, um geteilte Kühlschränke anzuzeigen.")
+
+
+def show_selected_fridge(fridge_id):
+    st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
+
+    # Filter the shared fridge DataFrame based on the selected fridge_id
+    fridge_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
+
+    if not fridge_items.empty:
+        # Filter items where Standort is not empty
+        fridge_items = fridge_items[fridge_items['Standort'].notna()]
+
+        if not fridge_items.empty:
+            # Sort the DataFrame by expiration date
+            fridge_items = fridge_items.sort_values(by='Tage_bis_Ablauf', ascending=True)
+            
+            # Display the fridge items
+            fridge_items_display = fridge_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']]
+            df_styled = colorize_expiring_food(fridge_items_display)
             st.write(df_styled)
 
-    # Prüfen, ob ein geteilter Kühlschrank vorhanden ist
-    if 'shared_fridge_id' in st.session_state:
-        fridge_id = st.session_state.shared_fridge_id
-        st.subheader(f"Ihr geteilter Kühlschrank: {fridge_id}")
-        if st.session_state.df_shared_fridge.empty:
-            st.write("Sie haben keinen geteilten Kühlschrank.")
+            # Allow the user to delete a food entry
+            food_names = fridge_items_display['Lebensmittel'].tolist()
+            food_index_to_delete = st.selectbox("Lebensmittel auswählen, um zu löschen:", food_names, index=0)
+            if st.button("🚮 Lebensmittel löschen", key="delete_food_button"):
+                index_to_delete = fridge_items_display[fridge_items_display['Lebensmittel'] == food_index_to_delete].index
+                st.session_state.df_shared_fridge.drop(index=index_to_delete, inplace=True)
+                save_data_to_database_shared_fridge()  # Save the updated dataframe
+                st.success("Lebensmittel erfolgreich gelöscht!")
+                st.experimental_rerun()  # Rerun the app to refresh the page
         else:
-            shared_items = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == fridge_id]
-            if not shared_items.empty:
-                st.write(shared_items[['Lebensmittel', 'Kategorie', 'Lagerort', 'Standort', 'Ablaufdatum', 'Tage_bis_Ablauf']])
-            elif st.button("Lebensmittel hinzufügen"):
-                add_food_to_fridge()  # Nur wenn der Button geklickt wird, wird die Funktion aufgerufen
+            st.write("Keine Lebensmitteleinträge vorhanden, die einen Standort haben.")
     else:
-        st.write("Sie haben keinen geteilten Kühlschrank.")
-
-
-
+        st.write("Dieser Kühlschrank ist leer oder enthält keine Standortinformationen.")
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
@@ -306,14 +341,15 @@ def add_food_to_fridge():
     new_entry = {
         DATA_COLUMNS_FOOD[0]: st.session_state.user_id,  # Setze die User ID als UserID
         DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Lebensmittel
-        DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]), #Kategorie
-        DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
-        DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
+        DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen",  "🥦 Gemüse", "🍎 Obst", "🥛 Milchprodukte", "🍗 Fleisch", "🐟 Fisch", "🍳 Eier", "🍺 Getränke", "🥫 Saucen", "🥯 Getreideprodukte", "🍨 Tiefkühlprodukte", "🧁 Gebäcke", "🍕 Sonstiges"]), #Kategorie
+        DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "📦Schrank", "🗄️Kühlschrank", "🧊Tiefkühler", "offen"]), # Location
+        DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "🗄️Mein Kühlschrank", "🤝geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
 
-    if not new_entry[DATA_COLUMNS_FOOD[1]] or not new_entry[DATA_COLUMNS_FOOD[5]]:
-        st.error("Bitte geben Sie das Lebensmittel und das Ablaufdatum ein.")
+    # Überprüfe, ob die Pflichtfelder ausgefüllt sind
+    if not new_entry[DATA_COLUMNS_FOOD[1]] or new_entry[DATA_COLUMNS_FOOD[4]] == "Bitte wählen" or not new_entry[DATA_COLUMNS_FOOD[5]]:
+        st.error("Bitte fülle die Pflichtfelder (Lebensmittel, Standort, Ablaufdatum) aus.")
         return
         
     # Überprüfe, ob das Ablaufdatum gültig ist
@@ -329,12 +365,12 @@ def add_food_to_fridge():
 
     # Füge die Tage_bis_Ablauf-Spalte zum neuen Eintrag hinzu
     new_entry['Tage_bis_Ablauf'] = days_until_expiry
-    
+
     for key, value in new_entry.items():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
-
+    
     if st.button("Hinzufügen"):
         if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
             new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
@@ -343,12 +379,41 @@ def add_food_to_fridge():
         else:
             st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
             save_data_to_database_food()
-        st.success("Lebensmittel erfolgreich hinzugefügt!")   
-        
+        st.success("Lebensmittel erfolgreich hinzugefügt!")
+
 
 
 def show_settings():
     st.title("Einstellungen")
+    
+    # Get the user's shared fridges
+    if st.session_state.user_logged_in:
+        user_shared_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+        
+        if not user_shared_fridges.empty:
+            fridge_names = user_shared_fridges['Benutzername'].unique().tolist()  # Get unique fridge names
+            selected_fridge_name_to_delete = st.selectbox("Wählen Sie einen geteilten Kühlschrank zum Löschen aus:", fridge_names)
+            selected_fridge_id_to_delete = user_shared_fridges.loc[user_shared_fridges['Benutzername'] == selected_fridge_name_to_delete, 'Kuehlschrank_ID'].iloc[0]
+            
+            if st.button("🚮Geteilten Kühlschrank löschen"):
+                # Lösche den ausgewählten geteilten Kühlschrank
+                st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != selected_fridge_id_to_delete]
+                save_data_to_database_shared_fridge()
+                st.success(f"Geteilter Kühlschrank mit dem Namen '{selected_fridge_name_to_delete}' erfolgreich gelöscht!")
+                #für eine Verzögerung der Aktualisierung
+                time.sleep(2)
+                
+                st.experimental_rerun()
+        else:
+            st.write("Sie haben keinen geteilten Kühlschrank.")
+    else:
+        st.write("Sie müssen angemeldet sein, um Ihre geteilten Kühlschränke zu verwalten.")
+        
+        # Show success message if fridge_deleted flag is set
+    if 'fridge_deleted' in st.session_state and st.session_state.fridge_deleted:
+        st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
+        st.session_state.fridge_deleted = False  # Reset the flag
+
 
 def show_my_friends():
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
@@ -422,6 +487,7 @@ def logout():
     st.success("Erfolgreich ausgeloggt!")
     st.session_state.current_user_id = None
     st.experimental_rerun()  # Rerun the app to go back to the login page
+
 
 def save_data_to_database_login():
     if 'github' in st.session_state:
