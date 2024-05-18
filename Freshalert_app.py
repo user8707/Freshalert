@@ -455,16 +455,39 @@ def show_settings():
 
 
 def show_my_friends():
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
-    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Zeige deinen Freunden, wie sie ihre Vorräte am besten organisieren können")
+    st.write("Teile die App FreshAltert, indem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
     friend_code = st.text_input("Freundecode eingeben")
     if st.button("Freundecode hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
             st.session_state.shared_fridge_id = friend_code
             st.success("Freundecode erfolgreich hinzugefügt!")
+            
+            # Annahme: Die User ID ist in der Session gespeichert
+            user_id = st.session_state.user_id
+            
+            # Daten für den geteilten Kühlschrank eintragen
+            new_entry = {
+                "Kuehlschrank_ID": friend_code,
+                "User ID": user_id,
+                "Lebensmittel": "",
+                "Kategorie": "",
+                "Lagerort": "",
+                "Standort": "🤝geteilter Kühlschrank",
+                "Ablaufdatum": None,
+                "Tage_bis_Ablauf": None,
+                "Benutzername": None,
+                "geteilter Account": True  # Annahme: Markieren Sie, dass dies ein geteilter Account ist
+            }
+            
+            # Daten speichern
+            st.session_state.df_shared_fridge = st.session_state.df_shared_fridge.append(new_entry, ignore_index=True)
+            # Speichern Sie die Daten in der Datenbank oder einer anderen Persistenzschicht
+            save_data_to_database_shared_fridge()
         else:
             st.error("Ungültiger Freundecode.")
+
 
 
     
