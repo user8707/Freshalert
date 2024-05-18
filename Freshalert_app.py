@@ -184,7 +184,7 @@ def show_expired_food_shared_fridge():
     if not shared_fridge_expired_food.empty:
         st.markdown("---")
         for index, row in shared_fridge_expired_food.iterrows():
-            st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Kuehlschrank_ID']})")
+            st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Benutzername']})")
             
 
 
