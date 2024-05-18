@@ -192,9 +192,15 @@ def show_expired_food_shared_fridge():
 
 def show_mainpage():
     st.title("FreshAlert")
-    if "Vorname" in st.session_state.df_login.columns:
-        user_first_name = st.session_state.df_login.iloc[0]["Vorname"]  # Annahme: Es wird der Vorname des ersten Benutzers verwendet
-        st.subheader(f"Herzlich Willkommen {user_first_name}, bei FreshAlert. Deine App für deine Lebensmittel!")            
+    # Überprüfen, ob der Benutzer eingeloggt ist und seine Informationen in der Sitzungsvariablen gespeichert sind
+    if "logged_in_user" in st.session_state:
+        user_info = st.session_state.logged_in_user
+        
+        # Vorname des eingeloggten Benutzers abrufen
+        user_first_name = user_info.get("Vorname", "Gast")
+        
+        # Willkommensnachricht mit dem Namen des Benutzers anzeigen
+        st.subheader(f"Herzlich Willkommen {user_first_name}, bei FreshAlert. Deine App für deine Lebensmittel!")                      
     else:
         st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!")  # Falls Vorname nicht verfügbar ist
     st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
