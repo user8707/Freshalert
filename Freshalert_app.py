@@ -367,17 +367,28 @@ def add_food_to_fridge():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
-
+            
     if st.button("Hinzufügen"):
+    # Überprüfen, ob der Standort der geteilte Kühlschrank ist und ob die shared_fridge_id vorhanden ist
         if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+            # Setzen der Kühlschrank-ID für das geteilte Kühlschrank-Eintrag
             new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+            # Hinzufügen des neuen Eintrags zum geteilten Kühlschrank-Datenframe
             st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+            # Speichern in die geteilte Kühlschrank-Datenbank
             save_data_to_database_shared_fridge()
+            # Erfolgsmeldung anzeigen
+            st.success("Lebensmittel erfolgreich im geteilten Kühlschrank hinzugefügt!")
+        elif new_entry["Standort"] == "geteilter Kühlschrank":
+            # Fehlermeldung anzeigen, wenn die geteilte Kühlschrank-ID nicht vorhanden ist
+            st.error("Fehler: Die ID des geteilten Kühlschranks fehlt!")
         else:
+            # Hinzufügen des neuen Eintrags zum persönlichen Kühlschrank-Datenframe
             st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+            # Speichern in die persönliche Kühlschrank-Datenbank
             save_data_to_database_food()
-        st.success("Lebensmittel erfolgreich hinzugefügt!")   
-        
+            # Erfolgsmeldung anzeigen
+            st.success("Lebensmittel erfolgreich im persönlichen Kühlschrank hinzugefügt!")
 
 
 def show_settings():
