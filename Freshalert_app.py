@@ -335,7 +335,6 @@ def show_selected_fridge(fridge_id):
     else:
         st.write("Dieser Kühlschrank ist leer oder enthält keine Standortinformationen.")
 
-
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
            
@@ -348,8 +347,9 @@ def add_food_to_fridge():
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
 
-    if not new_entry[DATA_COLUMNS_FOOD[1]] or not new_entry[DATA_COLUMNS_FOOD[5]]:
-        st.error("Bitte geben Sie das Lebensmittel und das Ablaufdatum ein.")
+    # Überprüfe, ob die Pflichtfelder ausgefüllt sind
+    if not new_entry[DATA_COLUMNS_FOOD[1]] or new_entry[DATA_COLUMNS_FOOD[4]] == "Bitte wählen" or not new_entry[DATA_COLUMNS_FOOD[5]]:
+        st.error("Bitte fülle die Pflichtfelder (Lebensmittel, Standort, Ablaufdatum) aus.")
         return
         
     # Überprüfe, ob das Ablaufdatum gültig ist
@@ -365,21 +365,22 @@ def add_food_to_fridge():
 
     # Füge die Tage_bis_Ablauf-Spalte zum neuen Eintrag hinzu
     new_entry['Tage_bis_Ablauf'] = days_until_expiry
-    
-    for key, value in new_entry.items():
+
+        for key, value in new_entry.items():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
-            
+    
     if st.button("Hinzufügen"):
-            if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
-                new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
-                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
-                save_data_to_database_shared_fridge()
-            else:
-                st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
-                save_data_to_database_food()
-            st.success("Lebensmittel erfolgreich hinzugefügt!")   
+        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+            new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+            save_data_to_database_shared_fridge()
+        else:
+            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+            save_data_to_database_food()
+        st.success("Lebensmittel erfolgreich hinzugefügt!")
+
 
 
 def show_settings():
