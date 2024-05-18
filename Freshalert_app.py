@@ -478,7 +478,7 @@ def show_my_friends():
                 "Ablaufdatum": None,
                 "Tage_bis_Ablauf": None,
                 "Benutzername": None,
-                "geteilter Account": True  # Annahme: Markieren Sie, dass dies ein geteilter Account ist
+                "geteilter Account": user_id   # Annahme: Markieren Sie, dass dies ein geteilter Account ist
             }
             
             # DataFrame mit der neuen Zeile erstellen
