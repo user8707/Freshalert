@@ -176,6 +176,7 @@ def show_expired_food_on_mainpage():
         st.subheader("Deine Lebensmittel, welche bald ablaufen⚠️:")
         for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
+            
 
 
 def show_mainpage():
