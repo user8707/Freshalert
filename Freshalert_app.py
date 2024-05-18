@@ -381,7 +381,8 @@ def add_food_to_fridge():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
-    
+
+    # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
         if "shared_fridge_id" not in st.session_state:
             st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
@@ -390,11 +391,11 @@ def add_food_to_fridge():
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
             shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
             selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
-            new_entry["selected_shared_fridge_name"] = selected_shared_fridge_name
+            new_entry["Benutzername"] = selected_shared_fridge_name
     
     if st.button("Hinzufügen"):
         if new_entry["Standort"] == "🤝geteilter Kühlschrank":
-            selected_shared_fridge_name = new_entry.get("selected_shared_fridge_name")
+            selected_shared_fridge_name = new_entry.get("Benutzername")
             if selected_shared_fridge_name:
                 # Holen Sie sich die entsprechende Kühlschrank-ID basierend auf dem ausgewählten Namen
                 selected_shared_fridge_id = st.session_state.df_shared_fridge.loc[
