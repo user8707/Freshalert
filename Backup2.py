@@ -117,26 +117,23 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-      # Überprüfen, ob der Standort der geteilte Kühlschrank ist und ob die shared_fridge_id vorhanden ist
-        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
-            # Setzen der Kühlschrank-ID für das geteilte Kühlschrank-Eintrag
-            new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
-            # Hinzufügen des neuen Eintrags zum geteilten Kühlschrank-Datenframe
-            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
-            # Speichern in die geteilte Kühlschrank-Datenbank
-            save_data_to_database_shared_fridge()
-            # Erfolgsmeldung anzeigen
-            st.success("Lebensmittel erfolgreich im geteilten Kühlschrank hinzugefügt!")
-        elif new_entry["Standort"] == "geteilter Kühlschrank":
-            # Fehlermeldung anzeigen, wenn die geteilte Kühlschrank-ID nicht vorhanden ist
-            st.error("Fehler: Die ID des geteilten Kühlschranks fehlt!")
+        if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
+            st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
-            # Hinzufügen des neuen Eintrags zum persönlichen Kühlschrank-Datenframe
-            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
-            # Speichern in die persönliche Kühlschrank-Datenbank
-            save_data_to_database_food()
-            # Erfolgsmeldung anzeigen
-            st.success("Lebensmittel erfolgreich im persönlichen Kühlschrank hinzugefügt!")
+            if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+                # Hash the password before storing it
+                hashed_password = bcrypt.hashpw(new_entry["Passwort"].encode('utf-8'), bcrypt.gensalt())
+                new_entry["Passwort"] = hashed_password.decode('utf-8')
+                
+                # Setze die User ID als E-Mail Adresse
+                new_entry["User ID"] = new_entry["E-Mail"]
+                
+                new_entry_df = pd.DataFrame([new_entry])
+                st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
+                save_data_to_database_login()
+                st.success("Registrierung erfolgreich!")
+            else:
+                st.error("Die Passwörter stimmen nicht überein.")
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
@@ -176,9 +173,21 @@ def show_expired_food_on_mainpage():
 
     if not user_expired_food.empty:
         st.markdown("---")
-        st.subheader("Deine Lebensmittel, welche bald ablaufen⚠️:")
+        st.header("Deine Lebensmittel, welche bald ablaufen⚠️:")
+        st.subheader("In meinem Kühlschrank")
         for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
+
+def show_expired_food_shared_fridge():
+    # Filtern aller Lebensmittel im geteilten Kühlschrank, die bald ablaufen
+    shared_fridge_expired_food = st.session_state.df_shared_fridge[(st.session_state.df_shared_fridge['Tage_bis_Ablauf'] <= 1)]
+
+    if not shared_fridge_expired_food.empty:
+        st.markdown(" --- ")
+        st.subheader("In deinem geteilten Kühlschränken")
+        for index, row in shared_fridge_expired_food.iterrows():
+            st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Benutzername']})")
+            
 
 
 def show_mainpage():
@@ -189,6 +198,7 @@ def show_mainpage():
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
     show_expired_food_on_mainpage()
+    show_expired_food_shared_fridge()
 
 def colorize_expiring_food(df):
     def colorize(val):
@@ -254,6 +264,7 @@ def show_my_fridge_page():
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
+        
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
 
@@ -372,13 +383,21 @@ def add_food_to_fridge():
             return
     
     if st.button("Hinzufügen"):
-        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
-            new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
-            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
-            save_data_to_database_shared_fridge()
-        else:
+        if new_entry["Standort"] == "🤝geteilter Kühlschrank":
+            if "shared_fridge_id" not in st.session_state:
+                st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
+                return
+            else:
+                new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+                new_entry["Benutzername"] = st.session_state.df_shared_fridge.loc[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == new_entry["Kuehlschrank_ID"], 'Benutzername'].iloc[0]
+                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+                save_data_to_database_shared_fridge()
+        elif new_entry["Standort"] == "🗄️Mein Kühlschrank":
             st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
             save_data_to_database_food()
+        else:
+            st.error("Ungültiger Standort ausgewählt.")
+            return
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 
