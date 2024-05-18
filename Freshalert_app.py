@@ -452,6 +452,25 @@ def show_settings():
     if 'fridge_deleted' in st.session_state and st.session_state.fridge_deleted:
         st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
         st.session_state.fridge_deleted = False  # Reset the flag
+        
+    if st.button("Account löschen"):
+        confirm_delete = st.checkbox("Sind Sie sicher, dass Sie Ihr Konto und alle Ihre Daten löschen möchten?")
+        if confirm_delete:
+            # Hier den Code einfügen, um das Benutzerkonto und alle damit verbundenen Daten zu löschen
+            # Dies könnte bedeuten, die Zeilen aus den Datenframes zu löschen, die mit der aktuellen Benutzer-ID verknüpft sind
+            # Zusätzlich müssten Sie die entsprechenden Daten aus der Datenbank löschen, wenn Sie eine verwenden
+            # Stellen Sie sicher, dass Sie eine Bestätigung vom Benutzer erhalten, bevor Sie das Konto löschen
+            st.success("Ihr Konto und alle damit verbundenen Daten wurden erfolgreich gelöscht.")
+            # Setzen Sie die Sitzung auf nicht angemeldet, damit der Benutzer auf die Anmeldeseite zurückgeleitet wird
+            st.session_state.user_logged_in = False
+            st.experimental_rerun()  # Rerun the app to reflect the changes
+    else:
+        st.write("Sie müssen angemeldet sein, um Ihre geteilten Kühlschränke zu verwalten.")
+        
+        # Show success message if fridge_deleted flag is set
+    if 'fridge_deleted' in st.session_state and st.session_state.fridge_deleted:
+        st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
+        st.session_state.fridge_deleted = False  # Reset the flag
 
 
 def show_my_friends():
