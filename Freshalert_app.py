@@ -346,22 +346,6 @@ def show_selected_fridge(fridge_id):
     else:
         st.write("Dieser Kühlschrank ist leer oder enthält keine Standortinformationen.")
 
-
-def check_shared_fridge_access():
-    if "shared_fridge_id" not in st.session_state:
-        st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
-        return False
-    
-    shared_fridge_id = st.session_state.shared_fridge_id
-    
-    # Überprüfen, ob der Benutzer zur Nutzung dieses Kühlschranks eingeladen wurde
-    if shared_fridge_id is None or shared_fridge_id not in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
-        st.error("Sie sind nicht zur Nutzung dieses geteilten Kühlschranks eingeladen.")
-        return False
-    
-    return True
-    
-
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
            
@@ -398,15 +382,16 @@ def add_food_to_fridge():
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
+    # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
-        if not check_shared_fridge_access():
+        if "shared_fridge_id" not in st.session_state:
+            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
             return
-    
-        # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
-        shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
-        selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
-    
-        new_entry["Benutzername"] = selected_shared_fridge_name
+        else:
+            # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
+            shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
+            selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
+            new_entry["Benutzername"] = selected_shared_fridge_name
     
     if st.button("Hinzufügen"):
         if new_entry["Standort"] == "🤝geteilter Kühlschrank":
