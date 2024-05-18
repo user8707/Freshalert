@@ -81,7 +81,7 @@ def show_login_page():
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
-    if st.button("Login"):
+    if st.button("🔓 Login"):
         login_successful = False
         for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and bcrypt.checkpw(password.encode('utf-8'), row["Passwort"].encode('utf-8')):  # Hashed password comparison
@@ -116,7 +116,7 @@ def show_registration_page():
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
-    if st.button("Registrieren"):
+    if st.button("🆕 Neu registrieren"):
         if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
             st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
@@ -142,7 +142,7 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 Geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔓 Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 Geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔐 Ausloggen"])
 
     # Check which page to display
     if navigation == "🏠 Startbildschirm":
@@ -321,7 +321,7 @@ def show_selected_fridge(fridge_id):
             # Allow the user to delete a food entry
             food_names = fridge_items_display['Lebensmittel'].tolist()
             food_index_to_delete = st.selectbox("Lebensmittel auswählen, um zu löschen:", food_names, index=0)
-            if st.button("Lebensmittel löschen", key="delete_food_button"):
+            if st.button("🚮 Lebensmittel löschen", key="delete_food_button"):
                 index_to_delete = fridge_items_display[fridge_items_display['Lebensmittel'] == food_index_to_delete].index
                 st.session_state.df_shared_fridge.drop(index=index_to_delete, inplace=True)
                 save_data_to_database_shared_fridge()  # Save the updated dataframe
@@ -391,7 +391,7 @@ def show_settings():
             selected_fridge_name_to_delete = st.selectbox("Wählen Sie einen geteilten Kühlschrank zum Löschen aus:", fridge_names)
             selected_fridge_id_to_delete = user_shared_fridges.loc[user_shared_fridges['Benutzername'] == selected_fridge_name_to_delete, 'Kuehlschrank_ID'].iloc[0]
             
-            if st.button("Geteilten Kühlschrank löschen"):
+            if st.button("🚮Geteilten Kühlschrank löschen"):
                 # Lösche den ausgewählten geteilten Kühlschrank
                 st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['Kuehlschrank_ID'] != selected_fridge_id_to_delete]
                 save_data_to_database_shared_fridge()
