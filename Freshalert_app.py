@@ -316,10 +316,10 @@ def show_shared_fridge_page():
 
     for index, fridge_row in user_shared_fridges.iterrows():
         st.subheader(f"Geteilter Kühlschrank ID: {fridge_row['Kuehlschrank_ID']}")
-        show_selected_fridge(fridge_row['Kuehlschrank_ID'])
+        show_selected_fridge(fridge_row['Kuehlschrank_ID'], index)
 
 
-def show_selected_fridge(fridge_id):
+def show_selected_fridge(fridge_id, index):
     st.subheader(f"Geteilter Kühlschrank ID: {fridge_id}")
 
     # Filter the shared fridge DataFrame based on the selected fridge_id
@@ -340,8 +340,8 @@ def show_selected_fridge(fridge_id):
 
             # Allow the user to delete a food entry
             food_names = fridge_items_display['Lebensmittel'].tolist()
-            food_index_to_delete = st.selectbox("Lebensmittel auswählen, um zu löschen:", food_names, index=0)
-            if st.button("🚮 Lebensmittel löschen", key="delete_food_button"):
+            food_index_to_delete = st.selectbox(f"Lebensmittel auswählen, um zu löschen (Kühlschrank {index}):", food_names, index=0)
+            if st.button("🚮 Lebensmittel löschen", key=f"delete_food_button_{index}"):
                 index_to_delete = fridge_items_display[fridge_items_display['Lebensmittel'] == food_index_to_delete].index
                 st.session_state.df_shared_fridge.drop(index=index_to_delete, inplace=True)
                 save_data_to_database_shared_fridge()  # Save the updated dataframe
@@ -351,6 +351,7 @@ def show_selected_fridge(fridge_id):
             st.write("Keine Lebensmitteleinträge vorhanden, die einen Standort haben.")
     else:
         st.write("Dieser Kühlschrank ist leer oder enthält keine Standortinformationen.")
+
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
