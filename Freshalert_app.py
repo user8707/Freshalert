@@ -392,6 +392,10 @@ def add_food_to_fridge():
             shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
             selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
 
+            # Vor der Überprüfung auf eingeladene Freunde, initialisieren Sie die Liste, wenn sie nicht existiert
+            if "invited_friends" not in st.session_state:
+                st.session_state.invited_friends = []
+
             # Überprüfen, ob der Benutzer zur Nutzung dieses Kühlschranks eingeladen wurde
             if selected_shared_fridge_name not in st.session_state.invited_friends:
                 st.error("Sie sind nicht zur Nutzung dieses geteilten Kühlschranks eingeladen.")
