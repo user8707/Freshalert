@@ -91,6 +91,7 @@ def show_login_page():
                 break
         if login_successful:
             st.success("Erfolgreich eingeloggt!")
+            user_first_name = row["Vorname"]  # Hole den Vornamen des eingeloggten Benutzers
             st.session_state.logged_in_user = {"Vorname": user_first_name}  # Speichere den Vornamen des Benutzers
         else:
             st.error("Ungültige E-Mail oder Passwort.")
