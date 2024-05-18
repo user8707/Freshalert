@@ -369,7 +369,7 @@ def add_food_to_fridge():
             return
     
     if st.button("Hinzufügen"):
-        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+        if new_entry["Standort"] == "geteilter Kühlschrank":
             if "shared_fridge_id" not in st.session_state:
                 st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
                 return
