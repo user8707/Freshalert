@@ -183,8 +183,8 @@ def show_expired_food_shared_fridge():
     shared_fridge_expired_food = st.session_state.df_shared_fridge[(st.session_state.df_shared_fridge['Tage_bis_Ablauf'] <= 1)]
 
     if not shared_fridge_expired_food.empty:
-        st.markdown("<p style='font-family: Arial, sans-serif'> --- </p>", unsafe_allow_html=True)
-        st.subheader("In deinen geteilten Kühlschränken")
+        st.markdown(" --- ")
+        st.subheader("<p style='font-family: Arial, sans-serif'> In deinem geteilten Kühlschränken </p>", unsafe_allow_html=True)
         for index, row in shared_fridge_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Benutzername']})")
             
