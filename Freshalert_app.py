@@ -77,7 +77,7 @@ def show_login_page():
     col1, col2 = st.columns([7, 1])
     col2.image(small_image, use_column_width=False, clamp=True)
     
-    st.title("Welcome to FreshAlert \U0001F600😀, Let's start together with saving food") 
+    st.title("Welcome to FreshAlert 😀, Let's start together with saving food") 
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
@@ -339,7 +339,7 @@ def add_food_to_fridge():
     new_entry = {
         DATA_COLUMNS_FOOD[0]: st.session_state.user_id,  # Setze die User ID als UserID
         DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Lebensmittel
-        DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen", "\U0001F966 Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte", "Gebäcke", "Sonstiges"]), #Kategorie
+        DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen", "\U0001F966 Gemüse", "\U0001F34E Obst", "\U0001F95B Milchprodukte", "\U001F357 Fleisch", "	\U0001F364 Fisch", "\U0001F373 Eier", "\U0001F37A Getränke", "\U0001F96B Saucen", "\U0001F96F Getreideprodukte", "\U0001F368 Tiefkühlprodukte", "\U0001F9C1 Gebäcke", "\U0001F355 Sonstiges"]), #Kategorie
         DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "Schrank", "Kühlschrank", "Tiefkühler", "offen"]), # Location
         DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "Mein Kühlschrank", "geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
