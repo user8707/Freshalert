@@ -95,7 +95,7 @@ def show_login_page():
             st.error("Ungültige E-Mail oder Passwort.")
 
     if not st.session_state.user_logged_in:  # Zeige den "Registrieren" Button nur wenn der Benutzer nicht eingeloggt ist
-        if st.button("Registrieren", key="registration_button"):
+        if st.button("🆕 Neu Registrieren", key="registration_button"):
             st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
         show_registration_page()
@@ -116,7 +116,7 @@ def show_registration_page():
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
-    if st.button("🆕 Neu registrieren"):
+    if st.button("Registrieren"):
         if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
             st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
         else:
@@ -173,7 +173,7 @@ def show_expired_food_on_mainpage():
 
     if not user_expired_food.empty:
         st.markdown("---")
-        st.subheader("Deine Lebensmittel, welche bald ablaufen!:")
+        st.subheader("Deine Lebensmittel, welche bald ablaufen⚠️:")
         for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
