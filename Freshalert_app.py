@@ -482,10 +482,9 @@ def show_informations():
     st.write("https://foodwaste.ch/was-ist-food-waste/5-schritte/")
 
 def logout():
-    st.session_state.user_logged_in = False
-    st.success("Erfolgreich ausgeloggt!")
-    st.session_state.current_user_id = None
-    st.experimental_rerun()  # Rerun the app to go back to the login page
+    st.session_state.pop('user_id', None)  # Entfernt die Benutzer-ID aus der Sitzung
+    st.session_state.pop('df_food', None)  # Optional: Entfernt die Lebensmittel-Daten aus der Sitzung
+    st.experimental_rerun()  # Startet die Anwendung neu, um den Benutzer zur Login-Seite zu führen
 
 
 def save_data_to_database_login():
