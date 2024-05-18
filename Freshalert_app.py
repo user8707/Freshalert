@@ -487,6 +487,7 @@ def logout():
     st.session_state.current_user_id = None
     st.experimental_rerun()  # Rerun the app to go back to the login page
 
+
 def save_data_to_database_login():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
