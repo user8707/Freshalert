@@ -173,7 +173,8 @@ def show_expired_food_on_mainpage():
 
     if not user_expired_food.empty:
         st.markdown("---")
-        st.subheader("Deine Lebensmittel, welche bald ablaufen⚠️:")
+        st.header("Deine Lebensmittel, welche bald ablaufen⚠️:")
+        st.subheader("In meinem Kühlschrank")
         for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
@@ -183,6 +184,7 @@ def show_expired_food_shared_fridge():
 
     if not shared_fridge_expired_food.empty:
         st.markdown("---")
+        st.subheader("In deinen geteilten Kühlschränke")
         for index, row in shared_fridge_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Benutzername']})")
             
