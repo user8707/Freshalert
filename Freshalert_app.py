@@ -145,21 +145,21 @@ def show_fresh_alert_page():
     navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 Geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔓 Ausloggen"])
 
     # Check which page to display
-    if navigation == "Startbildschirm":
+    if navigation == "🏠 Startbildschirm":
         show_mainpage()
-    elif navigation == "Mein Kühlschrank":
+    elif navigation == "🗄️ Mein Kühlschrank":
         show_my_fridge_page()
     elif navigation == "🤝 Geteilter Kühlschrank":
         show_shared_fridge_page()
-    elif navigation == "Neues Lebensmittel hinzufügen":
+    elif navigation == "🛒 Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
-    elif navigation == "Freunde einladen":
+    elif navigation == "📧 Freunde einladen":
         show_my_friends()
-    elif navigation == "Information":
+    elif navigation == "ℹ️ Information":
         show_informations()
-    elif navigation == "Einstellungen":
+    elif navigation == "⚙️ Einstellungen":
         show_settings()
-    elif navigation == "Ausloggen":
+    elif navigation == "🔓 Ausloggen":
         logout()
         
 def generate_new_fridge_id():
