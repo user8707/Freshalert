@@ -8,11 +8,13 @@ Was war gut?
 - Übersichtliche Sidebar
 
 
+
 Was war schlecht?
 - Beim Login muss zweimal auf den Login-Button gedrückt werden, damit ich tatsächlich in die App komme
 - Wenn ich zwei mal ein gleiches Produkt im Kühlschrank stehen habe, ich aber nur eines löschen will, weil nur eines gegessen wurde, löscht es trotzdem alle Produkte mit dem gleichen Namen --> eventuell wäre es einfacher, wenn neben meinen Vorräten eine zusätzliche Spalte mit einem 'Lösch'-Button vorhanden wäre
 - Wie man einen geteilten Kühlschrank mit einer fremden Person teilt, ist unklar
 - Die Funktion 'Freunde Einladen' ist unklar, wie sie funktioniert
+
 
 
 Beein merkungen?
