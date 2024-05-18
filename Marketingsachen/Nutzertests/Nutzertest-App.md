@@ -5,6 +5,7 @@ Was war gut?
 - Lebensmittel sind mittels der Dropdown-Liste einfach zu entfernen
 - Emojis waren ansprechend
 - Einfache Anwendung
+- Übersichtliche Homepage
 
 
 Was war schlecht?
