@@ -180,7 +180,7 @@ def show_expired_food_on_mainpage():
 
 def show_expired_food_shared_fridge():
     # Filtern aller Lebensmittel im geteilten Kühlschrank, die bald ablaufen
-    shared_fridge_expired_food = st.session_state.df_shared_fridge[(st.session_state.df_shared_fridge['Tage_bis_Ablauf'] <= 1)]
+    shared_fridge_expired_food = st.session_state.df_food[(st.session_state.df_food['User ID'] == st.session_state.user_id) & (st.session_state.df_food['Tage_bis_Ablauf'] <= 1)]
 
     if not shared_fridge_expired_food.empty:
         st.markdown(" --- ")
