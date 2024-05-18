@@ -369,7 +369,7 @@ def add_food_to_fridge():
             return
     
     if st.button("Hinzufügen"):
-        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+        if new_entry["Standort"] == "🤝geteilter Kühlschrank":
             if "shared_fridge_id" not in st.session_state:
                 st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
                 return
@@ -377,9 +377,12 @@ def add_food_to_fridge():
                 new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
                 st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
                 save_data_to_database_shared_fridge()
-        elif:
-                st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
-                save_data_to_database_food()
+        elif new_entry["Standort"] == "🗄️Mein Kühlschrank":
+            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+            save_data_to_database_food()
+        else:
+            st.error("Ungültiger Standort ausgewählt.")
+            return
         st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 
