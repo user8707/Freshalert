@@ -176,6 +176,15 @@ def show_expired_food_on_mainpage():
         st.subheader("Deine Lebensmittel, welche bald ablaufen⚠️:")
         for index, row in user_expired_food.iterrows():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
+
+def show_expired_food_shared_fridge():
+    # Filtern aller Lebensmittel im geteilten Kühlschrank, die bald ablaufen
+    shared_fridge_expired_food = st.session_state.df_shared_fridge[(st.session_state.df_shared_fridge['Tage_bis_Ablauf'] <= 1)]
+
+    if not shared_fridge_expired_food.empty:
+        st.markdown("---")
+        for index, row in shared_fridge_expired_food.iterrows():
+            st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Kuehlschrank_ID']})")
             
 
 
@@ -187,6 +196,7 @@ def show_mainpage():
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
     show_expired_food_on_mainpage()
+    show_expired_food_shared_fridge()
 
 def colorize_expiring_food(df):
     def colorize(val):
