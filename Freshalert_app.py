@@ -414,7 +414,7 @@ def add_food_to_fridge():
             st.error("Ungültiger Standort ausgewählt.")
             return
 
-    st.success("Lebensmittel erfolgreich hinzugefügt!")
+
 
 
 def show_settings():
