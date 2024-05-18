@@ -117,23 +117,26 @@ def show_registration_page():
             return
 
     if st.button("Registrieren"):
-        if new_entry["E-Mail"] in st.session_state.df_login["E-Mail"].values:
-            st.error("Benutzer mit dieser E-Mail-Adresse ist bereits registriert.")
+      # Überprüfen, ob der Standort der geteilte Kühlschrank ist und ob die shared_fridge_id vorhanden ist
+        if new_entry["Standort"] == "geteilter Kühlschrank" and "shared_fridge_id" in st.session_state:
+            # Setzen der Kühlschrank-ID für das geteilte Kühlschrank-Eintrag
+            new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+            # Hinzufügen des neuen Eintrags zum geteilten Kühlschrank-Datenframe
+            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+            # Speichern in die geteilte Kühlschrank-Datenbank
+            save_data_to_database_shared_fridge()
+            # Erfolgsmeldung anzeigen
+            st.success("Lebensmittel erfolgreich im geteilten Kühlschrank hinzugefügt!")
+        elif new_entry["Standort"] == "geteilter Kühlschrank":
+            # Fehlermeldung anzeigen, wenn die geteilte Kühlschrank-ID nicht vorhanden ist
+            st.error("Fehler: Die ID des geteilten Kühlschranks fehlt!")
         else:
-            if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-                # Hash the password before storing it
-                hashed_password = bcrypt.hashpw(new_entry["Passwort"].encode('utf-8'), bcrypt.gensalt())
-                new_entry["Passwort"] = hashed_password.decode('utf-8')
-                
-                # Setze die User ID als E-Mail Adresse
-                new_entry["User ID"] = new_entry["E-Mail"]
-                
-                new_entry_df = pd.DataFrame([new_entry])
-                st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
-                save_data_to_database_login()
-                st.success("Registrierung erfolgreich!")
-            else:
-                st.error("Die Passwörter stimmen nicht überein.")
+            # Hinzufügen des neuen Eintrags zum persönlichen Kühlschrank-Datenframe
+            st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+            # Speichern in die persönliche Kühlschrank-Datenbank
+            save_data_to_database_food()
+            # Erfolgsmeldung anzeigen
+            st.success("Lebensmittel erfolgreich im persönlichen Kühlschrank hinzugefügt!")
 
 def show_fresh_alert_page():
     col1, col2 = st.columns([7, 1])
