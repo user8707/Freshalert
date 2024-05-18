@@ -202,8 +202,8 @@ def show_mainpage():
         user_first_name = user_info.get("Vorname")
         
         # Willkommensnachricht mit dem Namen des Benutzers anzeigen
-        st.subheader("Herzlich Willkommen {user_first_name}, bei FreshAlert)
-        st.subheader(Deine App für deine Lebensmittel!")                      
+        st.subheader("Herzlich Willkommen {user_first_name}, bei FreshAlert")
+        st.subheader("Deine App für deine Lebensmittel!")                      
     else:
         st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!")  # Falls Vorname nicht verfügbar ist
     st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
