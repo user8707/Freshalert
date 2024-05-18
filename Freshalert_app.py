@@ -291,7 +291,7 @@ def show_shared_fridge_page():
             selected_fridge_name = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", fridge_names)
             
             if selected_fridge_name:
-                selected_fridge_id = user_fridges.loc[user_fridges['Benutzername'] == selected_fridge_name, 'Kuehlschrank_ID'].iloc[1]
+                selected_fridge_id = user_fridges.loc[user_fridges['Benutzername'] == selected_fridge_name, 'Kuehlschrank_ID'].iloc[0]
                 show_selected_fridge(selected_fridge_id)
         else:
             st.write("Sie haben keinen geteilten Kühlschrank.")
