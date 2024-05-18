@@ -142,7 +142,7 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 geteilter Kühlschrank", "➕ Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔓 Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔓 Ausloggen"])
 
     # Check which page to display
     if navigation == "Startbildschirm":
@@ -341,7 +341,7 @@ def add_food_to_fridge():
         DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Lebensmittel
         DATA_COLUMNS_FOOD[2]: st.selectbox("Kategorie", ["Bitte wählen",  "🥦 Gemüse", "🍎 Obst", "🥛 Milchprodukte", "🍗 Fleisch", "🐟 Fisch", "🍳 Eier", "🍺 Getränke", "🥫 Saucen", "🥯 Getreideprodukte", "🍨 Tiefkühlprodukte", "🧁 Gebäcke", "🍕 Sonstiges"]), #Kategorie
         DATA_COLUMNS_FOOD[3]: st.selectbox("Lagerort", ["Bitte wählen", "📦Schrank", "🗄️Kühlschrank", "🧊Tiefkühler", "offen"]), # Location
-        DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "🗄️Mein Kühlschrank", "🗄️🗄️geteilter Kühlschrank"]), #area
+        DATA_COLUMNS_FOOD[4]: st.selectbox("Standort", ["Bitte wählen", "🗄️Mein Kühlschrank", "🤝geteilter Kühlschrank"]), #area
         DATA_COLUMNS_FOOD[5]: st.date_input("Ablaufdatum"), #Ablaufdatum
     }
 
