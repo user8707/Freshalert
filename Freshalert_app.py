@@ -458,6 +458,16 @@ def show_settings():
         if confirm_delete:
             # Hier den Code einfügen, um das Benutzerkonto und alle damit verbundenen Daten zu löschen
             # Dies könnte bedeuten, die Zeilen aus den Datenframes zu löschen, die mit der aktuellen Benutzer-ID verknüpft sind
+            user_id = st.session_state.user_id
+
+            # Löschen aller Einträge im DataFrame df_shared_fridge, die mit der Benutzer-ID verknüpft sind
+            st.session_state.df_shared_fridge = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] != user_id]
+
+            # Speichern der aktualisierten Daten im Datenrepository (falls erforderlich)
+            save_data_to_database_shared_fridge()
+
+            # Setzen des Flags, um den Erfolg des Löschvorgangs anzuzeigen
+            st.session_state.fridge_deleted = True
             # Zusätzlich müssten Sie die entsprechenden Daten aus der Datenbank löschen, wenn Sie eine verwenden
             # Stellen Sie sicher, dass Sie eine Bestätigung vom Benutzer erhalten, bevor Sie das Konto löschen
             st.success("Ihr Konto und alle damit verbundenen Daten wurden erfolgreich gelöscht.")
