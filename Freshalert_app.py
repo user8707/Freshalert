@@ -19,7 +19,7 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 
 # Konstante für das  Datenrepo für den geteilten Kühlschrank
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
-DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername", "geteilter Account"]
+DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername"]
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -455,43 +455,16 @@ def show_settings():
 
 
 def show_my_friends():
-    st.title("Zeige deinen Freunden, wie sie ihre Vorräte am besten organisieren können")
-    st.write("Teile die App FreshAltert, indem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
+    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
     friend_code = st.text_input("Freundecode eingeben")
     if st.button("Freundecode hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
             st.session_state.shared_fridge_id = friend_code
             st.success("Freundecode erfolgreich hinzugefügt!")
-            
-            # Annahme: Die User ID ist in der Session gespeichert
-            user_id = st.session_state.user_id
-            
-            # Daten für den geteilten Kühlschrank eintragen
-            new_entry = {
-                "Kuehlschrank_ID": friend_code,
-                "User ID": user_id,
-                "Lebensmittel": "",
-                "Kategorie": "",
-                "Lagerort": "",
-                "Standort": "🤝geteilter Kühlschrank",
-                "Ablaufdatum": None,
-                "Tage_bis_Ablauf": None,
-                "Benutzername": None,
-                "geteilter Account": user_id   # Annahme: Markieren Sie, dass dies ein geteilter Account ist
-            }
-            
-            # DataFrame mit der neuen Zeile erstellen
-            new_row_df = pd.DataFrame([new_entry])
-            
-            # DataFrames zusammenfügen
-            st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, new_row_df], ignore_index=True)
-            
-            # Speichern Sie die Daten in der Datenbank oder einer anderen Persistenzschicht
-            save_data_to_database_shared_fridge()
         else:
             st.error("Ungültiger Freundecode.")
-
 
 
     
