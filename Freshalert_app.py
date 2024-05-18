@@ -366,7 +366,7 @@ def add_food_to_fridge():
     # Füge die Tage_bis_Ablauf-Spalte zum neuen Eintrag hinzu
     new_entry['Tage_bis_Ablauf'] = days_until_expiry
 
-        for key, value in new_entry.items():
+    for key, value in new_entry.items():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
