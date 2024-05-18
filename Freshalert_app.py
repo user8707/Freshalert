@@ -142,14 +142,14 @@ def show_fresh_alert_page():
     st.sidebar.image('images/18-04-_2024_11-16-47-Photoroom.png-Photoroom.png', use_column_width=True)
 
     # Create buttons for navigation
-    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔓 Ausloggen"])
+    navigation = st.sidebar.radio("Navigation", ["🏠 Startbildschirm", "🗄️ Mein Kühlschrank", "🤝 Geteilter Kühlschrank", "🛒 Neues Lebensmittel hinzufügen", "📧 Freunde einladen","ℹ️ Information", "⚙️ Einstellungen", "🔓 Ausloggen"])
 
     # Check which page to display
     if navigation == "Startbildschirm":
         show_mainpage()
     elif navigation == "Mein Kühlschrank":
         show_my_fridge_page()
-    elif navigation == "geteilter Kühlschrank":
+    elif navigation == "🤝 Geteilter Kühlschrank":
         show_shared_fridge_page()
     elif navigation == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
