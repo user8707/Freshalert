@@ -162,7 +162,7 @@ def show_fresh_alert_page():
         show_informations()
     elif navigation == "⚙️ Einstellungen":
         show_settings()
-    elif navigation == "🔓 Ausloggen":
+    elif navigation == "Ausloggen":
         logout()
         
 def generate_new_fridge_id():
