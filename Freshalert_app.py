@@ -262,6 +262,7 @@ def show_my_fridge_page():
             st.write("Der Kühlschrank ist leer oder Sie haben keine Einträge.")
     else:
         st.write("Der Kühlschrank ist leer.")
+        
 def show_shared_fridge_page():
     st.title("Geteilter Kühlschrank")
 
@@ -386,6 +387,7 @@ def add_food_to_fridge():
                 return
             else:
                 new_entry["Kuehlschrank_ID"] = st.session_state.shared_fridge_id
+                new_entry["Benutzername"] = st.session_state.df_shared_fridge.loc[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == new_entry["Kuehlschrank_ID"], 'Benutzername'].iloc[0]
                 st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
                 save_data_to_database_shared_fridge()
         elif new_entry["Standort"] == "🗄️Mein Kühlschrank":
