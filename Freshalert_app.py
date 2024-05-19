@@ -479,8 +479,8 @@ def show_settings():
 
 
 def show_my_friends():
-   st.title("Freunde einladen")
-   st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
+    st.title("Freunde einladen")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
     st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
     friend_code = st.text_input("Freundecode eingeben")
