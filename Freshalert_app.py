@@ -494,11 +494,13 @@ def invite_user_to_shared_fridge(fridge_id, user_id_to_invite):
         st.success(f"Benutzer {user_id_to_invite} erfolgreich eingeladen!")
     else:
         st.error("Ungültiger Kühlschrank-ID.")
-      
 
 def show_my_friends():
+
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
+
     st.write("Teile die App FreshAlert, indem du ihnen den Link unserer App schickst: https://fresh-alert.streamlit.app/")
+   
     # Benutzerdefinierte Kühlschränke anzeigen und Einladungen ermöglichen
     my_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
     if not my_fridges.empty:
@@ -510,8 +512,8 @@ def show_my_friends():
                 if invitee:
                     invite_user_to_shared_fridge(row['Kuehlschrank_ID'], invitee)
                 else:
-                    st.error("Bitte gib eine Benutzer-ID ein.")
-    
+                    st.error("Bitte...")
+  
     # Freundecode eingeben und hinzufügen
     st.subheader("Freundecode eingeben")
     friend_code = st.text_input("Freundecode")
