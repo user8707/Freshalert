@@ -481,14 +481,14 @@ def show_settings():
         st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
         st.session_state.fridge_deleted = False  # Reset the flag
         
-def invite_user_to_shared_fridge(fridge_id, user_id_to_invite):
+def invite_user_to_shared_fridge(fridge_id, user_id_to_invite, user_password):
     if fridge_id in st.session_state.df_shared_fridge["Kuehlschrank_ID"].values:
         idx = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge["Kuehlschrank_ID"] == fridge_id].index[0]
         invited_users = st.session_state.df_shared_fridge.at[idx, "Invited_Users"]
         if pd.isna(invited_users) or invited_users == '':
-            invited_users = user_id_to_invite
+            invited_users = f"{user_id_to_invite}:{user_password}"
         else:
-            invited_users = f"{invited_users},{user_id_to_invite}"
+            invited_users = f"{invited_users},{user_id_to_invite}:{user_password}"
         st.session_state.df_shared_fridge.at[idx, "Invited_Users"] = invited_users
         save_data_to_database_shared_fridge()
         st.success(f"Benutzer {user_id_to_invite} erfolgreich eingeladen!")
@@ -496,11 +496,8 @@ def invite_user_to_shared_fridge(fridge_id, user_id_to_invite):
         st.error("Ungültiger Kühlschrank-ID.")
 
 def show_my_friends():
-
     st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
-
-    st.write("Teile die App FreshAlert, indem du ihnen den Link unserer App schickst: https://fresh-alert.streamlit.app/")
-   
+    
     # Benutzerdefinierte Kühlschränke anzeigen und Einladungen ermöglichen
     my_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
     if not my_fridges.empty:
@@ -508,11 +505,12 @@ def show_my_friends():
         for idx, row in my_fridges.iterrows():
             st.write(f"Kühlschrank: {row['Benutzername']}")
             invitee = st.text_input(f"Benutzer-ID zum Kühlschrank {row['Benutzername']} einladen", key=f"invite_{row['Kuehlschrank_ID']}")
+            user_password = st.text_input("Dein Passwort", type="password", key=f"password_{row['Kuehlschrank_ID']}")
             if st.button(f"Einladen {row['Benutzername']}", key=f"button_invite_{row['Kuehlschrank_ID']}"):
-                if invitee:
-                    invite_user_to_shared_fridge(row['Kuehlschrank_ID'], invitee)
+                if invitee and user_password:
+                    invite_user_to_shared_fridge(row['Kuehlschrank_ID'], invitee, user_password)
                 else:
-                    st.error("Bitte...")
+                    st.error("Bitte fülle alle Felder aus.")
   
     # Freundecode eingeben und hinzufügen
     st.subheader("Freundecode eingeben")
