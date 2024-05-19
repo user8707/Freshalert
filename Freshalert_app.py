@@ -302,26 +302,30 @@ def show_shared_fridge_page():
         new_fridge_name = st.text_input("Name des neuen geteilten Kühlschranks")
         new_fridge_password = st.text_input("Passwort für den neuen geteilten Kühlschrank", type="password")
 
-        # Button zum Erstellen des Kühlschranks und Generieren des Codes
-        if st.button("Kühlschrank erstellen und Code generieren") and new_fridge_name and new_fridge_password:
-            new_fridge_id = generate_new_fridge_id()
-            st.session_state.shared_fridge_id = new_fridge_id
-            st.session_state.create_new_fridge = False
-            st.success(f"Neuer geteilter Kühlschrank '{new_fridge_name}' erfolgreich erstellt! Kühlschrank-ID: {new_fridge_id}")
-            
-            # Neue Zeile im Datenrepository hinzufügen
-            if st.session_state.user_logged_in:
-                new_fridge_data = {
-                    "Kuehlschrank_ID": new_fridge_id,
-                    "User ID": st.session_state.user_id,
-                    "Passwort": new_fridge_password,  # Hinzufügen des Passworts für den Kühlschrank
-                    "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
-                }
-                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
-                save_data_to_database_shared_fridge()
-            
-            # Automatisch die Seite neu laden
-            st.experimental_rerun()
+        # Überprüfen, ob beide Felder ausgefüllt sind
+        if not new_fridge_name or not new_fridge_password:
+            st.warning("Bitte geben Sie einen Namen und ein Passwort für den neuen geteilten Kühlschrank ein.")
+        else:
+            # Button zum Erstellen des Kühlschranks und Generieren des Codes
+            if st.button("Kühlschrank erstellen und Code generieren"):
+                new_fridge_id = generate_new_fridge_id()
+                st.session_state.shared_fridge_id = new_fridge_id
+                st.session_state.create_new_fridge = False
+                st.success(f"Neuer geteilter Kühlschrank '{new_fridge_name}' erfolgreich erstellt! Kühlschrank-ID: {new_fridge_id}")
+                
+                # Neue Zeile im Datenrepository hinzufügen
+                if st.session_state.user_logged_in:
+                    new_fridge_data = {
+                        "Kuehlschrank_ID": new_fridge_id,
+                        "User ID": st.session_state.user_id,
+                        "Passwort": new_fridge_password,  # Hinzufügen des Passworts für den Kühlschrank
+                        "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
+                    }
+                    st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
+                    save_data_to_database_shared_fridge()
+                
+                # Automatisch die Seite neu laden
+                st.experimental_rerun()
 
     if st.session_state.user_logged_in:
         user_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
