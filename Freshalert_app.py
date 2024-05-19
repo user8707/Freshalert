@@ -414,19 +414,19 @@ def add_food_to_fridge():
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
         selected_shared_fridge_name = new_entry.get("Benutzername")
         if selected_shared_fridge_name:
-            # Holen Sie sich die entsprechende Kühlschrank-ID basierend auf dem ausgewählten Namen
+            # Holen Sie sich das eingegebene Passwort für den geteilten Kühlschrank
+            entered_password = st.text_input("Passwort für den geteilten Kühlschrank", type="password")
+            # Holen Sie sich das Passwort für den ausgewählten geteilten Kühlschrank
             selected_shared_fridge_id = st.session_state.df_shared_fridge.loc[
-                st.session_state.df_shared_fridge["Benutzername"] == selected_shared_fridge_name, "Kuehlschrank_ID"].iloc[0]
-            # Überprüfen, ob das Passwort des Benutzers mit der Kühlschrank-ID übereinstimmt
-            user_password = st.session_state.df_shared_fridge.loc[st.session_state.df_shared_fridge["User ID"] == st.session_state.user_id, "Passwort"].iloc[0]
-            if user_password == selected_shared_fridge_id:
+                st.session_state.df_shared_fridge["Benutzername"] == selected_shared_fridge_name, "Passwort"].iloc[0]
+            if entered_password == selected_shared_fridge_id:
                 # Setzen Sie die ausgewählte Kühlschrank-ID im neuen Eintrag
                 new_entry["Kuehlschrank_ID"] = selected_shared_fridge_id
                 st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
                 save_data_to_database_shared_fridge()
                 st.success("Lebensmittel erfolgreich hinzugefügt!")
             else:
-                st.error("Das Passwort ist falsch. Sie haben keinen Zugriff auf diesen geteilten Kühlschrank.")
+                st.error("Das eingegebene Passwort ist falsch. Sie haben keinen Zugriff auf diesen geteilten Kühlschrank.")
         else:
             st.error("Bitte wählen Sie einen geteilten Kühlschrank aus.")
     elif new_entry["Standort"] == "🗄️Mein Kühlschrank":
