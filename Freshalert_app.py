@@ -491,15 +491,27 @@ def show_my_friends():
                 password_input = st.text_input("Bitte geben Sie das Passwort ein:", type="password")
                 if st.button("Einladung akzeptieren"):
                     # Überprüfen, ob das eingegebene Passwort mit dem gespeicherten Passwort übereinstimmt
-                    correct_password = st.session_state.df_shared_fridge.loc[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code, 'Passwort'].iloc[0]
-                    if correct_password:
+                    correct_password = st.session_state.df_shared_fridge.loc[
+                        (st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code) & 
+                        (st.session_state.df_shared_fridge['Passwort'] == password_input)
+                    ]
+                    if not correct_password.empty:
+                        # Generiere neue Kühlschrank-ID und Passwort
+                        new_fridge_id = generate_new_fridge_id()
+                        new_fridge_password = generate_password()
+                        new_fridge_name = st.text_input("Geben Sie einen Namen für den Kühlschrank ein:")
+                        
+                        # Eintrag in DataFrame für den geteilten Kühlschrank hinzufügen
                         new_fridge_data = {
-                        "Kuehlschrank_ID": new_fridge_id,
-                        "User ID": st.session_state.user_id,
-                        "Passwort": st.session_state.new_fridge_password,  # Hinzufügen des Passworts für den Kühlschrank
-                        "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
-                            }
-                        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
+                            "Kuehlschrank_ID": new_fridge_id,
+                            "User ID": st.session_state.user_id,
+                            "Passwort": new_fridge_password,  
+                            "Benutzername": new_fridge_name  
+                        }
+                        st.session_state.df_shared_fridge = pd.concat(
+                            [st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], 
+                            ignore_index=True
+                        )
                         save_data_to_database_shared_fridge()
                         st.success("Freund erfolgreich eingeladen und hinzugefügt!")
             
