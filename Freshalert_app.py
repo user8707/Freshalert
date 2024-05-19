@@ -492,7 +492,7 @@ def show_my_friends():
                 if st.button("Einladung akzeptieren"):
                     # Überprüfen, ob das eingegebene Passwort mit dem gespeicherten Passwort übereinstimmt
                     correct_password = st.session_state.df_shared_fridge.loc[st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code, 'Passwort'].iloc[0]
-                    if st.session_state.user_logged_in:
+                    if correct_password:
                         new_fridge_data = {
                         "Kuehlschrank_ID": new_fridge_id,
                         "User ID": st.session_state.user_id,
