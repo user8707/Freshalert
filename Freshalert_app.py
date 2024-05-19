@@ -19,7 +19,8 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 
 # Konstante für das  Datenrepo für den geteilten Kühlschrank
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
-DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername"]
+DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername", "Invited_Users"]
+
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -181,10 +182,10 @@ def show_expired_food_on_mainpage():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
 def show_expired_food_shared_fridge():
-    # Filtern aller Lebensmittel im geteilten Kühlschrank, die bald ablaufen
     try:
         shared_fridge_expired_food = st.session_state.df_shared_fridge[
-            (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) & 
+            ((st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) | 
+             (st.session_state.df_shared_fridge['Invited_Users'].str.contains(st.session_state.user_id, na=False))) &
             (st.session_state.df_shared_fridge['Tage_bis_Ablauf'] <= 1)
         ]
         
@@ -192,7 +193,6 @@ def show_expired_food_shared_fridge():
             st.markdown(" --- ")
             st.subheader("In deinem geteilten Kühlschrank")
             for index, row in shared_fridge_expired_food.iterrows():
-                # Überprüfen, ob 'Benutzername' in den Spalten vorhanden ist und nicht leer ist
                 if 'Benutzername' in row and pd.notna(row['Benutzername']):
                     st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']}, Kühlschrank: {row['Benutzername']})")
                 else:
@@ -412,8 +412,9 @@ def add_food_to_fridge():
             st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
             return
         else:
-            # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
-            shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
+            # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen, die der Benutzer erstellt hat oder zu denen er eingeladen wurde
+            shared_fridge_options = st.session_state.df_shared_fridge[(st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) |(st.session_state.df_shared_fridge['Invited_Users'].str.contains(st.session_state.user_id, na=False))]["Benutzername"].unique().tolist()
+
             if not shared_fridge_options:
                 st.error("Es gibt keine verfügbaren geteilten Kühlschränke.")
                 return
@@ -476,13 +477,41 @@ def show_settings():
         st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
         st.session_state.fridge_deleted = False  # Reset the flag
         
-       
+def invite_user_to_shared_fridge(fridge_id, user_id_to_invite):
+    if fridge_id in st.session_state.df_shared_fridge["Kuehlschrank_ID"].values:
+        idx = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge["Kuehlschrank_ID"] == fridge_id].index[0]
+        invited_users = st.session_state.df_shared_fridge.at[idx, "Invited_Users"]
+        if pd.isna(invited_users) or invited_users == '':
+            invited_users = user_id_to_invite
+        else:
+            invited_users = f"{invited_users},{user_id_to_invite}"
+        st.session_state.df_shared_fridge.at[idx, "Invited_Users"] = invited_users
+        save_data_to_database_shared_fridge()
+        st.success(f"Benutzer {user_id_to_invite} erfolgreich eingeladen!")
+    else:
+        st.error("Ungültiger Kühlschrank-ID.")
+      
 
 def show_my_friends():
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
-    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
+    st.write("Teile die App FreshAlert, indem du ihnen den Link unserer App schickst: https://fresh-alert.streamlit.app/")
     
-    friend_code = st.text_input("Freundecode eingeben")
+    # Benutzerdefinierte Kühlschränke anzeigen und Einladungen ermöglichen
+    my_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
+    if not my_fridges.empty:
+        st.subheader("Meine geteilten Kühlschränke")
+        for idx, row in my_fridges.iterrows():
+            st.write(f"Kühlschrank: {row['Benutzername']}")
+            invitee = st.text_input(f"Benutzer-ID zum Kühlschrank {row['Benutzername']} einladen", key=f"invite_{row['Kuehlschrank_ID']}")
+            if st.button(f"Einladen {row['Benutzername']}", key=f"button_invite_{row['Kuehlschrank_ID']}"):
+                if invitee:
+                    invite_user_to_shared_fridge(row['Kuehlschrank_ID'], invitee)
+                else:
+                    st.error("Bitte gib eine Benutzer-ID ein.")
+    
+    # Freundecode eingeben und hinzufügen
+    st.subheader("Freundecode eingeben")
+    friend_code = st.text_input("Freundecode")
     if st.button("Freundecode hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
             st.session_state.shared_fridge_id = friend_code
