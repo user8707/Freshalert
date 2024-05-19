@@ -21,6 +21,9 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
 DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername","Passwort"]
 
+DATA_FILE_INVITATION = "Freunde-Einladungen.csv"
+DATA_COLUMNS_INVITATION = ["Kuehlschrank_ID", "User ID", "Passwort"]
+
 
 # Load the image
 image = Image.open('images/Logo_Freshalert-Photoroom.png')
@@ -73,6 +76,13 @@ def init_dataframe_shared_fridge():
             st.session_state.df_shared_fridge = st.session_state.github.read_df(DATA_FILE_SHARED_FRIDGE)
         else:
             st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_SHARED_FRIDGE)
+
+def init_dataframe_invitation():
+    if 'df_invitation' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE_INVITATION):
+            st.session_state.df_shared_fridge = st.session_state.github.read_df(DATA_FILE_INVITATION)
+        else:
+            st.session_state.df_shared_fridge = pd.DataFrame(columns=DATA_COLUMNS_INVITATION)
 
 def show_login_page():
     col1, col2 = st.columns([7, 1])
@@ -488,16 +498,14 @@ def show_my_friends():
     
     if st.button("Freundecode hinzufügen"):
         try:
-            # Laden des Datenfiles mit allen Spalten
-            shared_fridge_data = pd.read_csv(DATA_FILE_SHARED_FRIDGE)
-            # Prüfen von Freundecode und Passwort
+            shared_fridge_data = pd.read_csv(DATA_FILE_INVITATION, usecols=DATA_COLUMNS_INVITATION)
             if (friend_code in shared_fridge_data['Kuehlschrank_ID'].values) and \
                (password in shared_fridge_data.loc[shared_fridge_data['Kuehlschrank_ID'] == friend_code, 'Passwort'].values):
                 # Speichern der Benutzer-ID und der Kühlschrank-ID im Datenrepo
                 user_id = "Benutzername"  # Hier die Benutzer-ID einfügen, z.B. st.session_state.user_id
-                new_entry = pd.DataFrame([[friend_code, user_id, password]], columns=DATA_COLUMNS_SHARED_FRIDGE)
+                new_entry = pd.DataFrame([[friend_code, user_id, password]], columns=DATA_COLUMNS_INVITATION)
                 shared_fridge_data = shared_fridge_data.append(new_entry, ignore_index=True)
-                shared_fridge_data.to_csv(DATA_FILE_SHARED_FRIDGE, index=False)
+                shared_fridge_data.to_csv(DATA_FILE_INVITATION, index=False)
                 st.success("Kühlschrank erfolgreich hinzugefügt!")
             else:
                 st.error("Ungültiger Freundecode oder Passwort.")
@@ -579,6 +587,11 @@ def save_data_to_database_food():
 def save_data_to_database_shared_fridge():
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE_SHARED_FRIDGE, st.session_state.df_shared_fridge, "Updated shared fridge data")
+
+def save_data_to_database_invitation():
+    if 'github' in st.session_state:
+        st.session_state.github.write_df(DATA_FILE_INVITATION, st.session_state.df_shared_fridge, "Updated shared fridge data")
+        
 
 
 def main():
