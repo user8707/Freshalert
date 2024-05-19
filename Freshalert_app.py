@@ -503,7 +503,7 @@ def show_my_friends():
                         }
                         st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
                         save_data_to_database_shared_fridge()
-                        st.success("Freund erfolgreich eingeladen!")
+                        st.success("Freund erfolgreich eingeladen und hinzugefügt!")
                     else:
                         st.error("Falsches Passwort. Einladung fehlgeschlagen.")
             else:
