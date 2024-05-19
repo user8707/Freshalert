@@ -496,14 +496,20 @@ def show_my_friends():
                     if bcrypt.checkpw(password_input.encode('utf-8'), correct_password.encode('utf-8')):
                         # Eintrag in der Datenbank hinzufügen
                         hashed_password = bcrypt.hashpw(password_input.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-                        new_entry = {
-                            "Kuehlschrank_ID": friend_code,
+                        if st.session_state.user_logged_in:
+                            new_fridge_data = {
+                            "Kuehlschrank_ID": new_fridge_id,
                             "User ID": st.session_state.user_id,
-                            "Passwort": hashed_password
-                        }
-                        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+                            "Passwort": st.session_state.new_fridge_password,  # Hinzufügen des Passworts für den Kühlschrank
+                            "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
+                               }
+                        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
                         save_data_to_database_shared_fridge()
                         st.success("Freund erfolgreich eingeladen und hinzugefügt!")
+            
+                        # Automatisch die Seite neu laden
+                        st.experimental_rerun()
+                    
                     else:
                         st.error("Falsches Passwort. Einladung fehlgeschlagen.")
             else:
