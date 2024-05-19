@@ -479,16 +479,36 @@ def show_settings():
 
 
 def show_my_friends():
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
-    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Freunde einladen")
+    st.write("Hier können Sie Freunde einladen, um Ihren geteilten Kühlschrank zu nutzen.")
     
-    friend_code = st.text_input("Freundecode eingeben")
-    if st.button("Freundecode hinzufügen"):
-        if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
-            st.session_state.shared_fridge_id = friend_code
-            st.success("Freundecode erfolgreich hinzugefügt!")
+    friend_code = st.text_input("Freundecode eingeben:")
+    if st.button("Freund einladen"):
+        if friend_code:
+            # Überprüfen, ob der Freundecode bereits vorhanden ist
+            if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
+                # An dieser Stelle sollte eine Passwortabfrage eingefügt werden
+                password_input = st.text_input("Bitte geben Sie das Passwort ein:", type="password")
+                if st.button("Einladung akzeptieren"):
+                    # Überprüfen, ob das eingegebene Passwort mit dem gespeicherten Passwort übereinstimmt
+                    correct_password = st.session_state.df_shared_fridge.loc[
+                        st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code, 'Passwort'].iloc[0]
+                    if bcrypt.checkpw(password_input.encode('utf-8'), correct_password.encode('utf-8')):
+                        # Eintrag in der Datenbank hinzufügen
+                        new_entry = {
+                            "Kuehlschrank_ID": friend_code,
+                            "User ID": st.session_state.user_id,
+                            "Passwort": bcrypt.hashpw(password_input.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+                        }
+                        st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+                        save_data_to_database_shared_fridge()
+                        st.success("Freund erfolgreich eingeladen!")
+                    else:
+                        st.error("Falsches Passwort. Einladung fehlgeschlagen.")
+            else:
+                st.error("Ungültiger Freundecode.")
         else:
-            st.error("Ungültiger Freundecode.")
+            st.error("Bitte geben Sie einen Freundecode ein.")
 
 
     
