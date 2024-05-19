@@ -19,7 +19,7 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 
 # Konstante für das  Datenrepo für den geteilten Kühlschrank
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
-DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername", "Invited_Users"]
+DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername"]
 
 
 # Load the image
@@ -412,32 +412,16 @@ def add_food_to_fridge():
 
     # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
-        selected_shared_fridge_name = new_entry.get("Benutzername")
-        if selected_shared_fridge_name:
-            # Holen Sie sich das eingegebene Passwort für den geteilten Kühlschrank
-            entered_password = st.text_input("Passwort für den geteilten Kühlschrank", type="password")
-            # Holen Sie sich das Passwort für den ausgewählten geteilten Kühlschrank
-            selected_shared_fridge_id = st.session_state.df_shared_fridge.loc[
-                st.session_state.df_shared_fridge["Benutzername"] == selected_shared_fridge_name, "Passwort"].iloc[0]
-            if entered_password == selected_shared_fridge_id:
-                # Setzen Sie die ausgewählte Kühlschrank-ID im neuen Eintrag
-                new_entry["Kuehlschrank_ID"] = selected_shared_fridge_id
-                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
-                save_data_to_database_shared_fridge()
-                st.success("Lebensmittel erfolgreich hinzugefügt!")
-            else:
-                st.error("Das eingegebene Passwort ist falsch. Sie haben keinen Zugriff auf diesen geteilten Kühlschrank.")
+        if "shared_fridge_id" not in st.session_state:
+            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
+            return
         else:
-            st.error("Bitte wählen Sie einen geteilten Kühlschrank aus.")
-    elif new_entry["Standort"] == "🗄️Mein Kühlschrank":
-        st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
-        save_data_to_database_food()
-        st.success("Lebensmittel erfolgreich hinzugefügt!")
-    else:
-        st.error("Ungültiger Standort ausgewählt.")
-        return
-
- if st.button("Hinzufügen"):
+            # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
+            shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
+            selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
+            new_entry["Benutzername"] = selected_shared_fridge_name
+    
+    if st.button("Hinzufügen"):
         if new_entry["Standort"] == "🤝geteilter Kühlschrank":
             selected_shared_fridge_name = new_entry.get("Benutzername")
             if selected_shared_fridge_name:
@@ -458,10 +442,6 @@ def add_food_to_fridge():
         else:
             st.error("Ungültiger Standort ausgewählt.")
             return
-    
-   
-
-
 
 
 def show_settings():
@@ -495,46 +475,20 @@ def show_settings():
         st.success("Der Kühlschrank wurde erfolgreich gelöscht.")
         st.session_state.fridge_deleted = False  # Reset the flag
         
-def invite_user_to_shared_fridge(fridge_id, user_id_to_invite, user_password):
-    if fridge_id in st.session_state.df_shared_fridge["Kuehlschrank_ID"].values:
-        idx = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge["Kuehlschrank_ID"] == fridge_id].index[0]
-        invited_users = st.session_state.df_shared_fridge.at[idx, "Invited_Users"]
-        if pd.isna(invited_users) or invited_users == '':
-            invited_users = f"{user_id_to_invite}:{user_password}"
-        else:
-            invited_users = f"{invited_users},{user_id_to_invite}:{user_password}"
-        st.session_state.df_shared_fridge.at[idx, "Invited_Users"] = invited_users
-        save_data_to_database_shared_fridge()
-        st.success(f"Benutzer {user_id_to_invite} erfolgreich eingeladen!")
-    else:
-        st.error("Ungültiger Kühlschrank-ID.")
+
 
 def show_my_friends():
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
+    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
-    # Benutzerdefinierte Kühlschränke anzeigen und Einladungen ermöglichen
-    my_fridges = st.session_state.df_shared_fridge[st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id]
-    if not my_fridges.empty:
-        st.subheader("Meine geteilten Kühlschränke")
-        for idx, row in my_fridges.iterrows():
-            st.write(f"Kühlschrank: {row['Benutzername']}")
-            invitee = st.text_input(f"Benutzer-ID zum Kühlschrank {row['Benutzername']} einladen", key=f"invite_{row['Kuehlschrank_ID']}")
-            user_password = st.text_input("Dein Passwort", type="password", key=f"password_{row['Kuehlschrank_ID']}")
-            if st.button(f"Einladen {row['Benutzername']}", key=f"button_invite_{row['Kuehlschrank_ID']}"):
-                if invitee and user_password:
-                    invite_user_to_shared_fridge(row['Kuehlschrank_ID'], invitee, user_password)
-                else:
-                    st.error("Bitte fülle alle Felder aus.")
-  
-    # Freundecode eingeben und hinzufügen
-    st.subheader("Freundecode eingeben")
-    friend_code = st.text_input("Freundecode")
+    friend_code = st.text_input("Freundecode eingeben")
     if st.button("Freundecode hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
             st.session_state.shared_fridge_id = friend_code
             st.success("Freundecode erfolgreich hinzugefügt!")
         else:
             st.error("Ungültiger Freundecode.")
+
 
     
     st.write("Wir als Entwickler-Team würden uns riesig freuen")
