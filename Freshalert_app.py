@@ -407,12 +407,16 @@ def add_food_to_fridge():
 
     # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
-        if "shared_fridge_id" not in st.session_state:
+        # Überprüfen, ob der Benutzer einen geteilten Kühlschrank erstellt hat
+        if "df_shared_fridge" not in st.session_state or st.session_state.df_shared_fridge.empty:
             st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
             return
         else:
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
             shared_fridge_options = st.session_state.df_shared_fridge["Benutzername"].unique().tolist()
+            if not shared_fridge_options:
+                st.error("Es gibt keine verfügbaren geteilten Kühlschränke.")
+                return
             selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
             new_entry["Benutzername"] = selected_shared_fridge_name
     
