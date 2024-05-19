@@ -182,10 +182,9 @@ def show_expired_food_on_mainpage():
             st.error(f"**{row['Lebensmittel']}** (Ablaufdatum: {row['Ablaufdatum']}, Lagerort: {row['Lagerort']})")
 
 def show_expired_food_shared_fridge():
-    try:
+   try:
         shared_fridge_expired_food = st.session_state.df_shared_fridge[
-            ((st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) | 
-             (st.session_state.df_shared_fridge['Invited_Users'].str.contains(st.session_state.user_id, na=False))) &
+            (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) & 
             (st.session_state.df_shared_fridge['Tage_bis_Ablauf'] <= 1)
         ]
         
