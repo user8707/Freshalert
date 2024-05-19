@@ -480,24 +480,31 @@ def show_settings():
 
 def show_my_friends():
     st.title("Freunde einladen")
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
-    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
+    st.write("Teile die App FreshAlert, indem du ihnen den Link unserer App schickst: [https://fresh-alert.streamlit.app/](https://fresh-alert.streamlit.app/)")
     
     friend_code = st.text_input("Freundecode eingeben")
     password = st.text_input("Passwort eingeben", type="password")
     
     if st.button("Freundecode hinzufügen"):
-        shared_fridge_data = pd.read_csv(DATA_FILE_SHARED_FRIDGE)
-        if (friend_code in shared_fridge_data['Kuehlschrank_ID'].values) and \
-           (password in shared_fridge_data.loc[shared_fridge_data['Kuehlschrank_ID'] == friend_code, 'Passwort'].values):
-            # Speichern der Benutzer-ID und der Kühlschrank-ID im Datenrepo
-            user_id = "Benutzername"  # Hier die Benutzer-ID einfügen, z.B. st.session_state.user_id
-            new_entry = pd.DataFrame([[friend_code, user_id, password]], columns=DATA_COLUMNS_SHARED_FRIDGE)
-            shared_fridge_data = shared_fridge_data.append(new_entry, ignore_index=True)
-            shared_fridge_data.to_csv(DATA_FILE_SHARED_FRIDGE, index=False)
-            st.success("Kühlschrank erfolgreich hinzugefügt!")
-        else:
-            st.error("Ungültiger Freundecode oder Passwort.")
+        try:
+            # Laden des Datenfiles mit allen Spalten
+            shared_fridge_data = pd.read_csv(DATA_FILE_SHARED_FRIDGE)
+            # Prüfen von Freundecode und Passwort
+            if (friend_code in shared_fridge_data['Kuehlschrank_ID'].values) and \
+               (password in shared_fridge_data.loc[shared_fridge_data['Kuehlschrank_ID'] == friend_code, 'Passwort'].values):
+                # Speichern der Benutzer-ID und der Kühlschrank-ID im Datenrepo
+                user_id = "Benutzername"  # Hier die Benutzer-ID einfügen, z.B. st.session_state.user_id
+                new_entry = pd.DataFrame([[friend_code, user_id, password]], columns=DATA_COLUMNS_SHARED_FRIDGE)
+                shared_fridge_data = shared_fridge_data.append(new_entry, ignore_index=True)
+                shared_fridge_data.to_csv(DATA_FILE_SHARED_FRIDGE, index=False)
+                st.success("Kühlschrank erfolgreich hinzugefügt!")
+            else:
+                st.error("Ungültiger Freundecode oder Passwort.")
+        except FileNotFoundError:
+            st.error("Datenfile nicht gefunden. Bitte überprüfen Sie den Dateipfad.")
+        except Exception as e:
+            st.error(f"Ein Fehler ist aufgetreten: {str(e)}")
 
 
     
