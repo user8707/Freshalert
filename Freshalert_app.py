@@ -21,10 +21,13 @@ DATA_COLUMNS_FOOD = ["User ID", "Lebensmittel", "Kategorie", "Lagerort", "Stando
 DATA_FILE_SHARED_FRIDGE = "geteilte_kuehlschraenke.csv"
 DATA_COLUMNS_SHARED_FRIDGE = ["Kuehlschrank_ID", "User ID", "Lebensmittel", "Kategorie", "Lagerort", "Standort", "Ablaufdatum", "Tage_bis_Ablauf", "Benutzername","Passwort"]
 
-# CSS-Stildefinition für den Button
 button_style = """
-    background-color: grey;
-    color: white;
+    <style>
+    .custom-button {
+        background-color: grey;
+        color: white;
+    }
+    </style>
 """
 
 # Load the image
@@ -278,16 +281,13 @@ def show_my_fridge_page():
             df_styled = colorize_expiring_food(user_fridge_display)
                                
             st.write(df_styled)
-            # CSS-Stildefinition für den Button
-            button_style = """
-                background-color: grey;
-                color: white;
-            """
+            
 
             # Allow the user to delete a food entry
             food_names = user_fridge_display['Lebensmittel'].tolist()
             food_index_to_delete = st.selectbox("Lebensmittel auswählen", food_names, index=0)
-            if st.button("🚮 Lebensmittel löschen", key="delete_entry_button", help="Lebensmittel entfernen", style=button_style):
+            st.markdown(button_style, unsafe_allow_html=True)
+            if st.button("🚮 Lebensmittel löschen", key="delete_entry_button", help="Lebensmittel entfernen", class_='custom-button'):
                 index_to_delete = user_fridge_display[user_fridge_display['Lebensmittel'] == food_index_to_delete].index
                 st.session_state.df_food.drop(index=index_to_delete, inplace=True)
                 save_data_to_database_food()  # Save the updated dataframe
