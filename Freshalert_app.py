@@ -495,10 +495,11 @@ def show_my_friends():
                         st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code, 'Passwort'].iloc[0]
                     if bcrypt.checkpw(password_input.encode('utf-8'), correct_password.encode('utf-8')):
                         # Eintrag in der Datenbank hinzufügen
+                        hashed_password = bcrypt.hashpw(password_input.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
                         new_entry = {
                             "Kuehlschrank_ID": friend_code,
                             "User ID": st.session_state.user_id,
-                            "Passwort": bcrypt.hashpw(password_input.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+                            "Passwort": hashed_password
                         }
                         st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
                         save_data_to_database_shared_fridge()
