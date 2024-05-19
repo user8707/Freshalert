@@ -407,23 +407,30 @@ def add_food_to_fridge():
 
     # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
-        # Überprüfen, ob der Benutzer einen geteilten Kühlschrank erstellt hat oder eingeladen wurde
-        if "Invited_Users" not in st.session_state.df_shared_fridge.columns:
-            st.session_state.df_shared_fridge["Invited_Users"] = ""
-            
-        available_fridges = st.session_state.df_shared_fridge[
-            (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) |(st.session_state.df_shared_fridge['Invited_Users'].str.contains(st.session_state.user_id, na=False))]
-        
-        if available_fridges.empty:
-            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen oder eingeladen werden.")
-            return
+        selected_shared_fridge_name = new_entry.get("Benutzername")
+        if selected_shared_fridge_name:
+            # Holen Sie sich die entsprechende Kühlschrank-ID basierend auf dem ausgewählten Namen
+            selected_shared_fridge_id = st.session_state.df_shared_fridge.loc[
+                st.session_state.df_shared_fridge["Benutzername"] == selected_shared_fridge_name, "Kuehlschrank_ID"].iloc[0]
+            # Überprüfen, ob das Passwort des Benutzers mit der Kühlschrank-ID übereinstimmt
+            user_password = st.session_state.df_shared_fridge.loc[st.session_state.df_shared_fridge["User ID"] == st.session_state.user_id, "Passwort"].iloc[0]
+            if user_password == selected_shared_fridge_id:
+                # Setzen Sie die ausgewählte Kühlschrank-ID im neuen Eintrag
+                new_entry["Kuehlschrank_ID"] = selected_shared_fridge_id
+                st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], ignore_index=True)
+                save_data_to_database_shared_fridge()
+                st.success("Lebensmittel erfolgreich hinzugefügt!")
+            else:
+                st.error("Das Passwort ist falsch. Sie haben keinen Zugriff auf diesen geteilten Kühlschrank.")
         else:
-            shared_fridge_options = available_fridges["Benutzername"].unique().tolist()
-            if not shared_fridge_options:
-                st.error("Es gibt keine verfügbaren geteilten Kühlschränke.")
-                return
-            selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
-            new_entry["Benutzername"] = selected_shared_fridge_name
+            st.error("Bitte wählen Sie einen geteilten Kühlschrank aus.")
+    elif new_entry["Standort"] == "🗄️Mein Kühlschrank":
+        st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
+        save_data_to_database_food()
+        st.success("Lebensmittel erfolgreich hinzugefügt!")
+    else:
+        st.error("Ungültiger Standort ausgewählt.")
+        return
     
     if st.button("Hinzufügen"):
         if new_entry["Standort"] == "🤝geteilter Kühlschrank":
