@@ -278,6 +278,11 @@ def show_my_fridge_page():
             df_styled = colorize_expiring_food(user_fridge_display)
                                
             st.write(df_styled)
+            # CSS-Stildefinition für den Button
+            button_style = """
+                background-color: grey;
+                color: white;
+            """
 
             # Allow the user to delete a food entry
             food_names = user_fridge_display['Lebensmittel'].tolist()
