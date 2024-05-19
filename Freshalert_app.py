@@ -407,14 +407,18 @@ def add_food_to_fridge():
 
     # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
-        # Überprüfen, ob der Benutzer einen geteilten Kühlschrank erstellt hat
-        if "df_shared_fridge" not in st.session_state or st.session_state.df_shared_fridge.empty:
-            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
+        # Überprüfen, ob der Benutzer einen geteilten Kühlschrank erstellt hat oder eingeladen wurde
+        if "Invited_Users" not in st.session_state.df_shared_fridge.columns:
+            st.session_state.df_shared_fridge["Invited_Users"] = ""
+            
+        available_fridges = st.session_state.df_shared_fridge[
+            (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) |(st.session_state.df_shared_fridge['Invited_Users'].str.contains(st.session_state.user_id, na=False))]
+        
+        if available_fridges.empty:
+            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen oder eingeladen werden.")
             return
         else:
-            # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen, die der Benutzer erstellt hat oder zu denen er eingeladen wurde
-            shared_fridge_options = st.session_state.df_shared_fridge[(st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) |(st.session_state.df_shared_fridge['Invited_Users'].str.contains(st.session_state.user_id, na=False))]["Benutzername"].unique().tolist()
-
+            shared_fridge_options = available_fridges["Benutzername"].unique().tolist()
             if not shared_fridge_options:
                 st.error("Es gibt keine verfügbaren geteilten Kühlschränke.")
                 return
