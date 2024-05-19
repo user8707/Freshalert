@@ -300,6 +300,10 @@ def show_shared_fridge_page():
         if new_fridge_name:
             st.session_state.new_fridge_name = new_fridge_name
 
+        new_fridge_password = st.text_input("Passwort für den neuen geteilten Kühlschrank", type="password")
+        if new_fridge_password:
+            st.session_state.new_fridge_password = new_fridge_password
+
         # Button zum Erstellen des Kühlschranks und Generieren des Codes
         if st.button("Kühlschrank erstellen und Code generieren"):
             new_fridge_name = st.session_state.get("new_fridge_name")
@@ -313,6 +317,7 @@ def show_shared_fridge_page():
                 new_fridge_data = {
                     "Kuehlschrank_ID": new_fridge_id,
                     "User ID": st.session_state.user_id,
+                    "Passwort": st.session_state.new_fridge_password,  # Hinzufügen des Passworts für den Kühlschrank
                     "Benutzername": new_fridge_name  # Hinzufügen des Benutzernamens für den Kühlschrank
                 }
                 st.session_state.df_shared_fridge = pd.concat([st.session_state.df_shared_fridge, pd.DataFrame([new_fridge_data])], ignore_index=True)
