@@ -440,9 +440,11 @@ def add_food_to_fridge():
             st.session_state.df_food = pd.concat([st.session_state.df_food, pd.DataFrame([new_entry])], ignore_index=True)
             save_data_to_database_food()
             st.success("Lebensmittel erfolgreich hinzugefügt!")
+            st.experimental_rerun()
         else:
             st.error("Ungültiger Standort ausgewählt.")
             return
+        
 
 
 def show_settings():
