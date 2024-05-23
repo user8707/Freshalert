@@ -443,7 +443,6 @@ def add_food_to_fridge():
         else:
             st.error("Ungültiger Standort ausgewählt.")
             return
-        
 
 
 def show_settings():
