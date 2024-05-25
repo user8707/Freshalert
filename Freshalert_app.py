@@ -36,6 +36,24 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+def set_background():
+    css = """
+    <style>
+    body {
+        background-color: black;
+        color: white;
+    }
+
+    /* Optional: Anpassung anderer Elemente */
+    .stApp {
+        background-color: black;
+    }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+
+set_background()
+
 def init_github():
     """Initialize the GithubContents object and other session state variables."""
     if 'github' not in st.session_state:
