@@ -94,9 +94,7 @@ def show_login_page():
         if login_successful:
             st.success("Erfolgreich eingeloggt!")
             user_first_name = row["Vorname"]  # Hole den Vornamen des eingeloggten Benutzers
-            user_userid = row["User ID"] # Hole die User ID des eingeloggten Benutzers
             st.session_state.logged_in_user = {"Vorname": user_first_name}  # Speichere den Vornamen des Benutzers
-            st.session_state.logged_UserID = {"User ID" : user_userid} # Speichere die User ID des Benutzers ab
         else:
             st.error("Ungültige E-Mail oder Passwort.")
 
@@ -422,7 +420,6 @@ def add_food_to_fridge():
         else:
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
             benutzername = st.session_state.user_id
-            st.markdown(benutzername)
             df = st.session_state.df_shared_fridge
             df_filtered = df[df["User ID"]== benutzername]
             shared_fridge_options = df_filtered["Benutzername"].unique().tolist()
