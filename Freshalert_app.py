@@ -94,7 +94,7 @@ def show_login_page():
         if login_successful:
             st.success("Erfolgreich eingeloggt!")
             user_first_name = row["Vorname"]  # Hole den Vornamen des eingeloggten Benutzers
-            user_userid = row["User ID] # Hole die User ID des eingeloggten Benutzers
+            user_userid = row["User ID"] # Hole die User ID des eingeloggten Benutzers
             st.session_state.logged_in_user = {"Vorname": user_first_name}  # Speichere den Vornamen des Benutzers
             st.session_state.logged_UserID = {"User ID" : user_userid} # Speichere die User ID des Benutzers ab
         else:
