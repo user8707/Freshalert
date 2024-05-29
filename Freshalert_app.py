@@ -503,8 +503,7 @@ def show_my_friends():
                 # Füge neuen Eintrag hinzu
                 new_entry = {
                     "Kuehlschrank_ID": friend_code,
-                    "User ID": st.session_state.user_id,
-                    "Benutzername": new_fridge_name  # Assuming you have the username in session state
+                    "User ID": st.session_state.user_id
                 }
                 st.session_state.df_shared_fridge = pd.concat(
                     [st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], 
