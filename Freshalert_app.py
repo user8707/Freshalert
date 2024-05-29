@@ -419,7 +419,8 @@ def add_food_to_fridge():
             return
         else:
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
-            df_filtered = st.session_state.df_shared_fridge[df_shared_fridge["UserID"]== "m"]
+            df = st.session_state.df_shared_fridge
+            df_filtered = df[df["UserID"]== "m"]
             shared_fridge_options = df_filtered["Benutzername"].unique().tolist()
             selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
             new_entry["Benutzername"] = selected_shared_fridge_name
