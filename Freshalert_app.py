@@ -502,7 +502,7 @@ def show_my_friends():
             else:
                 # Füge neuen Eintrag hinzu
                 df = st.session_state.df_shared_fridge
-                df_kühlschrank_ID = df[df[Kuehlschrank_ID] == friend_code]
+                df_kühlschrank_ID = df[df["Kuehlschrank_ID"] == friend_code]
                 new_entry = {
                     "Kuehlschrank_ID": friend_code,
                     "User ID": st.session_state.user_id,
