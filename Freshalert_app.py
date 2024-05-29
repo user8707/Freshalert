@@ -94,7 +94,9 @@ def show_login_page():
         if login_successful:
             st.success("Erfolgreich eingeloggt!")
             user_first_name = row["Vorname"]  # Hole den Vornamen des eingeloggten Benutzers
+            user_userid = row["User ID] # Hole die User ID des eingeloggten Benutzers
             st.session_state.logged_in_user = {"Vorname": user_first_name}  # Speichere den Vornamen des Benutzers
+            st.session_state.logged_UserID = {"User ID" : user_userid} # Speichere die User ID des Benutzers ab
         else:
             st.error("Ungültige E-Mail oder Passwort.")
 
@@ -418,11 +420,10 @@ def add_food_to_fridge():
             st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
             return
         else:
-            benutzername = st.session_state.logged_in_user
-            st.markdown(benutzername)
+            user_userid = user_info.get("User ID")
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
             df = st.session_state.df_shared_fridge
-            df_filtered = df[df["User ID"]== benutzername]
+            df_filtered = df[df["User ID"]== user_userid]
             shared_fridge_options = df_filtered["Benutzername"].unique().tolist()
             selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
             new_entry["Benutzername"] = selected_shared_fridge_name
