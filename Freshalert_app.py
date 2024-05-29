@@ -494,7 +494,8 @@ def show_my_friends():
             # Überprüfen, ob der Benutzer bereits in diesem geteilten Kühlschrank ist
             existing_entry = st.session_state.df_shared_fridge[
                 (st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code) &
-                (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id)
+                (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id) &
+                (st.session_state.df_shared_fridge['Benutzername'] == new_fridge_name)
             ]
             
             if not existing_entry.empty:
@@ -503,7 +504,8 @@ def show_my_friends():
                 # Füge neuen Eintrag hinzu
                 new_entry = {
                     "Kuehlschrank_ID": friend_code,
-                    "User ID": st.session_state.user_id
+                    "User ID": st.session_state.user_id,
+                    "Benutzername" : new_fridge_name
                 }
                 st.session_state.df_shared_fridge = pd.concat(
                     [st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], 
