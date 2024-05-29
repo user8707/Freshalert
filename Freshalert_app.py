@@ -484,14 +484,34 @@ def show_settings():
 
 def show_my_friends():
     st.title("Freunde einladen")
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organsieren können")
+    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
     st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
     friend_code = st.text_input("Freundecode eingeben")
+    
     if st.button("Freundecode hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
-            st.session_state.shared_fridge_id = friend_code
-            st.success("Freundecode erfolgreich hinzugefügt!")
+            # Überprüfen, ob der Benutzer bereits in diesem geteilten Kühlschrank ist
+            existing_entry = st.session_state.df_shared_fridge[
+                (st.session_state.df_shared_fridge['Kuehlschrank_ID'] == friend_code) &
+                (st.session_state.df_shared_fridge['User ID'] == st.session_state.user_id)
+            ]
+            
+            if not existing_entry.empty:
+                st.warning("Du bist bereits in diesem geteilten Kühlschrank.")
+            else:
+                # Füge neuen Eintrag hinzu
+                new_entry = {
+                    "Kuehlschrank_ID": friend_code,
+                    "User ID": st.session_state.user_id,
+                    "Benutzername": st.session_state.username  # Assuming you have the username in session state
+                }
+                st.session_state.df_shared_fridge = pd.concat(
+                    [st.session_state.df_shared_fridge, pd.DataFrame([new_entry])], 
+                    ignore_index=True
+                )
+                save_data_to_database_shared_fridge()
+                st.success("Freundecode erfolgreich hinzugefügt und zum geteilten Kühlschrank hinzugefügt!")
         else:
             st.error("Ungültiger Freundecode.")
 
