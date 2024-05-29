@@ -503,7 +503,7 @@ def show_my_friends():
                 # Füge neuen Eintrag hinzu
                 df = st.session_state.df_shared_fridge
                 df_kühlschrank_ID = df[df["Kuehlschrank_ID"] == friend_code]
-                df_def = df_kühlschrank_ID["Benutzername"].tolist()
+                df_def = df_kühlschrank_ID["Benutzername"].iloc[0]
                 
                 new_entry = {
                     "Kuehlschrank_ID": friend_code,
