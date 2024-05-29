@@ -418,9 +418,10 @@ def add_food_to_fridge():
             st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
             return
         else:
+            benutzername = st.session_state.logged_in_user
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
             df = st.session_state.df_shared_fridge
-            df_filtered = df[df["User ID"]== "m"]
+            df_filtered = df[df["User ID"]== benutzername]
             shared_fridge_options = df_filtered["Benutzername"].unique().tolist()
             selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
             new_entry["Benutzername"] = selected_shared_fridge_name
