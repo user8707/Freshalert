@@ -421,7 +421,7 @@ def add_food_to_fridge():
             return
         else:
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
-            benutzername = st.session_state.get("User ID")
+            benutzername = st.session_state.user_id
             st.markdown(user_userid)
             df = st.session_state.df_shared_fridge
             df_filtered = df[df["User ID"]== benutzername]
