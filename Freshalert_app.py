@@ -218,8 +218,8 @@ def show_mainpage():
         st.subheader("Deine App für deine Lebensmittel!")                      
     else:
         st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!")  # Falls Vorname nicht verfügbar ist
-    st.write("Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
-                 "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
+    st.write("Füge in der Sidebar deine ersten Lebensmittel zu deinem digitalen Kühlschrank hinzu. "
+                 "Wir werden dich daran erinnern, sie rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
     show_expired_food_on_mainpage()
@@ -415,7 +415,7 @@ def add_food_to_fridge():
     # Wenn Standort "geteilter Kühlschrank" ist, zeige eine zusätzliche Dropdown-Liste für die Auswahl des Kühlschranks
     if new_entry["Standort"] == "🤝geteilter Kühlschrank":
         if "shared_fridge_id" not in st.session_state:
-            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du zuerst einen geteilten Kühlschrank erstellen.")
+            st.error("Bevor du ein Lebensmittel zum geteilten Kühlschrank hinzufügen kannst, musst du erst einen geteilten Kühlschrank erstellen.")
             return
         else:
             # Holen Sie sich alle verfügbaren geteilten Kühlschrank-Namen
@@ -423,7 +423,7 @@ def add_food_to_fridge():
             df = st.session_state.df_shared_fridge
             df_filtered = df[df["User ID"]== benutzername]
             shared_fridge_options = df_filtered["Benutzername"].unique().tolist()
-            selected_shared_fridge_name = st.selectbox("Wählen Sie den geteilten Kühlschrank aus:", shared_fridge_options)
+            selected_shared_fridge_name = st.selectbox("Wählen Sie einen geteilten Kühlschrank aus:", shared_fridge_options)
             new_entry["Benutzername"] = selected_shared_fridge_name
     
     if st.button("Hinzufügen"):
@@ -484,8 +484,8 @@ def show_settings():
 
 def show_my_friends():
     st.title("Freunde einladen")
-    st.title("Zeige deinen Freunden wie sie ihre Vorräte am besten organisieren können")
-    st.write("Teile die App FreshAltert in dem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
+    st.title("Zeige deinen Freunden, wie sie ihre Vorräte am besten organisieren können")
+    st.write("Teile die App FreshAltert, indem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
     friend_code = st.text_input("Freundecode eingeben")
     
@@ -515,13 +515,13 @@ def show_my_friends():
                     ignore_index=True
                 )
                 save_data_to_database_shared_fridge()
-                st.success("Freundecode erfolgreich hinzugefügt und zum geteilten Kühlschrank hinzugefügt!")
+                st.success("Der Freundecode wurde erfolgreich registriert und dem geteilten Kühlschrank hinzugefügt!")
         else:
-            st.error("Ungültiger Freundecode.")
+            st.error("Ungültiger Freundecode")
 
 
     
-    st.write("Wir als Entwickler-Team würden uns riesig freuen")
+    st.write("Wir, als Entwickler-Team, würden uns riesig freuen")
     st.write("Liebe Grüsse von Mirco, Sarah und Sebastian, welche die App mit viel Liebe und noch mehr Schweiss und Tränen entwickelt haben")
 
 def show_informations():
