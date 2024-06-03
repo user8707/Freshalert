@@ -105,7 +105,7 @@ def show_login_page():
         show_registration_page()
 
 def show_registration_page():
-    st.title("Registrieren")
+    st.header("Registrieren")
            
     new_entry = {
         DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]), #Vorname
