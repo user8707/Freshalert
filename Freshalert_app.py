@@ -487,7 +487,7 @@ def show_my_friends():
     st.header("Zeige deinen Freunden, wie sie ihre Vorräte am besten organisieren können")
     st.write("Teile die App FreshAltert, indem du ihnen den Link unserer App schickst https://fresh-alert.streamlit.app/")
     
-    friend_code = st.text_input("Freundecode eingeben")
+    friend_code = st.text_input("geteilte Kühlschrank ID eingeben")
     
     if st.button("Freundecode hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
