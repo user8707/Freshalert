@@ -25,21 +25,20 @@ Lebensmittel welche bald ablaufen sind nun auf der Startseite zu sehen. Zudem ha
 Version 7
 Wir fügen informationen zum Thema Foodwaste ein und machen die Seite so informativer. An den Hashes arbeiten wir noch
 
+Version 8
+Wir haben einen geteilten Kühlschrank erstellt. Man kann nun über einen Freundschaftscode, Leute zu einem geteilten Kühlschrank einladen. 
+Diese Lebensmittel werden dann auch auf der Startseite angezeigt wenn sie das Ablaufdatum überschritten haben
+
 
 Siehe unsere Aktuelle ToDo Liste
 Hohe Priorität: 
-- Icon für Tab
-- Hashes
-- Code in Pages aufteilen 
-- Emoji hinzufügen für jedes Navigation abschnitt 
+- ALL DONE 
 
 Niedrige Priorität: 
-- Geteilter Kühlschrank für WG’s oder Families 
-- Unter ‘Einstellungen’ selber definieren, welche Lebensmittel wann gemeldet werden sollen. Fleisch früher als Nudeln
-
+- ALL DONE
+  
 Dominik fragen:
-- Hashes 
-- Pages
+- ALL DONE
 
 Erledigt:
 - Welcome-Page mit Logo und ‘Einführung’ 
@@ -50,4 +49,12 @@ Erledigt:
 - Buttons für ‘Einstellungen’ und ‘Meine Freunde’
 - ‘Sonstiges’ als zusätzliche Kategorie hinzufügen
 - Logo
-- Auslog-Funktion 
+- Auslog-Funktion
+- Icon für Tab
+- Hashes
+- Emoji hinzufügen für jedes Navigation abschnitt
+-  Geteilter Kühlschrank für WG’s oder Families
+
+Was technisch nicht geklappt hat:
+- Unter ‘Einstellungen’ selber definieren, welche Lebensmittel wann gemeldet werden sollen. Fleisch früher als Nudeln
+- Code in Pages Aufteilen
