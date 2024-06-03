@@ -218,7 +218,7 @@ def show_mainpage():
         st.subheader("Deine App für deine Lebensmittel!")                      
     else:
         st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel!")  # Falls Vorname nicht verfügbar ist
-    st.write("Füge in der Sidebar deine ersten Lebensmittel zu deinem digitalen Kühlschrank hinzu. "
+    st.caption("Füge in der Sidebar deine ersten Lebensmittel zu deinem digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, sie rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
     #Zeigt die bald ablaufenden Lebensmittel an
