@@ -489,7 +489,7 @@ def show_my_friends():
     
     friend_code = st.text_input("geteilte Kühlschrank ID eingeben")
     
-    if st.button("Freundecode hinzufügen"):
+    if st.button("geteilter Kühlschrank hinzufügen"):
         if friend_code in st.session_state.df_shared_fridge['Kuehlschrank_ID'].values:
             # Überprüfen, ob der Benutzer bereits in diesem geteilten Kühlschrank ist
             existing_entry = st.session_state.df_shared_fridge[
